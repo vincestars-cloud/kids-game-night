@@ -214,6 +214,48 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
 .dond-result-val { font-size:60px; font-weight:900; color:#00d4aa; }
 .dond-result-label { font-size:16px; color:#a0a0b0; margin-bottom:8px; }
 
+
+/* WHO WANTS TO BE A MILLIONAIRE */
+.wwtbam-wrap{flex:1;display:flex;gap:12px;overflow:hidden;}
+.wwtbam-ladder{width:180px;flex-shrink:0;overflow-y:auto;display:flex;flex-direction:column;gap:3px;}
+.wwtbam-rung{padding:6px 10px;border-radius:8px;font-size:13px;font-weight:700;display:flex;justify-content:space-between;align-items:center;background:#16213e;border:1px solid #2a2a4e;transition:all 0.3s;}
+.wwtbam-rung.current{background:#4a90e222;border-color:#4a90e2;color:#4a90e2;transform:scale(1.04);}
+.wwtbam-rung.safe{border-color:#f5a62366;color:#f5a623;}
+.wwtbam-rung.won{background:#00d4aa22;border-color:#00d4aa;color:#00d4aa;}
+.wwtbam-rung.lost{background:#e9456011;border-color:#e9456033;color:#555;}
+.wwtbam-rung .rung-pts{color:inherit;font-size:12px;}
+.wwtbam-main{flex:1;display:flex;flex-direction:column;gap:10px;overflow:hidden;}
+.wwtbam-question{background:#16213e;border-radius:14px;padding:20px 24px;font-size:22px;font-weight:700;line-height:1.4;text-align:center;border:2px solid #2a2a4e;flex-shrink:0;}
+.wwtbam-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;flex-shrink:0;}
+.wwtbam-opt{background:#16213e;border:2px solid #4a90e2;border-radius:12px;padding:14px 18px;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all 0.2s;text-align:left;}
+.wwtbam-opt:hover:not(.disabled){background:#1a2a4e;border-color:#f5a623;}
+.wwtbam-opt.selected{background:#2a3a6e;border-color:#4a90e2;}
+.wwtbam-opt.correct{background:#00d4aa22;border-color:#00d4aa;color:#00d4aa;}
+.wwtbam-opt.wrong{background:#e9456022;border-color:#e94560;color:#e94560;}
+.wwtbam-opt.eliminated{opacity:0.15;cursor:default;}
+.wwtbam-opt.disabled{cursor:default;}
+.opt-letter-badge{background:#4a90e2;color:#fff;border-radius:6px;padding:3px 8px;font-size:13px;font-weight:900;flex-shrink:0;}
+.wwtbam-opt.correct .opt-letter-badge{background:#00d4aa;color:#000;}
+.wwtbam-opt.wrong .opt-letter-badge{background:#e94560;}
+.wwtbam-opt.eliminated .opt-letter-badge{background:#333;}
+.wwtbam-lifelines{display:flex;gap:8px;justify-content:center;flex-shrink:0;}
+.lifeline-btn{display:flex;flex-direction:column;align-items:center;gap:4px;background:#16213e;border:2px solid #4a90e2;border-radius:12px;padding:10px 16px;cursor:pointer;font-size:12px;font-weight:700;transition:all 0.2s;color:#4a90e2;min-width:80px;}
+.lifeline-btn:hover:not(.used){background:#1a2a4e;}
+.lifeline-btn .ll-icon{font-size:24px;}
+.lifeline-btn.used{opacity:0.3;cursor:not-allowed;border-color:#333;color:#555;}
+.wwtbam-feedback{text-align:center;font-size:18px;font-weight:700;min-height:30px;padding:6px;flex-shrink:0;}
+.wwtbam-age-select{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:20px;}
+.age-btn{padding:20px 40px;border-radius:16px;border:3px solid #4a90e2;background:#16213e;color:#e0e0e0;font-size:22px;font-weight:900;cursor:pointer;transition:all 0.25s;width:320px;text-align:left;}
+.age-btn:hover{border-color:#f5a623;background:#2a2a4e;transform:translateX(6px);}
+.age-btn .age-sub{font-size:13px;color:#a0a0b0;font-weight:400;margin-top:4px;}
+.wwtbam-result{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px;}
+.wwtbam-result-amount{font-size:72px;font-weight:900;color:#f5a623;line-height:1;}
+.wwtbam-result-label{font-size:22px;color:#a0a0b0;}
+.ai-hint-box{background:#1a1a3e;border:2px solid #9b59b6;border-radius:12px;padding:16px;text-align:center;font-size:16px;color:#e0e0e0;margin:4px 0;flex-shrink:0;}
+.friend-box{background:#1a2e1a;border:2px solid #00d4aa;border-radius:12px;padding:16px;text-align:center;flex-shrink:0;}
+.friend-name{font-size:14px;color:#00d4aa;font-weight:700;margin-bottom:4px;}
+.friend-says{font-size:18px;font-weight:700;}
+
 </style>
 </head>
 <body>
@@ -276,6 +318,7 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
     <button class="nav-btn" onclick="showGame('feud')">&#127942; Feud</button>
   
 <button class="nav-btn" onclick="showGame('dond')">Deal or No Deal</button>
+<button class="nav-btn" onclick="showGame('wwtbam')">&#128176; Millionaire</button>
 </nav>
 
   <div id="game-home" class="game-section active" style="overflow-y:auto;">
@@ -294,6 +337,7 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
       <div class="home-card" onclick="showGame('password')"><div class="icon">&#128273;</div><h3>Password / Hot Seat</h3><p>One-word clues, 30 words</p></div>
       <div class="home-card" onclick="showGame('feud')" style="border:2px solid var(--gold);"><div class="icon">&#127942;</div>
 <div class="home-card" onclick="showGame('dond')"><div class="icon">&#128188;</div><h3>Deal or No Deal</h3><p>20 briefcases, banker offers, Deal or No Deal! Each player takes a turn.</p></div><h3>Family Feud</h3><p>NEW! Survey says... 8 rounds!</p></div>
+      <div class="home-card" onclick="showGame('wwtbam')"><div class="icon">&#128176;</div><h3>Who Wants to Be a Millionaire?</h3><p>Age-based questions, 3 lifelines, prize ladder. Pick your age group!</p></div>
     </div>
   </div>
 
@@ -667,6 +711,7 @@ function showGame(id){
   Object.keys(timers).forEach(k=>stopTimer(k));
   if(id==='emoji')loadEmoji(emojiIdx);
     if(id==='dond') initDOND();
+  if(id==='wwtbam') initWWTBAM();
   if(id==='flags')loadFlag(flagIdx);
   if(id==='draw')loadDraw(drawIdx);
   if(id==='brainrot')loadBR(brIdx);
@@ -1737,6 +1782,226 @@ function dondNextPlayer() {
   setDondContestant(notPlayed[0]);
 }
 
+// WHO WANTS TO BE A MILLIONAIRE
+const WWTBAM_LADDER=[
+  {pts:100,safe:false},{pts:200,safe:false},{pts:300,safe:false},{pts:500,safe:false},
+  {pts:1000,safe:true},{pts:2000,safe:false},{pts:4000,safe:false},{pts:8000,safe:false},
+  {pts:16000,safe:false},{pts:32000,safe:true},{pts:64000,safe:false},{pts:125000,safe:false},
+  {pts:250000,safe:false},{pts:500000,safe:false},{pts:1000000,safe:false}
+];
+const FRIEND_NAMES=["Jake","Maya","Alex","Jordan","Sam","Riley","Tyler","Morgan"];
+const WWTBAM_QUESTIONS={11:[
+    {q:"What animal is Bluey from the hit kids show?",opts:["Labrador", "Blue Heeler", "Border Collie", "Dalmatian"],c:1,hint:"Bluey is an Australian cattle dog. The show is set in Brisbane.",tier:1},
+    {q:"In Minecraft, what material makes the strongest tools?",opts:["Gold", "Iron", "Diamond", "Wood"],c:2,hint:"Diamond is the hardest craftable resource in Minecraft.",tier:1},
+    {q:"How many legs does a spider have?",opts:["6", "8", "10", "4"],c:1,hint:"Spiders are arachnids. Insects have 6 legs, arachnids have 8.",tier:1},
+    {q:"What is the capital city of the United States?",opts:["New York City", "Los Angeles", "Chicago", "Washington D.C."],c:3,hint:"Built specifically to be the capital. Named after the first US president.",tier:1},
+    {q:"In Adopt Me on Roblox, what do you primarily collect and trade?",opts:["Weapons", "Pets", "Houses", "Cars"],c:1,hint:"The game core loop involves hatching eggs and collecting creatures.",tier:1},
+    {q:"What color is SpongeBob SquarePants?",opts:["Orange", "Blue", "Yellow", "Green"],c:2,hint:"He lives in Bikini Bottom and works at the Krusty Krab.",tier:1},
+    {q:"What planet is known as the Red Planet?",opts:["Venus", "Jupiter", "Saturn", "Mars"],c:3,hint:"NASA has sent several rovers here. Elon Musk wants to colonize it.",tier:1},
+    {q:"In Among Us, what are the bad guys called?",opts:["Killers", "Traitors", "Impostors", "Saboteurs"],c:2,hint:"There are 1-3 of them. Their job is to eliminate crewmates without being voted out.",tier:1},
+    {q:"What does NPC stand for in gaming?",opts:["Non-Playable Character", "New Player Control", "Night Play Category", "Network Player Clan"],c:0,hint:"These are background characters in video games controlled by the computer.",tier:2},
+    {q:"Who created Skibidi Toilet?",opts:["MrBeast", "PewDiePie", "DaFuq Boom", "Markiplier"],c:2,hint:"A small YouTube channel that blew up in 2023 with a bizarre animated series.",tier:2},
+    {q:"What does POV mean on TikTok?",opts:["Play Of Video", "Point Of View", "People On Video", "Part Of Vlog"],c:1,hint:"When someone does a POV video, they show a scenario from one specific person perspective.",tier:2},
+    {q:"How many colors are in a standard rainbow?",opts:["5", "6", "7", "8"],c:2,hint:"ROY G BIV: Red, Orange, Yellow, Green, Blue, Indigo, Violet.",tier:2},
+    {q:"What is the name of Peppa Pig little brother?",opts:["George", "Henry", "Charlie", "Max"],c:0,hint:"He loves dinosaurs and his favorite toy is called Mr. Dinosaur.",tier:2},
+    {q:"In Minecraft, what do you get when you kill an Ender Dragon?",opts:["Diamond sword", "Dragon egg plus XP", "A new biome", "Elytra wings"],c:1,hint:"Defeating the final boss drops this unique item plus massive experience points.",tier:2},
+    {q:"In Among Us, how do crewmates win?",opts:["Complete all assigned tasks", "Vote out all Impostors", "Find the Impostor hideout", "Collect all sabotage parts"],c:0,hint:"Crewmates win by completing all their tasks OR voting out all Impostors.",tier:2},
+    {q:"What does www stand for in a website address?",opts:["World Wide Web", "Wireless Web Works", "Web World Wide", "World Web Wire"],c:0,hint:"Tim Berners-Lee invented this in 1989. These three letters precede almost every website URL.",tier:3},
+    {q:"What is the fastest land animal on Earth?",opts:["Lion", "Greyhound", "Cheetah", "Pronghorn"],c:2,hint:"This spotted African big cat can reach 70-75 mph in short bursts.",tier:3},
+    {q:"In what country was Minecraft originally created?",opts:["USA", "UK", "Sweden", "Canada"],c:2,hint:"Markus Notch Persson created it. Same country as IKEA and ABBA.",tier:3},
+    {q:"What does the G in GIF stand for?",opts:["Global", "Graphic", "Generated", "Google"],c:1,hint:"It is a type of image format. The pronunciation debate is one of the oldest internet arguments.",tier:3},
+    {q:"Which planet has the most moons in our solar system?",opts:["Jupiter", "Uranus", "Neptune", "Saturn"],c:3,hint:"As of 2024, this ringed planet has 146 confirmed moons.",tier:3},
+    {q:"What is the name of the Roblox currency?",opts:["RobuxCoins", "Robux", "RobloxBucks", "R-Coins"],c:1,hint:"You use this to buy avatar items, game passes, and premium features.",tier:3},
+    {q:"What year was YouTube founded?",opts:["2003", "2004", "2005", "2006"],c:2,hint:"Three former PayPal employees created it. Google bought it the following year for 1.65 billion dollars.",tier:3}
+  ],15:[
+    {q:"Who sings drivers license (2021)?",opts:["Taylor Swift", "Billie Eilish", "Olivia Rodrigo", "Sabrina Carpenter"],c:2,hint:"She went from Disney to a record-breaking solo debut.",tier:1},
+    {q:"What does rizz mean?",opts:["Being rich", "Natural charm and charisma", "Moving fast", "Being very funny"],c:1,hint:"Someone with this has the effortless ability to attract others. Tom Holland claimed he has zero of it.",tier:1},
+    {q:"What app did TikTok replace or rebrand from?",opts:["Vine", "Dubsmash", "Musical.ly", "Kwai"],c:2,hint:"The original app focused on lip-syncing videos. ByteDance merged it into TikTok in 2018.",tier:1},
+    {q:"What streaming service is Euphoria on?",opts:["Netflix", "Disney Plus", "Amazon Prime", "HBO Max"],c:3,hint:"Zendaya stars as Rue. The show sparked major beauty trends with elaborate eye makeup looks.",tier:1},
+    {q:"What K-pop group has members RM, Jin, Suga, J-Hope, Jimin, V, and Jungkook?",opts:["BLACKPINK", "EXO", "BTS", "TWICE"],c:2,hint:"This 7-member group broke multiple Billboard records. Their fanbase is called ARMY.",tier:1},
+    {q:"What does GRWM stand for?",opts:["Get Ready With Me", "Give Respect When Merited", "Great Reaction Worth Making", "Girls Really Want More"],c:0,hint:"Popular format where creators film themselves applying makeup or getting dressed while talking.",tier:1},
+    {q:"Who plays Rue in Euphoria?",opts:["Millie Bobby Brown", "Sydney Sweeney", "Hunter Schafer", "Zendaya"],c:3,hint:"She is also known for playing MJ in the Spider-Man MCU films and won two Emmys for this role.",tier:1},
+    {q:"What is a nepo baby?",opts:["A celebrity who acts young", "A celebrity child who benefits from parents industry connections", "A baby influencer on Instagram", "Someone who never leaves their hometown"],c:1,hint:"Nepo is short for nepotism. The term went viral in late 2022 after a New York Magazine feature.",tier:2},
+    {q:"In Fortnite, what is a Victory Royale?",opts:["A special skin reward", "Being the last player or team standing", "Winning 100 matches in a season", "A limited-time game mode"],c:1,hint:"This phrase appears on screen at the end of every Fortnite match for the winner.",tier:2},
+    {q:"What year did TikTok officially launch globally?",opts:["2016", "2017", "2018", "2019"],c:2,hint:"ByteDance merged Musical.ly into TikTok this year. It exploded in the US during COVID-19 in 2020.",tier:2},
+    {q:"Which singer album SOUR featured drivers license deja vu and good 4 u?",opts:["Doja Cat", "Billie Eilish", "Olivia Rodrigo", "Gracie Abrams"],c:2,hint:"This was her debut album released in 2021. All three songs charted extremely high simultaneously.",tier:2},
+    {q:"What does understood the assignment mean?",opts:["Did all their homework", "Perfectly delivered exactly what was expected or more", "Read all the rules carefully", "Agreed with what someone said"],c:1,hint:"If someone understood the assignment, they went all-in on the vibe with maximum effort.",tier:2},
+    {q:"What is Kai Cenat known for?",opts:["Being a professional gamer", "Record-breaking Twitch subathons", "YouTube cooking videos", "A viral dance challenge"],c:1,hint:"He broke Twitch subscriber records multiple times and became the most subscribed streamer.",tier:2},
+    {q:"Which Love Island UK season is widely considered the most iconic?",opts:["Season 2 2016", "Season 4 2018", "Season 6 2020", "Season 3 2017"],c:1,hint:"Dani Dyer and Jack Fincham won this season. It was the highest-rated in the show history.",tier:3},
+    {q:"What does delulu mean in internet slang?",opts:["Very tired", "Delusional about a crush or celebrity", "Extremely hungry", "A dance style"],c:1,hint:"Shortening of delusional. Often used for people with unrealistic beliefs about celebrities.",tier:3},
+    {q:"Who performed at the Super Bowl LVIII halftime show in 2024?",opts:["Taylor Swift", "Beyonce", "Usher", "Drake"],c:2,hint:"He brought out a massive list of surprise guests including Alicia Keys, HER, Lil Jon, and Ludacris.",tier:3},
+    {q:"What is the beige flag in dating slang?",opts:["A serious red flag warning", "A quirky but harmless personal trait", "A good sign about someone", "A sign someone is boring"],c:1,hint:"Unlike red flags or green flags, this describes something odd that is neither negative nor positive.",tier:3},
+    {q:"Sabrina Carpenter Espresso was the biggest song of which summer?",opts:["Summer 2022", "Summer 2023", "Summer 2024", "Summer 2025"],c:2,hint:"That is that me espresso became one of the most viral audio clips on TikTok.",tier:3},
+    {q:"What does caught in 4K mean?",opts:["Watching something in 4K resolution", "Being caught doing something wrong with clear undeniable evidence", "Being filmed without permission", "A photography term"],c:1,hint:"The 4K refers to high-definition video quality. The evidence is crystal clear and undeniable.",tier:3},
+    {q:"What is main character energy?",opts:["Being the team captain", "Acting like you are the confident protagonist of your own story", "Having the most followers", "Being the loudest person in a room"],c:1,hint:"When someone has this, they move through life as if the world revolves around them.",tier:3}
+  ],17:[
+    {q:"Who won Love Island UK 2023?",opts:["Molly-Mae and Tommy", "Jess Harding and Sammy Root", "Ekin-Su and Davide", "Paige and Finn"],c:1,hint:"The winners were the fan favorites that season. Jess was a beautician and Sammy was a business owner.",tier:1},
+    {q:"What rapper had the biggest beef with Drake in 2024?",opts:["J. Cole", "The Game", "Pusha T", "Kendrick Lamar"],c:3,hint:"His diss track Not Like Us became a number 1 hit and he performed it at the Super Bowl halftime show in 2025.",tier:1},
+    {q:"What does the ick mean in dating culture?",opts:["A gross food", "A sudden irrational disgust that kills your attraction to someone", "Being sick", "An awkward moment on a date"],c:1,hint:"Once you get this, you cannot unsee it. Something small can trigger it and suddenly you are completely turned off.",tier:1},
+    {q:"What year did Beyonce release Renaissance Act I?",opts:["2021", "2022", "2023", "2024"],c:1,hint:"It was a surprise drop with no prior single. The album leaned into dance, disco, and house music.",tier:1},
+    {q:"What does IYKYK mean?",opts:["I Will Yield Keep Your Kindness", "If You Know You Know", "I Yelled Keep Your Knowledge", "It Is Your Kind of Knowledge"],c:1,hint:"Posted when sharing inside jokes only specific people will understand. You either get it or you do not.",tier:1},
+    {q:"Kendrick Lamar Not Like Us is a diss track against which artist?",opts:["J. Cole", "Travis Scott", "Drake", "Future"],c:2,hint:"They not like us became a number 1 anthem on the Hot 100.",tier:1},
+    {q:"Who is Nicki Minaj most famous rap rival?",opts:["Cardi B", "Megan Thee Stallion", "Doja Cat", "Iggy Azalea"],c:0,hint:"Their feud is one of the most documented in hip-hop history. Tension peaked around 2018 at a Fashion Week incident.",tier:1},
+    {q:"What album did SZA release in December 2022?",opts:["CTRL", "Z", "SOS", "Good Days"],c:2,hint:"It included Kill Bill, Shirt, and many other hits. Her second studio album, broke streaming records.",tier:2},
+    {q:"What is dark academia as an aesthetic?",opts:["Goth fashion focused on black clothing", "Subculture centered on classic literature Gothic architecture and moody intellectual vibes", "Horror movies with academic settings", "A TikTok trend about studying at night"],c:1,hint:"Think Oxbridge libraries, tweed, candles, old books, rainy autumn days. Popularized on Tumblr and TikTok.",tier:2},
+    {q:"What is the correct term for when an AI generates false information confidently?",opts:["Glitching", "Hallucinating", "Dreaming", "Confabulating"],c:1,hint:"This word was adopted from psychology. It describes when an AI produces plausible-sounding but made-up facts.",tier:2},
+    {q:"Who hosts Love Island UK from 2023 onwards?",opts:["Laura Whitmore", "Caroline Flack", "Maya Jama", "Emma Willis"],c:2,hint:"She took over in 2023. She is a TV presenter who was previously in a relationship with Stormzy.",tier:2},
+    {q:"What does the 4B movement refer to?",opts:["A fashion trend with four basic colors", "A South Korean feminist movement with no dating marriage or sex with men", "A K-pop fan club ranking system", "A TikTok challenge about four boundaries"],c:1,hint:"The 4B comes from four Korean words all starting with bi meaning no. It gained huge attention in November 2024.",tier:2},
+    {q:"What Netflix show features teenagers at a prestigious school in Madrid?",opts:["Money Heist", "Cable Girls", "Elite", "Control Z"],c:2,hint:"It mixes murder mysteries with teenage drama. Known for its diverse cast and plot twists.",tier:2},
+    {q:"What Supreme Court case in 2022 overturned Roe v Wade?",opts:["Obergefell v Hodges", "Dobbs v Jackson", "Planned Parenthood v Casey", "Whole Womans Health v Jackson"],c:1,hint:"Named after Mississippi state health officer. It eliminated the federal constitutional right to abortion established in 1973.",tier:3},
+    {q:"Kendrick Lamar performed at Super Bowl LIX in 2025. What city was it in?",opts:["Miami", "Los Angeles", "Las Vegas", "New Orleans"],c:3,hint:"The Superdome. He performed Not Like Us live for the first time at a major stage.",tier:3},
+    {q:"What is normcore as a fashion aesthetic?",opts:["Maximalist colorful fashion", "Deliberately unremarkable average basic clothing as a fashion statement", "Nostalgia-based 90s revival looks", "Athletic wear worn casually"],c:1,hint:"A 2014 trend concept: wearing dad jeans, white sneakers, and plain t-shirts on PURPOSE.",tier:3},
+    {q:"What UK Love Island concept involves the public voting in a new bombshell?",opts:["Casa Amor", "The Hideaway", "The Dumping", "Movie Night"],c:0,hint:"Arguably the most dramatic moment of every Love Island series. Islanders are split up and tempted by 6 new singles.",tier:3},
+    {q:"In AI, what does LLM stand for?",opts:["Large Language Model", "Linked Learning Machine", "Linear Logic Module", "Low Latency Mechanism"],c:0,hint:"ChatGPT, Claude, and Gemini are all examples. They are trained on massive text datasets.",tier:3},
+    {q:"What year did Instagram launch?",opts:["2008", "2009", "2010", "2011"],c:2,hint:"Kevin Systrom and Mike Krieger launched it in October of this year. Facebook bought it two years later.",tier:3},
+    {q:"What song did Kendrick Lamar perform LAST at the 2025 Super Bowl halftime show?",opts:["Not Like Us", "Humble", "DNA", "Alright"],c:0,hint:"He saved the most pointed song for last, turning a pop culture event into a statement.",tier:3}
+  ]};
+let wwtbamAge=11,wwtbamPlayerIdx=0,wwtbamQuestions=[],wwtbamQIdx=0,wwtbamSafeHaven=0;
+let wwtbamLifelinesUsed={ff:false,ai:false,friend:false};
+let wwtbamEliminated=[],wwtbamAnswered=false;
+function initWWTBAM(){
+  document.getElementById("wwtbam-age-screen").style.display="flex";
+  document.getElementById("wwtbam-game").style.display="none";
+  document.getElementById("wwtbam-result").style.display="none";
+  document.getElementById("wwtbam-lifeline-box").style.display="none";
+}
+function startWWTBAM(age,playerIdx){
+  wwtbamAge=age;wwtbamPlayerIdx=playerIdx;wwtbamQIdx=0;wwtbamSafeHaven=0;
+  wwtbamLifelinesUsed={ff:false,ai:false,friend:false};
+  wwtbamEliminated=[];wwtbamAnswered=false;
+  const pool=WWTBAM_QUESTIONS[age];
+  const t1=wwtbamShuffle(pool.filter(function(q){return q.tier===1;})).slice(0,5);
+  const t2=wwtbamShuffle(pool.filter(function(q){return q.tier===2;})).slice(0,5);
+  const t3=wwtbamShuffle(pool.filter(function(q){return q.tier===3;})).slice(0,5);
+  wwtbamQuestions=t1.concat(t2).concat(t3);
+  const names=["Legend","Sumaya","Sarai"];
+  document.getElementById("wwtbam-player-badge").textContent=names[playerIdx];
+  ["ll-5050","ll-ai","ll-friend"].forEach(function(id){document.getElementById(id).classList.remove("used");});
+  document.getElementById("wwtbam-age-screen").style.display="none";
+  document.getElementById("wwtbam-game").style.display="flex";
+  document.getElementById("wwtbam-result").style.display="none";
+  document.getElementById("wwtbam-lifeline-box").style.display="none";
+  renderWWTBAMLadder();renderWWTBAMQuestion();
+}
+function wwtbamShuffle(arr){
+  const a=arr.slice();
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=a[i];a[i]=a[j];a[j]=t;}
+  return a;
+}
+function renderWWTBAMLadder(){
+  const el=document.getElementById("wwtbam-ladder");el.innerHTML="";
+  WWTBAM_LADDER.slice().reverse().forEach(function(rung,ri){
+    const idx=WWTBAM_LADDER.length-1-ri;
+    const div=document.createElement("div");
+    let cls="wwtbam-rung";
+    if(idx===wwtbamQIdx)cls+=" current";
+    else if(idx<wwtbamQIdx)cls+=" won";
+    else if(rung.safe)cls+=" safe";
+    div.className=cls;
+    let lbl=rung.pts>=1000000?"1M":rung.pts>=1000?(rung.pts/1000)+"K":String(rung.pts);
+    div.innerHTML="<span>"+(idx+1)+(rung.safe?" 🛡️":"")+"</span><span class=\"rung-pts\">"+lbl+"</span>";
+    el.appendChild(div);
+  });
+}
+function renderWWTBAMQuestion(){
+  if(wwtbamQIdx>=wwtbamQuestions.length){endWWTBAM("win",WWTBAM_LADDER[WWTBAM_LADDER.length-1].pts);return;}
+  wwtbamEliminated=[];wwtbamAnswered=false;
+  const q=wwtbamQuestions[wwtbamQIdx];const rung=WWTBAM_LADDER[wwtbamQIdx];
+  document.getElementById("wwtbam-q-num").textContent="Question "+(wwtbamQIdx+1)+" of 15 — Worth "+rung.pts.toLocaleString()+" points"+(rung.safe?" 🛡️ SAFE HAVEN":"");
+  document.getElementById("wwtbam-question").textContent=q.q;
+  document.getElementById("wwtbam-feedback").textContent="";
+  document.getElementById("wwtbam-next-btn").style.display="none";
+  document.getElementById("wwtbam-lifeline-box").style.display="none";
+  renderWWTBAMOptions();renderWWTBAMLadder();
+}
+function renderWWTBAMOptions(){
+  const q=wwtbamQuestions[wwtbamQIdx];
+  const container=document.getElementById("wwtbam-options");container.innerHTML="";
+  const letters=["A","B","C","D"];
+  q.opts.forEach(function(opt,i){
+    const btn=document.createElement("div");
+    const elim=wwtbamEliminated.indexOf(i)!==-1;
+    btn.className="wwtbam-opt"+(elim?" eliminated":"")+(wwtbamAnswered?" disabled":"");
+    btn.innerHTML="<span class=\"opt-letter-badge\">"+letters[i]+"</span>"+opt;
+    if(!elim&&!wwtbamAnswered)(function(idx){btn.onclick=function(){answerWWTBAM(idx);};})(i);
+    container.appendChild(btn);
+  });
+}
+function answerWWTBAM(chosen){
+  if(wwtbamAnswered)return;wwtbamAnswered=true;
+  const q=wwtbamQuestions[wwtbamQIdx];const rung=WWTBAM_LADDER[wwtbamQIdx];
+  const opts=document.querySelectorAll(".wwtbam-opt");
+  opts.forEach(function(o){o.classList.add("disabled");});
+  opts[chosen].classList.add(chosen===q.c?"correct":"selected");
+  setTimeout(function(){
+    opts[q.c].classList.add("correct");
+    if(chosen!==q.c){opts[chosen].classList.remove("selected");opts[chosen].classList.add("wrong");}
+    if(chosen===q.c){
+      if(rung.safe)wwtbamSafeHaven=rung.pts;
+      if(wwtbamQIdx+1>=WWTBAM_LADDER.length){
+        document.getElementById("wwtbam-feedback").style.color="#00d4aa";
+        document.getElementById("wwtbam-feedback").textContent="CORRECT! YOU ARE A MILLIONAIRE!";
+        setTimeout(function(){endWWTBAM("win",rung.pts);},1200);
+      }else{
+        const nr=WWTBAM_LADDER[wwtbamQIdx+1];
+        document.getElementById("wwtbam-feedback").style.color="#00d4aa";
+        document.getElementById("wwtbam-feedback").textContent="Correct! Next: "+(nr?nr.pts.toLocaleString()+" pts":"");
+        document.getElementById("wwtbam-next-btn").style.display="inline-block";
+      }
+    }else{
+      document.getElementById("wwtbam-feedback").style.color="#e94560";
+      document.getElementById("wwtbam-feedback").textContent="Wrong! The answer was: "+q.opts[q.c];
+      setTimeout(function(){endWWTBAM("lose",wwtbamSafeHaven);},1500);
+    }
+  },600);
+}
+function wwtbamNext(){wwtbamQIdx++;document.getElementById("wwtbam-next-btn").style.display="none";renderWWTBAMQuestion();}
+function wwtbamWalkAway(){
+  if(wwtbamAnswered)return;
+  const safe=wwtbamQIdx>0?WWTBAM_LADDER[wwtbamQIdx-1].pts:0;
+  endWWTBAM("walkaway",Math.max(safe,wwtbamSafeHaven));
+}
+function endWWTBAM(outcome,pts){
+  document.getElementById("wwtbam-game").style.display="none";
+  document.getElementById("wwtbam-result").style.display="flex";
+  const names=["Legend","Sumaya","Sarai"];const name=names[wwtbamPlayerIdx];
+  const icons={win:"🏆",lose:"💸",walkaway:"🚶"};
+  const labels={win:name+" is a MILLIONAIRE!",lose:name+" goes home with...",walkaway:name+" walked away with..."};
+  const subs={win:"Perfect game! All 15 questions answered correctly!",lose:"Dropped to safe haven. The correct answer has been revealed.",walkaway:"Smart move — locked in those points!"};
+  document.getElementById("wwtbam-result-icon").textContent=icons[outcome];
+  document.getElementById("wwtbam-result-label").textContent=labels[outcome];
+  document.getElementById("wwtbam-result-amount").textContent=pts.toLocaleString()+" pts";
+  document.getElementById("wwtbam-result-sub").textContent=subs[outcome];
+  if(pts>0)addScore(wwtbamPlayerIdx+1,pts);
+}
+function useLifeline(type){
+  if(wwtbamAnswered)return;
+  const q=wwtbamQuestions[wwtbamQIdx];
+  const box=document.getElementById("wwtbam-lifeline-box");
+  if(type==="5050"){
+    if(wwtbamLifelinesUsed.ff)return;wwtbamLifelinesUsed.ff=true;
+    document.getElementById("ll-5050").classList.add("used");
+    const wrongs=[0,1,2,3].filter(function(i){return i!==q.c&&wwtbamEliminated.indexOf(i)===-1;});
+    wwtbamEliminated=wwtbamEliminated.concat(wwtbamShuffle(wrongs).slice(0,2));
+    renderWWTBAMOptions();box.style.display="none";
+  }else if(type==="ai"){
+    if(wwtbamLifelinesUsed.ai)return;wwtbamLifelinesUsed.ai=true;
+    document.getElementById("ll-ai").classList.add("used");
+    box.style.display="block";
+    box.innerHTML='<div class="ai-hint-box"><div style="font-size:12px;color:#9b59b6;margin-bottom:6px;letter-spacing:2px;">🤖 AI HINT</div>'+q.hint+'</div>';
+  }else if(type==="friend"){
+    if(wwtbamLifelinesUsed.friend)return;wwtbamLifelinesUsed.friend=true;
+    document.getElementById("ll-friend").classList.add("used");
+    const fname=FRIEND_NAMES[Math.floor(Math.random()*FRIEND_NAMES.length)];
+    const letters=["A","B","C","D"];
+    const wrongs2=[0,1,2,3].filter(function(i){return i!==q.c&&wwtbamEliminated.indexOf(i)===-1;});
+    const fp=Math.random()<0.70?q.c:(wrongs2.length>0?wrongs2[Math.floor(Math.random()*wrongs2.length)]:q.c);
+    const confs=["I think","I am pretty sure","I am almost certain","I believe","Hmm I would guess"];
+    const conf=confs[Math.floor(Math.random()*confs.length)];
+    box.style.display="block";
+    box.innerHTML='<div class="friend-box"><div class="friend-name">📞 '+fname+' says...</div><div class="friend-says">&quot;'+conf+' it\'s <b>'+letters[fp]+': '+q.opts[fp]+'</b>&quot;</div><div style="font-size:12px;color:#a0a0b0;margin-top:4px;">Friends are right about 70% of the time...</div></div>';
+  }
+}
 </script>
 
   <!-- DEAL OR NO DEAL -->
@@ -1795,6 +2060,73 @@ function dondNextPlayer() {
           <div style="font-size:11px;color:#a0a0b0;text-align:center;margin-bottom:4px;letter-spacing:1px;">BANKED</div>
           <div id="dond-player-scores"></div>
         </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- WHO WANTS TO BE A MILLIONAIRE -->
+  <div id="game-wwtbam" class="game-section">
+    <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;padding-bottom:8px;">
+      <button class="btn btn-gray btn-sm" onclick="showGame('home')">&#8592; Home</button>
+      <span style="font-size:20px;font-weight:900;color:#f5a623;">&#128176; Who Wants to Be a Millionaire?</span>
+      <span id="wwtbam-player-badge" style="margin-left:8px;background:#4a90e222;color:#4a90e2;border:1px solid #4a90e2;border-radius:20px;padding:3px 12px;font-size:13px;font-weight:700;"></span>
+      <button class="btn btn-gray btn-sm" style="margin-left:auto;" onclick="initWWTBAM()">Restart</button>
+    </div>
+    <div id="wwtbam-age-screen" class="wwtbam-age-select">
+      <div style="font-size:28px;font-weight:900;color:#f5a623;text-align:center;">Select the player age group</div>
+      <div style="color:#a0a0b0;font-size:15px;text-align:center;">Questions are tailored to their generation, pop culture, and knowledge level</div>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-top:8px;">
+        <div style="display:flex;gap:10px;align-items:center;">
+          <select id="wwtbam-player-sel" style="background:#16213e;border:2px solid #4a90e2;color:#e0e0e0;padding:10px 14px;border-radius:10px;font-size:16px;font-weight:700;">
+            <option value="0">Legend</option>
+            <option value="1">Sumaya</option>
+            <option value="2">Sarai</option>
+          </select>
+          <span style="color:#a0a0b0;">is playing</span>
+        </div>
+        <button class="age-btn" onclick="startWWTBAM(11,parseInt(document.getElementById('wwtbam-player-sel').value))">
+          <div>Age 11</div><div class="age-sub">Roblox, Minecraft, Bluey, SpongeBob, basic science &amp; history</div>
+        </button>
+        <button class="age-btn" onclick="startWWTBAM(15,parseInt(document.getElementById('wwtbam-player-sel').value))">
+          <div>Age 15</div><div class="age-sub">TikTok trends, Olivia Rodrigo, BTS, Euphoria, Fortnite, social media</div>
+        </button>
+        <button class="age-btn" onclick="startWWTBAM(17,parseInt(document.getElementById('wwtbam-player-sel').value))">
+          <div>Age 17</div><div class="age-sub">Love Island, Kendrick vs Drake, SZA, current events, brain rot deep cuts</div>
+        </button>
+      </div>
+    </div>
+    <div id="wwtbam-game" style="display:none;flex:1;flex-direction:column;overflow:hidden;gap:8px;">
+      <div class="wwtbam-lifelines">
+        <div class="lifeline-btn" id="ll-5050" onclick="useLifeline('5050')"><span class="ll-icon">&#9986;&#65039;</span><span>50:50</span></div>
+        <div class="lifeline-btn" id="ll-ai" onclick="useLifeline('ai')"><span class="ll-icon">&#129302;</span><span>Ask AI</span></div>
+        <div class="lifeline-btn" id="ll-friend" onclick="useLifeline('friend')"><span class="ll-icon">&#128222;</span><span>Ask Friend</span></div>
+        <div style="margin-left:auto;display:flex;align-items:center;">
+          <button class="btn btn-gold btn-sm" onclick="wwtbamWalkAway()">&#128694; Walk Away</button>
+        </div>
+      </div>
+      <div id="wwtbam-lifeline-box" style="display:none;"></div>
+      <div class="wwtbam-wrap">
+        <div class="wwtbam-ladder" id="wwtbam-ladder"></div>
+        <div class="wwtbam-main">
+          <div id="wwtbam-q-num" style="font-size:12px;color:#a0a0b0;text-align:center;"></div>
+          <div class="wwtbam-question" id="wwtbam-question"></div>
+          <div class="wwtbam-options" id="wwtbam-options"></div>
+          <div class="wwtbam-feedback" id="wwtbam-feedback"></div>
+          <div style="display:flex;gap:8px;justify-content:center;">
+            <button class="btn btn-blue" id="wwtbam-next-btn" onclick="wwtbamNext()" style="display:none;">Next Question &#9654;</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="wwtbam-result" style="display:none;" class="wwtbam-result">
+      <div id="wwtbam-result-icon" style="font-size:60px;"></div>
+      <div class="wwtbam-result-label" id="wwtbam-result-label"></div>
+      <div class="wwtbam-result-amount" id="wwtbam-result-amount"></div>
+      <div id="wwtbam-result-sub" style="color:#a0a0b0;font-size:15px;max-width:400px;"></div>
+      <div style="display:flex;gap:12px;margin-top:12px;">
+        <button class="btn btn-blue" onclick="initWWTBAM()">Play Again</button>
+        <button class="btn btn-gray btn-sm" onclick="showGame('home')">Home</button>
       </div>
     </div>
   </div>

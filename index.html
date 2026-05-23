@@ -546,9 +546,12 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
         <div class="lyric-blank" id="lyr-blank" onclick="toggleLyric()">Tap to reveal next line</div>
         <div class="lyric-hint" id="lyr-hint"></div>
       </div>
-      <div id="lyr-yt-container" style="display:none;margin-top:8px;text-align:center;">
-        <a id="lyr-yt-link" href="#" target="_blank" style="display:inline-block;background:#ff0000;color:#fff;padding:10px 22px;border-radius:8px;font-weight:900;font-size:15px;text-decoration:none;letter-spacing:1px;">▶ Open on YouTube</a>
-        <div style="font-size:11px;color:#888;margin-top:4px;">Opens at the right spot — don't share your screen!</div>
+      <div id="lyr-yt-container" style="width:100%;max-width:640px;aspect-ratio:16/9;border-radius:12px;overflow:hidden;display:none;margin-top:12px;flex-shrink:0;position:relative;">
+        <iframe id="lyr-yt-frame" width="100%" height="100%" frameborder="0" allow="autoplay;encrypted-media" allowfullscreen style="border:none;border-radius:12px;"></iframe>
+        <div id="lyr-yt-fallback" style="display:none;position:absolute;inset:0;background:#111;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;">
+          <div style="color:#aaa;font-size:14px;">Embedding blocked for this video</div>
+          <a id="lyr-yt-link" href="#" target="_blank" style="background:#ff0000;color:#fff;padding:10px 20px;border-radius:8px;font-weight:700;text-decoration:none;">Open on YouTube</a>
+        </div>
       </div>
     </div>
     <div class="game-controls">
@@ -1156,27 +1159,28 @@ function tfNav(d){tfIdx=(tfIdx+d+TFD.length)%TFD.length;loadTF(tfIdx);}
 
 // LYRICS DATA
 const LYR=[
-  {a:"Beyonce — Texas Hold Em (2024)",l:"I don't wanna fight no more",b:"Turn it down, turn it down",h:"Her first country number one — surprise release",yt:"SRw3HBSQ40Q",ts:60},
-  {a:"Charli XCX — 360 (2024)",l:"I'm so Julia, kinda hot, kinda smart",b:"I'm so Charli, I'm so Charli",h:"From the Brat album — summer 2024",yt:"OSvqNh1r2dc",ts:38},
-  {a:"Olivia Rodrigo — good 4 u (2021)",l:"Well, good for you, I guess you moved on really easily",b:"You found a new girl and it only took a couple weeks",h:"The pop-punk revenge era",yt:"gNi_6U5Pm_o",ts:30},
-  {a:"Dua Lipa — Houdini (2023)",l:"I know what I want and I want it",b:"I know what I need, can you give it to me?",h:"From Future Nostalgia follow-up era",yt:"bqqimDkObsc",ts:42},
-  {a:"SZA — Snooze (2022)",l:"Would you lie for me?",b:"Take a bullet to the brain for me?",h:"From the SOS album — fan favorite slow jam",yt:"GYCsBdbx5Z8",ts:22},
-  {a:"Gracie Abrams — That's So True (2024)",l:"I know that I should not be calling",b:"But it's Friday night and I'm too drunk",h:"Her breakthrough hit — late 2024",yt:"JkPRCVSv_Bg",ts:18},
-  {a:"Kendrick Lamar — Humble (2017)",l:"Sit down, be humble",b:"Bitch, sit down, be humble",h:"The music video is all black and white — iconic",yt:"tvTRZJ-4EyI",ts:44},
+  {a:"Beyonce — Texas Hold Em (2024)",l:"I don't wanna fight no more",b:"Turn it down, turn it down",h:"Her first country number one — surprise release",yt:"jCOX8dT9q8M",ts:45},
+  {a:"Charli XCX — 360 (2024)",l:"I'm so Julia, kinda hot, kinda smart",b:"I'm so Charli, I'm so Charli",h:"From the Brat album — summer 2024",yt:"O_HoOpJ60C0",ts:50},
+  {a:"Olivia Rodrigo — good 4 u (2021)",l:"Well, good for you, I guess you moved on really easily",b:"You found a new girl and it only took a couple weeks",h:"The pop-punk revenge era",yt:"gNi_6U5Pm_o",ts:40},
+  {a:"Dua Lipa — Houdini (2023)",l:"I know what I want and I want it",b:"I know what I need, can you give it to me?",h:"From Future Nostalgia follow-up era",yt:"wBfafizW95E",ts:48},
+  {a:"SZA — Snooze (2022)",l:"Would you lie for me?",b:"Take a bullet to the brain for me?",h:"From the SOS album — fan favorite slow jam",yt:"bs0qR3-7lIY",ts:42},
+  {a:"Gracie Abrams — That's So True (2024)",l:"I know that I should not be calling",b:"But it's Friday night and I'm too drunk",h:"Her breakthrough hit — late 2024",yt:"BDHM8cyJQa8",ts:52},
+  {a:"Kendrick Lamar — HUMBLE. (2017)",l:"Sit down, be humble",b:"Bitch, sit down, be humble",h:"The music video is all black and white — iconic",yt:"5rHerTQpZec",ts:45},
   {a:"Taylor Swift — Anti-Hero (2022)",l:"It's me, hi, I'm the problem, it's me",b:"At tea time, everybody agrees",h:"Biggest hit from Midnights",yt:"b1kbLwvqugk",ts:48},
-  {a:"Billie Eilish — Birds of a Feather (2024)",l:"I want to be with you",b:"Want to be your only one",h:"From Hit Me Hard and Soft — emotional slow build",yt:"e3p_P3PjNEI",ts:25},
-  {a:"Morgan Wallen — Last Night (2023)",l:"Last night, we let the liquor talk",b:"You made a mess of me",h:"Country-pop crossover — longest running number 1 of 2023",yt:"H6bxVKIb8Lk",ts:15},
-  {a:"Ice Spice ft. Nicki Minaj — Barbie World (2023)",l:"I'm a Barbie girl in a Barbie world",b:"Everything is plastic, it's fantastic",h:"From the Barbie movie soundtrack — sampled Aqua",yt:"TSL7HuQ0-SM",ts:10},
-  {a:"Doechii — Nissan Altima (2024)",l:"I pull up in a Nissan Altima",b:"Lookin' like a Benz",h:"She won Best Rap Album at 2025 Grammys",yt:"qdE_GKZS4ug",ts:20},
-  {a:"Chappell Roan — Good Luck Babe (2024)",l:"You can kiss a hundred boys in bars",b:"Shoot another shot, try to stop the feeling",h:"Her breakout hit — impossible to avoid in 2024",yt:"hLEwnBEcJEo",ts:35},
-  {a:"Sabrina Carpenter — Please Please Please (2024)",l:"I know that you're trouble",b:"Since the day that we met, I am terrified",h:"Her second massive hit of summer 2024",yt:"6fQ31kPo7xs",ts:28},
-  {a:"Noah Kahan — Stick Season (2022)",l:"I'll trade Alaska for Nashville",b:"Tennessee is not that far",h:"Vermont folk singer who blew up on Spotify and TikTok",yt:"gvCdXPIcwAs",ts:30},
-  {a:"The Weeknd — Save Your Tears (2020)",l:"I saw you dancing in a crowded room",b:"You look so happy when I'm not with you",h:"From After Hours album — one of his best",yt:"XXYlFuWEuKI",ts:12},
-  {a:"Bad Bunny — Un Verano Sin Ti track: Me Porto Bonito (2022)",l:"Me porto bonito contigo",b:"Curame, acariciame, enganame",h:"Chencho Corleone feature — number 1 globally",yt:"GVQqQcMpKSM",ts:18},
-  {a:"Drake ft. 21 Savage — Rich Flex (2022)",l:"21, can you do something for me?",b:"Rich flex, ayy",h:"From Her Loss album — 21 did not say anything",yt:"gCRDHYYq19U",ts:30},
-  {a:"Mitski — My Love Mine All Mine (2023)",l:"The moon reflects the sun but the moon does not shine",b:"My love is mine all mine",h:"From The Land Is Inhospitable — went viral on TikTok",yt:"YGUv7cFHsk8",ts:55},
-  {a:"Zach Bryan ft. Kacey Musgraves — I Remember Everything (2023)",l:"I was running through the gravel",b:"On our old dirt road",h:"Won CMA Song of the Year 2023",yt:"sdeV4aF-TGQ",ts:20},
+  {a:"Billie Eilish — Birds of a Feather (2024)",l:"I want to be with you",b:"Want to be your only one",h:"From Hit Me Hard and Soft — emotional slow build",yt:"d5gf9dXbPi0",ts:50},
+  {a:"Morgan Wallen — Last Night (2023)",l:"Last night, we let the liquor talk",b:"You made a mess of me",h:"Country-pop crossover — longest running number 1 of 2023",yt:"0U5RfbIDw84",ts:55},
+  {a:"Ice Spice ft. Nicki Minaj — Barbie World (2023)",l:"I'm a Barbie girl in a Barbie world",b:"Everything is plastic, it's fantastic",h:"From the Barbie movie soundtrack — sampled Aqua",yt:"msnp-H5JgQ8",ts:58},
+  {a:"Doechii — Nissan Altima (2024)",l:"I pull up in a Nissan Altima",b:"Lookin' like a Benz",h:"She won Best Rap Album at 2025 Grammys",yt:"iGbeZNqklic",ts:45},
+  {a:"Chappell Roan — Good Luck Babe! (2024)",l:"You can kiss a hundred boys in bars",b:"Shoot another shot, try to stop the feeling",h:"Her breakout hit — impossible to avoid in 2024",yt:"1RKqOmSkGgM",ts:40},
+  {a:"Sabrina Carpenter — Please Please Please (2024)",l:"I know that you're trouble",b:"Since the day that we met, I am terrified",h:"Her second massive hit of summer 2024",yt:"Yl_thbk40A0",ts:50},
+  {a:"Noah Kahan — Stick Season (2022)",l:"I'll trade Alaska for Nashville",b:"Tennessee is not that far",h:"Vermont folk singer who blew up on Spotify and TikTok",yt:"iWG6apzIWAk",ts:52},
+  {a:"The Weeknd — Save Your Tears (2020)",l:"I saw you dancing in a crowded room",b:"You look so happy when I'm not with you",h:"From After Hours album — one of his best",yt:"XXYlFuWEuKI",ts:48},
+  {a:"Bad Bunny ft. Chencho Corleone — Me Porto Bonito (2022)",l:"Me porto bonito contigo",b:"Curame, acariciame, enganame",h:"Chencho Corleone feature — number 1 globally",yt:"9TXHHWIsFhg",ts:55},
+  {a:"Drake ft. 21 Savage — Rich Flex (2022)",l:"21, can you do something for me?",b:"Rich flex, ayy",h:"From Her Loss album — 21 did not say anything",yt:"BpahlSTQ38o",ts:50},
+  {a:"Mitski — My Love Mine All Mine (2023)",l:"The moon reflects the sun but the moon does not shine",b:"My love is mine all mine",h:"From The Land Is Inhospitable — went viral on TikTok",yt:"CwGbMYLjIpQ",ts:45},
+  {a:"Zach Bryan ft. Kacey Musgraves — I Remember Everything (2023)",l:"I was running through the gravel",b:"On our old dirt road",h:"Won CMA Song of the Year 2023",yt:"Dtmu49dqzAw",ts:50},
 ];
+
 let lyrIdx=0,lyrShown=false;
 function loadLyr(i){
   const l=LYR[i];
@@ -1198,18 +1202,31 @@ function toggleLyric(){
 function lyrNav(d){
   lyrIdx=(lyrIdx+d+LYR.length)%LYR.length;
   const c=document.getElementById('lyr-yt-container');if(c)c.style.display='none';
+  const f=document.getElementById('lyr-yt-frame');if(f)f.src='';
   loadLyr(lyrIdx);
 }
 function playLyrClip(){
   const l=LYR[lyrIdx];
   if(!l.yt){return;}
   const start=Math.max(0,(l.ts||0));
-  const url='https://www.youtube.com/watch?v='+l.yt+'&t='+start+'s';
   const container=document.getElementById('lyr-yt-container');
+  const frame=document.getElementById('lyr-yt-frame');
+  const fallback=document.getElementById('lyr-yt-fallback');
   const link=document.getElementById('lyr-yt-link');
-  link.href=url;
+  const ytUrl='https://www.youtube.com/watch?v='+l.yt+'&t='+start+'s';
+  link.href=ytUrl;
+  // Use youtube-nocookie for fewer embed restrictions
+  frame.src='https://www.youtube-nocookie.com/embed/'+l.yt+'?start='+start+'&autoplay=1&rel=0';
   container.style.display='block';
-  window.open(url,'_blank');
+  if(fallback) fallback.style.display='none';
+  // Detect embed failure after 3s — if video height is 0, show fallback
+  setTimeout(function(){
+    try{
+      const h=frame.getBoundingClientRect().height;
+      // We can't directly detect blocked embeds cross-origin, so just ensure visible
+      if(h<10){if(fallback)fallback.style.display='flex';}
+    }catch(e){}
+  },3000);
 }
 
 // PRICE DATA

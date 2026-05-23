@@ -133,19 +133,35 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
 .conn-puzzle-select{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
 .password-word-hidden{font-size:clamp(28px,5vw,52px);color:#333;cursor:pointer;background:var(--card);border-radius:12px;padding:16px 36px;border:2px dashed #444;}
 .password-word-shown{font-size:clamp(32px,6vw,58px);font-weight:900;color:var(--blue);}
-.feud-question{font-size:clamp(15px,2.2vw,20px);font-weight:900;color:var(--gold);text-align:center;background:var(--card);border-radius:12px;padding:12px 18px;width:100%;max-width:800px;margin-bottom:10px;}
-.feud-board{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;max-width:800px;}
-.feud-cell{background:var(--surface);border:3px solid var(--blue);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all 0.2s;min-height:50px;}
-.feud-cell:hover:not(.revealed){border-color:var(--gold);transform:scale(1.02);}
-.feud-cell.revealed{background:var(--card);border-color:var(--green);cursor:default;}
-.feud-num{width:30px;height:30px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#fff;flex-shrink:0;}
-.feud-cell.revealed .feud-num{background:var(--green);color:#000;}
-.feud-text{flex:1;font-size:14px;font-weight:700;color:#555;}
-.feud-cell.revealed .feud-text{color:var(--text);}
-.feud-pts{font-size:15px;font-weight:900;color:var(--gold);flex-shrink:0;}
-.feud-hidden{font-size:12px;color:var(--text2);letter-spacing:3px;}
-.feud-strikes{display:flex;gap:6px;align-items:center;}
-.feud-stats{display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:4px;margin-bottom:6px;}
+.feud-input-row { display:flex; gap:8px; margin:12px 0; }
+.feud-text-input { flex:1; background:#1a1a2e; border:2px solid #4a90e2; color:#e0e0e0; font-size:20px; padding:10px 16px; border-radius:10px; outline:none; }
+.feud-text-input:focus { border-color:#00d4aa; }
+.feud-strikes { display:flex; gap:8px; justify-content:center; margin:8px 0; }
+.feud-strike-icon { font-size:28px; opacity:0.3; transition:all 0.3s; }
+.feud-strike-icon.active { opacity:1; animation: strikeIn 0.3s ease; }
+@keyframes strikeIn { 0%{transform:scale(1.8)} 100%{transform:scale(1)} }
+.feud-board { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin:12px 0; }
+.feud-cell { background:#16213e; border:2px solid #2a2a4e; border-radius:10px; padding:12px 16px; display:flex; justify-content:space-between; align-items:center; font-size:16px; min-height:52px; transition:all 0.4s; }
+.feud-cell-num { color:#4a90e2; font-weight:900; font-size:18px; min-width:24px; }
+.feud-cell-text { flex:1; text-align:center; font-weight:700; color:#333; }
+.feud-cell-pts { color:#f5a623; font-weight:900; font-size:18px; min-width:36px; text-align:right; opacity:0; }
+.feud-cell.revealed { background:#0d2137; border-color:#00d4aa; }
+.feud-cell.revealed .feud-cell-text { color:#e0e0e0; }
+.feud-cell.revealed .feud-cell-pts { opacity:1; }
+.feud-match-flash { animation: matchFlash 0.6s ease; }
+@keyframes matchFlash { 0%{background:#00d4aa44} 100%{background:#0d2137} }
+.feud-round-pts { font-size:36px; font-weight:900; color:#f5a623; text-align:center; margin:8px 0; }
+.feud-mode-btns { display:flex; gap:8px; margin-bottom:12px; }
+.feud-mode-btn { padding:8px 18px; border-radius:20px; border:2px solid #2a2a4e; background:#16213e; color:#a0a0b0; cursor:pointer; font-size:13px; font-weight:700; }
+.feud-mode-btn.active { background:#4a90e2; border-color:#4a90e2; color:#fff; }
+.fm-question-display { font-size:22px; font-weight:800; color:#f5a623; text-align:center; margin:12px 0; line-height:1.3; }
+.fm-answer-list { max-height:240px; overflow-y:auto; }
+.fm-answer-item { display:flex; justify-content:space-between; align-items:center; padding:8px 14px; border-radius:8px; margin:4px 0; background:#16213e; border:1px solid #2a2a4e; font-size:15px; }
+.fm-answer-item.hit { background:#0d2137; border-color:#00d4aa; color:#00d4aa; font-weight:700; }
+.fm-answer-item.miss { background:#1a0d0d; border-color:#e94560; color:#666; }
+.fm-score-box { text-align:center; padding:12px; background:#16213e; border-radius:12px; margin:6px; }
+.fm-score-name { font-size:13px; color:#a0a0b0; }
+.fm-score-num { font-size:32px; font-weight:900; color:#f5a623; }
 .feud-round-pts{font-size:18px;font-weight:900;color:var(--gold);background:var(--card);border-radius:10px;padding:6px 14px;}
 .result-badge{padding:4px 12px;border-radius:20px;font-size:13px;font-weight:700;display:inline-block;margin:4px;}
 .badge-correct{background:var(--green);color:#000;}
@@ -512,32 +528,75 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
 
   <!-- FAMILY FEUD -->
   <div id="game-feud" class="game-section">
-    <div class="game-header">
-      <button class="back-btn" onclick="showGame('home')">&#8592; Home</button>
-      <h2>&#127942; Family Feud</h2>
-      <span class="counter" id="feud-counter">1 / 8</span>
-    </div>
-    <div class="game-content" style="padding:10px 16px;justify-content:flex-start;overflow-y:auto;">
-      <div class="feud-question" id="feud-question">Loading...</div>
-      <div class="feud-stats">
-        <div class="feud-strikes">
-          <span style="color:var(--text2);font-size:13px;">Strikes:</span>
-          <span id="feud-s1" style="font-size:20px;">&#11036;</span>
-          <span id="feud-s2" style="font-size:20px;">&#11036;</span>
-          <span id="feud-s3" style="font-size:20px;">&#11036;</span>
-        </div>
-        <div class="feud-round-pts">Round: <span id="feud-round-pts">0</span> pts</div>
-        <button class="btn btn-red btn-sm" onclick="feudStrike()">&#10060; Strike</button>
-        <button class="btn btn-gray btn-sm" onclick="feudReset()">Reset Strikes</button>
-      </div>
-      <div class="feud-board" id="feud-board"></div>
-    </div>
-    <div class="game-controls">
-      <button class="btn btn-gray btn-sm" onclick="feudNav(-1)">&#8592; Prev</button>
-      <button class="btn btn-gold btn-sm" onclick="feudRevealAll()">Reveal All</button>
-      <button class="btn btn-blue btn-sm" onclick="feudNav(1)">Next &#8594;</button>
+  <div style="padding:8px 0 0; display:flex; gap:8px; align-items:center;">
+    <button class="back-btn btn btn-gray btn-sm" onclick="showGame('home')">&#8592; Home</button>
+    <span style="font-size:20px;font-weight:900;color:#f5a623;margin-left:8px;">&#127942; Family Feud</span>
+    <div class="feud-mode-btns" style="margin-left:auto;margin-bottom:0;">
+      <button class="feud-mode-btn active" id="feud-mode-regular" onclick="setFeudMode('regular')">Regular</button>
+      <button class="feud-mode-btn" id="feud-mode-fastmoney" onclick="setFeudMode('fastmoney')">&#9889; Fast Money</button>
     </div>
   </div>
+  <div id="feud-regular" style="flex:1;display:flex;flex-direction:column;overflow:hidden;padding-top:8px;">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+      <button class="btn btn-gray btn-sm" onclick="feudPrev()">&#9664;</button>
+      <div id="feud-q-display" style="flex:1;background:#16213e;border-radius:10px;padding:12px 16px;font-size:18px;font-weight:800;text-align:center;color:#e0e0e0;border:2px solid #2a2a4e;"></div>
+      <button class="btn btn-gray btn-sm" onclick="feudNext()">&#9654;</button>
+      <span id="feud-q-counter" style="color:#a0a0b0;font-size:13px;white-space:nowrap;"></span>
+    </div>
+    <div class="feud-input-row">
+      <input class="feud-text-input" id="feud-input" placeholder="Type player answer here..." onkeydown="if(event.key==='Enter')checkFeudAnswer()" autocomplete="off" />
+      <button class="btn btn-blue" onclick="checkFeudAnswer()">Check &#10003;</button>
+      <button class="btn btn-gray btn-sm" onclick="addFeudStrike()">&#10060; Strike</button>
+    </div>
+    <div id="feud-feedback" style="text-align:center;font-size:16px;font-weight:700;min-height:28px;margin-bottom:4px;"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+      <div class="feud-strikes">
+        <span>Strikes:</span>
+        <span class="feud-strike-icon" id="feud-x1">&#10060;</span>
+        <span class="feud-strike-icon" id="feud-x2">&#10060;</span>
+        <span class="feud-strike-icon" id="feud-x3">&#10060;</span>
+      </div>
+      <div style="color:#a0a0b0;font-size:14px;">Round pts: <span id="feud-round-pts" style="color:#f5a623;font-weight:900;font-size:18px;">0</span></div>
+      <button class="btn btn-red btn-sm" onclick="revealAllFeud()">Reveal All</button>
+    </div>
+    <div class="feud-board" id="feud-board"></div>
+    <div style="display:flex;gap:8px;justify-content:center;margin-top:auto;padding-top:8px;">
+      <button class="btn btn-gray btn-sm" onclick="resetFeudRound()">Reset Round</button>
+    </div>
+  </div>
+  <div id="feud-fastmoney" style="flex:1;display:none;flex-direction:column;overflow:hidden;padding-top:8px;">
+    <div style="text-align:center;color:#a0a0b0;font-size:14px;margin-bottom:8px;">First player answers 5 Qs. Next player goes. No repeat answers. First to <b style="color:#f5a623">200 pts</b> wins!</div>
+    <div style="display:flex;gap:8px;justify-content:center;margin-bottom:8px;">
+      <button class="who-btn" id="fm-p0" onclick="setFMPlayer(0)">Legend</button>
+      <button class="who-btn" id="fm-p1" onclick="setFMPlayer(1)">Sumaya</button>
+      <button class="who-btn" id="fm-p2" onclick="setFMPlayer(2)">Sarai</button>
+    </div>
+    <div style="display:flex;justify-content:center;margin-bottom:8px;">
+      <svg width="80" height="80" viewBox="0 0 100 100">
+        <circle fill="none" stroke="#333" stroke-width="8" cx="50" cy="50" r="40"/>
+        <circle id="fm-ring" cx="50" cy="50" r="40" stroke="#00d4aa" stroke-dasharray="251.2" stroke-dashoffset="0" stroke-width="8" fill="none" stroke-linecap="round" style="transform:rotate(-90deg);transform-origin:50% 50%;"/>
+        <text id="fm-time" x="50" y="50" fill="#e0e0e0" font-size="24" font-weight="900" dominant-baseline="middle" text-anchor="middle">20</text>
+      </svg>
+    </div>
+    <div class="fm-question-display" id="fm-question">Press Start to begin</div>
+    <div class="feud-input-row">
+      <input class="feud-text-input" id="fm-input" placeholder="Type answer..." onkeydown="if(event.key==='Enter')checkFMAnswer()" autocomplete="off" />
+      <button class="btn btn-blue" onclick="checkFMAnswer()">&#10003;</button>
+    </div>
+    <div id="fm-feedback" style="text-align:center;font-size:15px;font-weight:700;min-height:26px;"></div>
+    <div class="fm-answer-list" id="fm-answer-list"></div>
+    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:8px;">
+      <div class="fm-score-box"><div class="fm-score-name" id="fm-sname0">Legend</div><div class="fm-score-num" id="fm-sscore0">0</div></div>
+      <div class="fm-score-box"><div class="fm-score-name" id="fm-sname1">Sumaya</div><div class="fm-score-num" id="fm-sscore1">0</div></div>
+      <div class="fm-score-box"><div class="fm-score-name" id="fm-sname2">Sarai</div><div class="fm-score-num" id="fm-sscore2">0</div></div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:center;margin-top:8px;">
+      <button class="btn btn-green" onclick="startFMRound()">&#9654; Start Round</button>
+      <button class="btn btn-gray btn-sm" onclick="skipFMQuestion()">Skip Q</button>
+      <button class="btn btn-gray btn-sm" onclick="resetFM()">Reset</button>
+    </div>
+  </div>
+</div>
 
 </div>
 
@@ -564,7 +623,7 @@ function showGame(id){
   if(id==='price')loadPrice(priceIdx);
   if(id==='connections')initConn();
   if(id==='password')loadPW(pwIdx);
-  if(id==='feud')loadFeud(feudIdx);
+  if(id==='feud')initFeud();
   if(id==='jeopardy')buildJBoard();
 }
 
@@ -1110,62 +1169,231 @@ function togglePWWord(){
 }
 function pwNav(d){pwIdx=(pwIdx+d+PWD.length)%PWD.length;loadPW(pwIdx);}
 
-// FAMILY FEUD DATA
-const FEUD=[
-  {q:'Name something you do every morning before school',answers:[{text:'Brush teeth',pts:38},{text:'Eat breakfast',pts:24},{text:'Shower / get dressed',pts:18},{text:'Check phone',pts:12},{text:'Use the bathroom',pts:8}]},
-  {q:'Name a popular TikTok trend',answers:[{text:'Dance challenge',pts:35},{text:'Recipe / cooking video',pts:22},{text:'Lip sync',pts:18},{text:'POV / skit',pts:15},{text:'Transition video',pts:10}]},
+// ========== FAMILY FEUD DATA ==========
+const feudData = [
+  {q:'Name something you do every morning before school',answers:[{text:'Brush teeth',pts:38},{text:'Eat breakfast',pts:24},{text:'Shower / get dressed',pts:18},{text:'Check your phone',pts:12},{text:'Use the bathroom',pts:8}]},
+  {q:'Name a popular TikTok trend',answers:[{text:'Dance challenge',pts:35},{text:'Recipe / cooking video',pts:22},{text:'Lip sync video',pts:18},{text:'POV skit',pts:15},{text:'Transition video',pts:10}]},
   {q:'Name something that would make a great superpower',answers:[{text:'Invisibility',pts:30},{text:'Flying',pts:28},{text:'Mind reading',pts:20},{text:'Super speed',pts:14},{text:'Time travel',pts:8}]},
-  {q:"Name a reason someone would be late to class",answers:[{text:'Slept through alarm',pts:40},{text:'Traffic / bus was late',pts:22},{text:"Couldn't find something to wear",pts:18},{text:'Forgot something and went back',pts:12},{text:'Talking to friends',pts:8}]},
-  {q:'Name something teens spend too much time doing',answers:[{text:'On their phone / social media',pts:45},{text:'Playing video games',pts:28},{text:'Watching Netflix / YouTube',pts:16},{text:'Sleeping',pts:7},{text:'Hanging out with friends',pts:4}]},
-  {q:'Name a famous person who would be fun to hang out with for a day',answers:[{text:'MrBeast',pts:32},{text:'Drake / rapper',pts:22},{text:'Taylor Swift',pts:18},{text:'Kevin Hart',pts:15},{text:'Lionel Messi / athlete',pts:13}]},
-  {q:"Name something you'd find in a teenager's bedroom",answers:[{text:'Phone charger',pts:38},{text:'Clothes on the floor',pts:26},{text:'Gaming console',pts:18},{text:'Posters / LED lights',pts:12},{text:'Snacks',pts:6}]},
-  {q:'Name a food that hits different at 2am',answers:[{text:'Pizza',pts:35},{text:'Ramen / noodles',pts:25},{text:'Chips / snacks',pts:20},{text:"McDonald's",pts:12},{text:'Cereal',pts:8}]},
+  {q:'Name a reason someone would be late to class',answers:[{text:'Slept through alarm',pts:40},{text:'Traffic or bus was late',pts:22},{text:"Couldn't find something to wear",pts:18},{text:'Forgot something',pts:12},{text:'Talking to friends',pts:8}]},
+  {q:'Name something teens spend too much time doing',answers:[{text:'On phone or social media',pts:45},{text:'Playing video games',pts:28},{text:'Watching Netflix or YouTube',pts:16},{text:'Sleeping',pts:7},{text:'Hanging out with friends',pts:4}]},
+  {q:'Name a famous person who would be fun to hang out with',answers:[{text:'MrBeast',pts:32},{text:'Drake',pts:22},{text:'Taylor Swift',pts:18},{text:'Kevin Hart',pts:15},{text:'Lionel Messi',pts:13}]},
+  {q:"Name something you would find in a teenager's bedroom",answers:[{text:'Phone charger',pts:38},{text:'Clothes on the floor',pts:26},{text:'Gaming console',pts:18},{text:'Posters or LED lights',pts:12},{text:'Snacks',pts:6}]},
+  {q:'Name a food that hits different at 2am',answers:[{text:'Pizza',pts:35},{text:'Ramen or noodles',pts:25},{text:'Chips or snacks',pts:20},{text:"McDonald's",pts:12},{text:'Cereal',pts:8}]},
 ];
-let feudIdx=0,feudStrikes=0,feudRevealed=[],feudRoundPts=0;
-function loadFeud(i){
-  const f=FEUD[i];
-  document.getElementById('feud-counter').textContent=(i+1)+' / '+FEUD.length;
-  document.getElementById('feud-question').textContent='We surveyed 100 people... '+f.q;
-  feudStrikes=0;feudRevealed=new Array(f.answers.length).fill(false);feudRoundPts=0;
-  document.getElementById('feud-round-pts').textContent='0';
-  updateFeuStrikes();renderFeuBoard(i);
+const fmQuestions = [
+  {q:'Name something you find in a refrigerator',answers:[{text:'Milk',pts:32},{text:'Leftovers',pts:25},{text:'Juice',pts:18},{text:'Cheese',pts:15},{text:'Eggs',pts:10}]},
+  {q:'Name a word that rhymes with cat',answers:[{text:'Hat',pts:35},{text:'Bat',pts:28},{text:'Rat',pts:18},{text:'Sat',pts:12},{text:'Mat',pts:7}]},
+  {q:'Name something you do when bored',answers:[{text:'Scroll phone',pts:40},{text:'Watch TV',pts:28},{text:'Sleep',pts:16},{text:'Eat',pts:12},{text:'Text someone',pts:4}]},
+  {q:'Name a reason to call in sick to school',answers:[{text:"Didn't do homework",pts:35},{text:'Actually sick',pts:30},{text:'Tired',pts:20},{text:'Big test',pts:10},{text:'Drama with friend',pts:5}]},
+  {q:'Name something you bring to a sleepover',answers:[{text:'Phone charger',pts:38},{text:'Snacks',pts:28},{text:'Pillow or blanket',pts:18},{text:'Clothes',pts:12},{text:'Toiletries',pts:4}]},
+];
+// ========== FUZZY MATCH ==========
+function feudFuzzy(input,target){
+  var a=input.toLowerCase().trim().replace(/[^a-z0-9 ]/g,'');
+  var b=target.toLowerCase().trim().replace(/[^a-z0-9 ]/g,'');
+  if(!a||!b)return false;
+  if(a===b)return true;
+  if(b.includes(a)||a.includes(b))return true;
+  var aw=a.split(/\s+/).filter(function(w){return w.length>2;});
+  var bw=b.split(/\s+/).filter(function(w){return w.length>2;});
+  for(var i=0;i<aw.length;i++){for(var j=0;j<bw.length;j++){if(aw[i]===bw[j]||bw[j].includes(aw[i])||aw[i].includes(bw[j]))return true;}}
+  if(aw.length===1&&bw.length===1){if(feudLev(aw[0],bw[0])<=Math.ceil(bw[0].length*0.35))return true;}
+  return false;
 }
-function renderFeuBoard(i){
-  const f=FEUD[i];
-  const board=document.getElementById('feud-board');board.innerHTML='';
-  f.answers.forEach((ans,idx)=>{
-    const cell=document.createElement('div');
-    cell.className='feud-cell'+(feudRevealed[idx]?' revealed':'');
-    const num=document.createElement('div');num.className='feud-num';num.textContent=idx+1;
-    const txt=document.createElement('div');txt.className='feud-text';
-    const pts=document.createElement('div');pts.className='feud-pts';
-    if(feudRevealed[idx]){txt.textContent=ans.text;pts.textContent=ans.pts+' pts';}
-    else{
-      txt.innerHTML='<span class="feud-hidden">\u2022\u2022\u2022\u2022\u2022\u2022\u2022</span>';
-      pts.textContent='';
-      cell.onclick=()=>{if(!feudRevealed[idx]){feudRevealed[idx]=true;feudRoundPts+=ans.pts;document.getElementById('feud-round-pts').textContent=feudRoundPts;renderFeuBoard(feudIdx);}};
-    }
-    cell.appendChild(num);cell.appendChild(txt);cell.appendChild(pts);board.appendChild(cell);
+function feudLev(a,b){
+  var m=a.length,n=b.length;
+  var dp=[];
+  for(var i=0;i<=m;i++){dp[i]=[];for(var j=0;j<=n;j++)dp[i][j]=i===0?j:j===0?i:0;}
+  for(var i=1;i<=m;i++)for(var j=1;j<=n;j++)dp[i][j]=a[i-1]===b[j-1]?dp[i-1][j-1]:1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);
+  return dp[m][n];
+}
+// ========== REGULAR FEUD ==========
+var feudIdx=0,feudRevealed=[],feudStrikes=0,feudRoundPts=0;
+function initFeud(){feudIdx=0;renderFeudQuestion();}
+function renderFeudQuestion(){
+  var q=feudData[feudIdx];
+  document.getElementById('feud-q-display').textContent='"'+q.q+'"';
+  document.getElementById('feud-q-counter').textContent=(feudIdx+1)+'/'+feudData.length;
+  feudRevealed=new Array(q.answers.length).fill(false);
+  feudStrikes=0;feudRoundPts=0;
+  var inp=document.getElementById('feud-input');
+  if(inp){inp.value='';inp.disabled=false;}
+  document.getElementById('feud-feedback').textContent='';
+  document.getElementById('feud-round-pts').textContent='0';
+  updateStrikeDisplay();renderFeudBoard();
+}
+function renderFeudBoard(){
+  var q=feudData[feudIdx];
+  var board=document.getElementById('feud-board');
+  board.innerHTML='';
+  q.answers.forEach(function(ans,i){
+    var cell=document.createElement('div');
+    cell.className='feud-cell'+(feudRevealed[i]?' revealed':'');
+    cell.id='feud-cell-'+i;
+    cell.innerHTML='<span class="feud-cell-num">'+(i+1)+'</span><span class="feud-cell-text">'+(feudRevealed[i]?ans.text:'??????????')+'</span><span class="feud-cell-pts">'+ans.pts+'</span>';
+    if(!feudRevealed[i]){cell.style.cursor='pointer';cell.onclick=(function(idx){return function(){revealFeudCell(idx);};})(i);}
+    board.appendChild(cell);
   });
 }
-function feudStrike(){if(feudStrikes<3){feudStrikes++;updateFeuStrikes();}}
-function updateFeuStrikes(){
-  ['feud-s1','feud-s2','feud-s3'].forEach((id,i)=>{document.getElementById(id).textContent=i<feudStrikes?'\u274C':'\u2B1C';});
+function checkFeudAnswer(){
+  if(feudStrikes>=3)return;
+  var input=document.getElementById('feud-input').value.trim();
+  if(!input)return;
+  var q=feudData[feudIdx],matched=-1;
+  for(var i=0;i<q.answers.length;i++){if(!feudRevealed[i]&&feudFuzzy(input,q.answers[i].text)){matched=i;break;}}
+  var fb=document.getElementById('feud-feedback');
+  if(matched>=0){
+    revealFeudCell(matched);
+    fb.style.color='#00d4aa';
+    fb.textContent='\u2705 Match! "'+q.answers[matched].text+'" \u2014 '+q.answers[matched].pts+' pts';
+  } else {
+    var already=q.answers.some(function(a,i){return feudRevealed[i]&&feudFuzzy(input,a.text);});
+    if(already){fb.style.color='#f5a623';fb.textContent='\u26a0 Already revealed!';}
+    else{addFeudStrike();fb.style.color='#e94560';fb.textContent='\u274c Not on the board!';}
+  }
+  document.getElementById('feud-input').value='';
+  document.getElementById('feud-input').focus();
 }
-function feudReset(){feudStrikes=0;updateFeuStrikes();}
-function feudRevealAll(){
-  feudRevealed=new Array(FEUD[feudIdx].answers.length).fill(true);
-  feudRoundPts=FEUD[feudIdx].answers.reduce((s,a)=>s+a.pts,0);
+function revealFeudCell(i){
+  var q=feudData[feudIdx];
+  feudRevealed[i]=true;feudRoundPts+=q.answers[i].pts;
   document.getElementById('feud-round-pts').textContent=feudRoundPts;
-  renderFeuBoard(feudIdx);
+  renderFeudBoard();
+  var cell=document.getElementById('feud-cell-'+i);
+  if(cell)cell.classList.add('feud-match-flash');
 }
-function feudNav(d){feudIdx=(feudIdx+d+FEUD.length)%FEUD.length;loadFeud(feudIdx);}
+function addFeudStrike(){
+  if(feudStrikes>=3)return;
+  feudStrikes++;updateStrikeDisplay();
+  if(feudStrikes>=3){
+    document.getElementById('feud-feedback').style.color='#e94560';
+    document.getElementById('feud-feedback').textContent='\ud83d\udea8 3 STRIKES \u2014 Revealing all!';
+    document.getElementById('feud-input').disabled=true;
+    setTimeout(revealAllFeud,800);
+  }
+}
+function updateStrikeDisplay(){
+  for(var i=1;i<=3;i++){var el=document.getElementById('feud-x'+i);if(el)el.classList.toggle('active',i<=feudStrikes);}
+}
+function revealAllFeud(){
+  var q=feudData[feudIdx];
+  feudRevealed=new Array(q.answers.length).fill(true);
+  feudRoundPts=q.answers.reduce(function(s,a){return s+a.pts;},0);
+  document.getElementById('feud-round-pts').textContent=feudRoundPts;
+  var inp=document.getElementById('feud-input');if(inp)inp.disabled=false;
+  renderFeudBoard();
+}
+function resetFeudRound(){var inp=document.getElementById('feud-input');if(inp)inp.disabled=false;renderFeudQuestion();}
+function feudPrev(){feudIdx=(feudIdx-1+feudData.length)%feudData.length;renderFeudQuestion();}
+function feudNext(){feudIdx=(feudIdx+1)%feudData.length;renderFeudQuestion();}
+// ========== FAST MONEY ==========
+var fmPlayer=-1,fmQIdx=0,fmTimer=null,fmTimeLeft=20,fmScores=[0,0,0],fmRoundAnswers=[],fmActive=false;
+function setFMPlayer(n){
+  fmPlayer=n;
+  ['fm-p0','fm-p1','fm-p2'].forEach(function(id,i){document.getElementById(id).classList.toggle('active',i===n);});
+}
+function startFMRound(){
+  if(fmPlayer<0){alert('Select a player first!');return;}
+  fmQIdx=0;fmActive=true;
+  document.getElementById('fm-input').disabled=false;
+  document.getElementById('fm-answer-list').innerHTML='';
+  renderFMQuestion();startFMTimer();
+}
+function renderFMQuestion(){
+  if(fmQIdx>=fmQuestions.length){endFMRound();return;}
+  var q=fmQuestions[fmQIdx];
+  document.getElementById('fm-question').textContent=q.q;
+  document.getElementById('fm-feedback').textContent='';
+  document.getElementById('fm-input').value='';
+  document.getElementById('fm-input').focus();
+}
+function startFMTimer(){
+  clearInterval(fmTimer);fmTimeLeft=20;
+  var ring=document.getElementById('fm-ring'),timeEl=document.getElementById('fm-time'),circ=251.2;
+  function tick(){
+    timeEl.textContent=fmTimeLeft;
+    ring.style.strokeDashoffset=circ*(1-fmTimeLeft/20);
+    ring.style.stroke=fmTimeLeft<=5?'#e94560':fmTimeLeft<=10?'#f5a623':'#00d4aa';
+    if(fmTimeLeft<=0){clearInterval(fmTimer);skipFMQuestion();return;}
+    fmTimeLeft--;
+  }
+  tick();fmTimer=setInterval(tick,1000);
+}
+function checkFMAnswer(){
+  if(!fmActive||fmQIdx>=fmQuestions.length)return;
+  var input=document.getElementById('fm-input').value.trim();
+  if(!input)return;
+  var q=fmQuestions[fmQIdx],matched=null;
+  for(var i=0;i<q.answers.length;i++){
+    var ans=q.answers[i],key=fmQIdx+'-'+ans.text;
+    if(fmRoundAnswers.indexOf(key)>=0)continue;
+    if(feudFuzzy(input,ans.text)){matched=ans;fmRoundAnswers.push(key);break;}
+  }
+  var fb=document.getElementById('fm-feedback');
+  if(matched){
+    fmScores[fmPlayer]+=matched.pts;
+    document.getElementById('fm-sscore'+fmPlayer).textContent=fmScores[fmPlayer];
+    fb.style.color='#00d4aa';fb.textContent='\u2705 '+matched.text+' +'+matched.pts+'!';
+    addFMAnswerRow(matched.text,matched.pts,true);
+    document.getElementById('fm-input').value='';
+    if(fmScores[fmPlayer]>=200){
+      clearInterval(fmTimer);fmActive=false;
+      fb.textContent='\ud83c\udfc6 Player wins with '+fmScores[fmPlayer]+' pts!';
+      document.getElementById('fm-input').disabled=true;return;
+    }
+    fmQIdx++;renderFMQuestion();startFMTimer();
+  } else {
+    fb.style.color='#e94560';fb.textContent='\u274c Not found or already used!';
+    addFMAnswerRow(input,0,false);document.getElementById('fm-input').value='';
+  }
+  document.getElementById('fm-input').focus();
+}
+function addFMAnswerRow(text,pts,hit){
+  var list=document.getElementById('fm-answer-list');
+  var row=document.createElement('div');
+  row.className='fm-answer-item '+(hit?'hit':'miss');
+  row.innerHTML='<span>'+text+'</span><span>'+(hit?'+'+pts:'\u2717')+'</span>';
+  list.prepend(row);
+}
+function skipFMQuestion(){
+  clearInterval(fmTimer);
+  document.getElementById('fm-feedback').style.color='#f5a623';
+  document.getElementById('fm-feedback').textContent='\u23ed Skipped!';
+  fmQIdx++;
+  if(fmQIdx>=fmQuestions.length){endFMRound();return;}
+  setTimeout(function(){renderFMQuestion();startFMTimer();},600);
+}
+function endFMRound(){
+  clearInterval(fmTimer);fmActive=false;
+  var total=fmScores[fmPlayer];
+  document.getElementById('fm-question').textContent='Round over! Scored '+total+' points.';
+  document.getElementById('fm-feedback').textContent=total>=200?'\ud83c\udfc6 Winner!':'Scored '+total+'/200.';
+  document.getElementById('fm-input').disabled=true;
+}
+function resetFM(){
+  clearInterval(fmTimer);
+  fmPlayer=-1;fmQIdx=0;fmScores=[0,0,0];fmRoundAnswers=[];fmActive=false;
+  ['fm-p0','fm-p1','fm-p2'].forEach(function(id){document.getElementById(id).classList.remove('active');});
+  document.getElementById('fm-question').textContent='Press Start to begin';
+  document.getElementById('fm-feedback').textContent='';
+  document.getElementById('fm-answer-list').innerHTML='';
+  document.getElementById('fm-input').disabled=false;
+  document.getElementById('fm-time').textContent='20';
+  document.getElementById('fm-ring').style.strokeDashoffset='0';
+  ['fm-sscore0','fm-sscore1','fm-sscore2'].forEach(function(id){document.getElementById(id).textContent='0';});
+}
+function setFeudMode(mode){
+  document.getElementById('feud-regular').style.display=mode==='regular'?'flex':'none';
+  document.getElementById('feud-fastmoney').style.display=mode==='fastmoney'?'flex':'none';
+  document.getElementById('feud-mode-regular').classList.toggle('active',mode==='regular');
+  document.getElementById('feud-mode-fastmoney').classList.toggle('active',mode==='fastmoney');
+}
 
 // INIT
 document.addEventListener('DOMContentLoaded',()=>{
   buildJBoard();
   loadEmoji(0);loadFlag(0);loadDraw(0);loadBR(0);loadTF(0);
-  loadLyr(0);loadPrice(0);loadPW(0);loadFeud(0);initConn();
+  loadLyr(0);loadPrice(0);loadPW(0);initFeud();initConn();
 });
 </script>
 </body>

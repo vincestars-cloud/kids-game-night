@@ -166,6 +166,54 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
 .result-badge{padding:4px 12px;border-radius:20px;font-size:13px;font-weight:700;display:inline-block;margin:4px;}
 .badge-correct{background:var(--green);color:#000;}
 .badge-wrong{background:var(--red);color:#fff;}
+
+/* DEAL OR NO DEAL */
+.dond-cases { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin:12px 0; }
+.dond-case {
+  background:#1a1a3e; border:3px solid #4a90e2; border-radius:12px;
+  padding:14px 8px; text-align:center; cursor:pointer; font-size:22px; font-weight:900;
+  color:#e0e0e0; transition:all 0.25s; position:relative; min-height:70px;
+  display:flex; align-items:center; justify-content:center; flex-direction:column;
+}
+.dond-case:hover:not(.opened):not(.selected) { border-color:#f5a623; transform:scale(1.05); background:#2a2a5e; }
+.dond-case.selected { background:#f5a623; border-color:#f5a623; color:#000; }
+.dond-case.opened { background:#111; border-color:#333; color:#555; cursor:default; }
+.dond-case.opened .case-num { text-decoration:line-through; }
+.dond-case .case-val { font-size:13px; font-weight:700; margin-top:2px; }
+.case-num { font-size:26px; font-weight:900; }
+.dond-values { display:grid; grid-template-columns:1fr 1fr; gap:4px; margin:8px 0; }
+.dond-val-pill {
+  padding:5px 10px; border-radius:8px; font-size:14px; font-weight:700;
+  text-align:center; transition:all 0.3s; border:1px solid transparent;
+}
+.dond-val-pill.low { background:#1a2e1a; color:#00d4aa; border-color:#00d4aa44; }
+.dond-val-pill.mid { background:#2e2a1a; color:#f5a623; border-color:#f5a62344; }
+.dond-val-pill.high { background:#2e1a1a; color:#e94560; border-color:#e9456044; }
+.dond-val-pill.gone { background:#111; color:#444; border-color:#333; text-decoration:line-through; }
+.dond-banker {
+  background:linear-gradient(135deg,#1a0a2e,#2a1a4e); border:3px solid #9b59b6;
+  border-radius:16px; padding:20px; text-align:center; margin:8px 0;
+}
+.dond-banker-title { font-size:13px; color:#9b59b6; letter-spacing:3px; text-transform:uppercase; margin-bottom:8px; }
+.dond-offer { font-size:52px; font-weight:900; color:#f5a623; line-height:1; }
+.dond-offer-sub { font-size:14px; color:#a0a0b0; margin-top:4px; }
+.dond-deal-btns { display:flex; gap:12px; justify-content:center; margin-top:12px; }
+.dond-deal { background:#00d4aa; color:#000; font-size:22px; font-weight:900; padding:16px 36px; border-radius:12px; border:none; cursor:pointer; transition:all 0.2s; }
+.dond-deal:hover { filter:brightness(1.1); transform:scale(1.03); }
+.dond-nodeal { background:#e94560; color:#fff; font-size:22px; font-weight:900; padding:16px 36px; border-radius:12px; border:none; cursor:pointer; transition:all 0.2s; }
+.dond-nodeal:hover { filter:brightness(1.1); transform:scale(1.03); }
+.dond-phone { font-size:48px; animation:phonering 0.4s infinite alternate; display:inline-block; }
+@keyframes phonering { 0%{transform:rotate(-15deg)} 100%{transform:rotate(15deg)} }
+.dond-status { background:#16213e; border-radius:10px; padding:10px 16px; font-size:15px; text-align:center; color:#a0a0b0; margin:6px 0; }
+.dond-round-info { color:#4a90e2; font-weight:700; }
+.dond-turn-badge {
+  display:inline-block; padding:4px 14px; border-radius:20px;
+  font-size:13px; font-weight:700; margin-bottom:8px;
+}
+.dond-result { background:linear-gradient(135deg,#0d2e0d,#1a4e1a); border:3px solid #00d4aa; border-radius:16px; padding:24px; text-align:center; }
+.dond-result-val { font-size:60px; font-weight:900; color:#00d4aa; }
+.dond-result-label { font-size:16px; color:#a0a0b0; margin-bottom:8px; }
+
 </style>
 </head>
 <body>
@@ -226,7 +274,9 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
     <button class="nav-btn" onclick="showGame('connections')">Connections</button>
     <button class="nav-btn" onclick="showGame('password')">Password</button>
     <button class="nav-btn" onclick="showGame('feud')">&#127942; Feud</button>
-  </nav>
+  
+<button class="nav-btn" onclick="showGame('dond')">Deal or No Deal</button>
+</nav>
 
   <div id="game-home" class="game-section active" style="overflow-y:auto;">
     <div class="game-title">&#127918; Mr Vince's Game Show Night!</div>
@@ -242,7 +292,8 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
       <div class="home-card" onclick="showGame('price')"><div class="icon">&#128176;</div><h3>Price Is Right</h3><p>Guess real prices — 20 products</p></div>
       <div class="home-card" onclick="showGame('connections')"><div class="icon">&#128279;</div><h3>Connections</h3><p>Group 16 words into 4 categories</p></div>
       <div class="home-card" onclick="showGame('password')"><div class="icon">&#128273;</div><h3>Password / Hot Seat</h3><p>One-word clues, 30 words</p></div>
-      <div class="home-card" onclick="showGame('feud')" style="border:2px solid var(--gold);"><div class="icon">&#127942;</div><h3>Family Feud</h3><p>NEW! Survey says... 8 rounds!</p></div>
+      <div class="home-card" onclick="showGame('feud')" style="border:2px solid var(--gold);"><div class="icon">&#127942;</div>
+<div class="home-card" onclick="showGame('dond')"><div class="icon">&#128188;</div><h3>Deal or No Deal</h3><p>20 briefcases, banker offers, Deal or No Deal! Each player takes a turn.</p></div><h3>Family Feud</h3><p>NEW! Survey says... 8 rounds!</p></div>
     </div>
   </div>
 
@@ -615,6 +666,7 @@ function showGame(id){
   });
   Object.keys(timers).forEach(k=>stopTimer(k));
   if(id==='emoji')loadEmoji(emojiIdx);
+    if(id==='dond') initDOND();
   if(id==='flags')loadFlag(flagIdx);
   if(id==='draw')loadDraw(drawIdx);
   if(id==='brainrot')loadBR(brIdx);
@@ -1395,6 +1447,357 @@ document.addEventListener('DOMContentLoaded',()=>{
   loadEmoji(0);loadFlag(0);loadDraw(0);loadBR(0);loadTF(0);
   loadLyr(0);loadPrice(0);loadPW(0);initFeud();initConn();
 });
+
+// ========================================================
+// DEAL OR NO DEAL
+// ========================================================
+const DOND_VALUES = [1, 5, 10, 25, 50, 75, 100, 150, 200, 250, 300, 400, 500, 750, 1000, 1500, 2000, 3500, 5000, 10000];
+const DOND_ROUNDS = [5, 4, 3, 2, 1, 1, 1]; // cases to open each round
+
+let dondCases = [];
+let dondContestant = -1;
+let dondMyCase = -1;
+let dondRound = 0;
+let dondOpenedThisRound = 0;
+let dondPhase = 'setup';
+let dondBanked = [null, null, null];
+let dondPlayedOrder = [];
+let dondCurrentOffer = 0;
+
+function initDOND() {
+  const shuffled = [...DOND_VALUES].sort(() => Math.random() - 0.5);
+  dondCases = shuffled.map((val, i) => ({num: i+1, val, opened: false, selected: false}));
+  dondContestant = -1;
+  dondMyCase = -1;
+  dondRound = 0;
+  dondOpenedThisRound = 0;
+  dondPhase = 'setup';
+  document.getElementById('dond-setup').style.display = 'flex';
+  document.getElementById('dond-play').style.display = 'none';
+  document.getElementById('dond-turn-badge').textContent = '';
+  ['dond-p0','dond-p1','dond-p2'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('active');
+  });
+  document.getElementById('dond-contestant-name').textContent = 'Pick a contestant';
+  renderDondSetup();
+}
+
+function resetDOND() {
+  dondBanked = [null, null, null];
+  dondPlayedOrder = [];
+  initDOND();
+}
+
+function setDondContestant(p) {
+  dondContestant = p;
+  ['dond-p0','dond-p1','dond-p2'].forEach((id,i) => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('active', i===p);
+  });
+  const nameEl = document.getElementById('pname' + p);
+  const name = (nameEl && nameEl.value) ? nameEl.value : ['Legend','Sumaya','Sarai'][p];
+  document.getElementById('dond-contestant-name').textContent = name;
+  document.getElementById('dond-turn-badge').textContent = name + "'s turn";
+  renderDondSetup();
+}
+
+function renderDondSetup() {
+  const grid = document.getElementById('dond-cases-setup');
+  if (!grid) return;
+  grid.innerHTML = '';
+  dondCases.forEach((c, i) => {
+    const div = document.createElement('div');
+    div.className = 'dond-case' + (c.selected ? ' selected' : '');
+    div.innerHTML = '<span class="case-num">' + c.num + '</span>';
+    if (dondContestant >= 0 && !c.selected) {
+      div.onclick = () => pickMyCase(i);
+    }
+    grid.appendChild(div);
+  });
+}
+
+function pickMyCase(i) {
+  if (dondContestant < 0) return;
+  dondMyCase = i;
+  dondCases[i].selected = true;
+  document.getElementById('dond-setup').style.display = 'none';
+  document.getElementById('dond-play').style.display = 'flex';
+  dondPhase = 'play';
+  renderDondPlay();
+}
+
+function renderDondPlay() {
+  renderDondCases();
+  renderDondValueBoard();
+  renderDondPlayerScores();
+  updateDondPhaseStatus();
+}
+
+function renderDondCases() {
+  const grid = document.getElementById('dond-cases-play');
+  if (!grid) return;
+  grid.innerHTML = '';
+  dondCases.forEach((c, i) => {
+    const div = document.createElement('div');
+    if (c.selected) {
+      div.className = 'dond-case selected';
+      div.innerHTML = '<span class="case-num">' + c.num + '</span><span class="case-val">YOUR CASE</span>';
+    } else if (c.opened) {
+      div.className = 'dond-case opened';
+      div.innerHTML = '<span class="case-num">' + c.num + '</span><span class="case-val">' + c.val.toLocaleString() + '</span>';
+    } else {
+      div.className = 'dond-case';
+      div.innerHTML = '<span class="case-num">' + c.num + '</span>';
+      if (dondPhase === 'play') div.onclick = () => openDondCase(i);
+    }
+    grid.appendChild(div);
+  });
+}
+
+function renderDondValueBoard() {
+  const board = document.getElementById('dond-val-board');
+  if (!board) return;
+  board.innerHTML = '';
+  const openedVals = dondCases.filter(c => c.opened).map(c => c.val);
+  DOND_VALUES.forEach(v => {
+    const gone = openedVals.includes(v);
+    const tier = v >= 1000 ? 'high' : v >= 200 ? 'mid' : 'low';
+    const pill = document.createElement('div');
+    pill.className = 'dond-val-pill ' + (gone ? 'gone' : tier);
+    pill.textContent = v >= 1000 ? (v/1000) + 'K' : v;
+    board.appendChild(pill);
+  });
+}
+
+function renderDondPlayerScores() {
+  const pbox = document.getElementById('dond-player-scores');
+  if (!pbox) return;
+  pbox.innerHTML = '';
+  [0,1,2].forEach(i => {
+    const nameEl = document.getElementById('pname' + i);
+    const name = (nameEl && nameEl.value) ? nameEl.value : ['Legend','Sumaya','Sarai'][i];
+    const div = document.createElement('div');
+    div.style.cssText = 'background:#16213e;border-radius:10px;padding:8px;text-align:center;margin-bottom:6px;border:2px solid #2a2a4e;';
+    const banked = dondBanked[i];
+    div.innerHTML =
+      '<div style="font-size:11px;color:#a0a0b0;">' + name + '</div>' +
+      '<div style="font-size:' + (banked !== null ? '18px' : '13px') + ';font-weight:900;color:' + (banked !== null ? '#00d4aa' : '#555') + ';">' +
+      (banked !== null ? banked.toLocaleString() : (i === dondContestant ? '\u25b6' : '\u2014')) +
+      '</div>';
+    pbox.appendChild(div);
+  });
+}
+
+function openDondCase(i) {
+  if (dondPhase !== 'play') return;
+  if (dondCases[i].opened || dondCases[i].selected) return;
+  dondCases[i].opened = true;
+  dondOpenedThisRound++;
+  const needed = DOND_ROUNDS[dondRound] || 1;
+  renderDondPlay();
+  if (dondOpenedThisRound >= needed) {
+    dondPhase = 'banker';
+    setTimeout(() => showBankerOffer(), 600);
+  } else {
+    updateDondPhaseStatus();
+  }
+}
+
+function updateDondPhaseStatus() {
+  const el = document.getElementById('dond-phase-status');
+  if (!el) return;
+  const needed = DOND_ROUNDS[dondRound] || 1;
+  const left = needed - dondOpenedThisRound;
+  const remaining = dondCases.filter(c => !c.opened && !c.selected).length;
+  el.innerHTML = '<span class="dond-round-info">Round ' + (dondRound+1) + '</span> \u2014 Open <b>' + left + '</b> more case' + (left !== 1 ? 's' : '') + '. <span style="color:#a0a0b0;">(' + remaining + ' left)</span>';
+}
+
+function showBankerOffer() {
+  const remaining = dondCases.filter(c => !c.opened && !c.selected).map(c => c.val);
+  const myCase = dondCases[dondMyCase].val;
+  const allLeft = [...remaining, myCase];
+  const expectedVal = allLeft.reduce((s,v) => s+v, 0) / allLeft.length;
+  const factors = [0.35, 0.45, 0.55, 0.65, 0.75, 0.82, 0.90];
+  const factor = factors[Math.min(dondRound, factors.length-1)];
+  const offer = Math.round(expectedVal * factor);
+  const bankerBox = document.getElementById('dond-banker-box');
+  const casesPlay = document.getElementById('dond-cases-play');
+  const phaseStatus = document.getElementById('dond-phase-status');
+  if (bankerBox) bankerBox.style.display = 'block';
+  if (casesPlay) casesPlay.style.display = 'none';
+  if (phaseStatus) phaseStatus.style.display = 'none';
+  document.getElementById('dond-offer-num').textContent = offer.toLocaleString() + ' pts';
+  document.getElementById('dond-offer-sub').textContent = 'Expected value: ' + Math.round(expectedVal).toLocaleString() + ' pts \u00b7 ' + Math.round(factor*100) + '% offer';
+  dondCurrentOffer = offer;
+}
+
+function dondDeal() {
+  dondBanked[dondContestant] = dondCurrentOffer;
+  if (typeof addScore === 'function') addScore(dondContestant + 1, dondCurrentOffer);
+  const nameEl = document.getElementById('pname' + dondContestant);
+  const name = (nameEl && nameEl.value) ? nameEl.value : ['Legend','Sumaya','Sarai'][dondContestant];
+  const myVal = dondCases[dondMyCase].val;
+  document.getElementById('dond-banker-box').style.display = 'none';
+  document.getElementById('dond-result-box').style.display = 'block';
+  document.getElementById('dond-result-label').textContent = name + ' took the deal!';
+  document.getElementById('dond-result-val').textContent = dondCurrentOffer.toLocaleString() + ' pts';
+  document.getElementById('dond-result-sub').textContent = 'Your case had ' + myVal.toLocaleString() + ' pts. ' + (dondCurrentOffer >= myVal ? '\u2705 Good deal!' : '\ud83d\ude2c Your case was worth more!');
+  dondPhase = 'result';
+  renderDondPlayerScores();
+  dondPlayedOrder.push(dondContestant);
+}
+
+function dondNoDeal() {
+  const bankerBox = document.getElementById('dond-banker-box');
+  const casesPlay = document.getElementById('dond-cases-play');
+  const phaseStatus = document.getElementById('dond-phase-status');
+  if (bankerBox) bankerBox.style.display = 'none';
+  if (casesPlay) casesPlay.style.display = 'grid';
+  if (phaseStatus) phaseStatus.style.display = 'block';
+  dondRound++;
+  dondOpenedThisRound = 0;
+  const remaining = dondCases.filter(c => !c.opened && !c.selected);
+  if (remaining.length === 0) {
+    dondRevealOwnCase();
+    return;
+  }
+  if (remaining.length === 1) {
+    dondPhase = 'final';
+    const other = remaining[0];
+    const otherIdx = dondCases.indexOf(other);
+    if (phaseStatus) phaseStatus.innerHTML =
+      '<b style="color:#f5a623;">FINAL DECISION:</b> Keep your case OR swap for Case ' + other.num + '?<br>' +
+      '<div style="display:flex;gap:8px;justify-content:center;margin-top:8px;">' +
+      '<button class="btn btn-green" onclick="dondKeep()">Keep My Case</button>' +
+      '<button class="btn btn-blue" onclick="dondSwap(' + otherIdx + ')">Swap for Case ' + other.num + '</button>' +
+      '</div>';
+    renderDondCases();
+    return;
+  }
+  dondPhase = 'play';
+  renderDondPlay();
+}
+
+function dondKeep() {
+  const myVal = dondCases[dondMyCase].val;
+  const nameEl = document.getElementById('pname' + dondContestant);
+  const name = (nameEl && nameEl.value) ? nameEl.value : ['Legend','Sumaya','Sarai'][dondContestant];
+  dondBanked[dondContestant] = myVal;
+  if (typeof addScore === 'function') addScore(dondContestant + 1, myVal);
+  dondShowFinalResult(name, myVal, 'kept their case');
+}
+
+function dondSwap(otherIdx) {
+  const swappedVal = dondCases[otherIdx].val;
+  const originalVal = dondCases[dondMyCase].val;
+  const nameEl = document.getElementById('pname' + dondContestant);
+  const name = (nameEl && nameEl.value) ? nameEl.value : ['Legend','Sumaya','Sarai'][dondContestant];
+  dondBanked[dondContestant] = swappedVal;
+  if (typeof addScore === 'function') addScore(dondContestant + 1, swappedVal);
+  dondShowFinalResult(name, swappedVal, 'swapped! (original had ' + originalVal.toLocaleString() + ' pts)');
+}
+
+function dondRevealOwnCase() {
+  const myVal = dondCases[dondMyCase].val;
+  const nameEl = document.getElementById('pname' + dondContestant);
+  const name = (nameEl && nameEl.value) ? nameEl.value : ['Legend','Sumaya','Sarai'][dondContestant];
+  dondBanked[dondContestant] = myVal;
+  if (typeof addScore === 'function') addScore(dondContestant + 1, myVal);
+  dondShowFinalResult(name, myVal, 'went all the way!');
+}
+
+function dondShowFinalResult(name, val, sub) {
+  const phaseStatus = document.getElementById('dond-phase-status');
+  const casesPlay = document.getElementById('dond-cases-play');
+  const resultBox = document.getElementById('dond-result-box');
+  if (phaseStatus) phaseStatus.style.display = 'none';
+  if (casesPlay) casesPlay.style.display = 'none';
+  if (resultBox) resultBox.style.display = 'block';
+  document.getElementById('dond-result-label').textContent = name + ' ' + sub;
+  document.getElementById('dond-result-val').textContent = val.toLocaleString() + ' pts';
+  document.getElementById('dond-result-sub').textContent = 'Points added to ' + name + "'s scoreboard!";
+  dondPhase = 'result';
+  renderDondPlayerScores();
+  dondPlayedOrder.push(dondContestant);
+}
+
+function dondNextPlayer() {
+  const notPlayed = [0,1,2].filter(i => !dondPlayedOrder.includes(i));
+  if (notPlayed.length === 0) {
+    resetDOND();
+    return;
+  }
+  // Preserve banked + played order, re-init cases only
+  const savedBanked = [...dondBanked];
+  const savedOrder = [...dondPlayedOrder];
+  initDOND();
+  dondBanked = savedBanked;
+  dondPlayedOrder = savedOrder;
+  setDondContestant(notPlayed[0]);
+}
+
 </script>
+
+  <!-- DEAL OR NO DEAL -->
+  <div id="game-dond" class="game-section">
+    <div style="display:flex;align-items:center;gap:8px;padding-bottom:8px;flex-shrink:0;">
+      <button class="btn btn-gray btn-sm" onclick="showGame('home')">&#8592; Home</button>
+      <span style="font-size:20px;font-weight:900;color:#f5a623;">&#128188; Deal or No Deal</span>
+      <span id="dond-turn-badge" class="dond-turn-badge" style="background:#4a90e222;color:#4a90e2;margin-left:8px;"></span>
+      <button class="btn btn-gray btn-sm" style="margin-left:auto;" onclick="resetDOND()">New Game</button>
+    </div>
+
+    <!-- SETUP PHASE: pick contestant -->
+    <div id="dond-setup" style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
+      <div class="dond-status">Step 1 - <span id="dond-contestant-name" style="color:#f5a623;font-weight:900;">Pick a contestant</span>, then choose your briefcase!</div>
+      <div style="display:flex;gap:8px;justify-content:center;margin:8px 0;flex-shrink:0;">
+        <button class="who-btn" id="dond-p0" onclick="setDondContestant(0)">Legend</button>
+        <button class="who-btn" id="dond-p1" onclick="setDondContestant(1)">Sumaya</button>
+        <button class="who-btn" id="dond-p2" onclick="setDondContestant(2)">Sarai</button>
+      </div>
+      <div class="dond-cases" id="dond-cases-setup"></div>
+    </div>
+
+    <!-- PLAY PHASE -->
+    <div id="dond-play" style="flex:1;display:none;flex-direction:column;overflow:hidden;">
+      <div style="display:flex;gap:8px;overflow:hidden;flex:1;">
+        <!-- Left: value board -->
+        <div style="width:130px;flex-shrink:0;overflow-y:auto;">
+          <div style="font-size:11px;color:#a0a0b0;text-align:center;margin-bottom:4px;letter-spacing:1px;">VALUES LEFT</div>
+          <div class="dond-values" id="dond-val-board"></div>
+        </div>
+        <!-- Center: cases + banker -->
+        <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
+          <div id="dond-phase-status" class="dond-status" style="flex-shrink:0;"></div>
+          <div id="dond-banker-box" style="display:none;" class="dond-banker">
+            <div class="dond-banker-title"><span class="dond-phone">&#128222;</span> THE BANKER IS CALLING...</div>
+            <div class="dond-offer" id="dond-offer-num"></div>
+            <div class="dond-offer-sub" id="dond-offer-sub"></div>
+            <div class="dond-deal-btns">
+              <button class="dond-deal" onclick="dondDeal()">&#10003; DEAL</button>
+              <button class="dond-nodeal" onclick="dondNoDeal()">&#10007; NO DEAL</button>
+            </div>
+          </div>
+          <div id="dond-result-box" style="display:none;" class="dond-result">
+            <div class="dond-result-label" id="dond-result-label"></div>
+            <div class="dond-result-val" id="dond-result-val"></div>
+            <div style="color:#a0a0b0;font-size:14px;margin-top:8px;" id="dond-result-sub"></div>
+            <div style="display:flex;gap:8px;justify-content:center;margin-top:16px;">
+              <button class="btn btn-blue" onclick="dondNextPlayer()">Next Player &#9654;</button>
+              <button class="btn btn-gray btn-sm" onclick="resetDOND()">New Game</button>
+            </div>
+          </div>
+          <div class="dond-cases" id="dond-cases-play" style="flex:1;overflow:hidden;"></div>
+        </div>
+        <!-- Right: player scores -->
+        <div style="width:110px;flex-shrink:0;">
+          <div style="font-size:11px;color:#a0a0b0;text-align:center;margin-bottom:4px;letter-spacing:1px;">BANKED</div>
+          <div id="dond-player-scores"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>

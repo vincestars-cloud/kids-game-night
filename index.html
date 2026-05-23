@@ -1858,7 +1858,7 @@ function showBankerOffer() {
   if (casesPlay) casesPlay.style.display = 'none';
   if (phaseStatus) phaseStatus.style.display = 'none';
   document.getElementById('dond-offer-num').textContent = '$' + offer.toLocaleString();
-  document.getElementById('dond-offer-sub').textContent = 'The Banker is offering ' + Math.round(factor*100) + '% of the average remaining case ($' + Math.round(expectedVal).toLocaleString() + ')';
+  document.getElementById('dond-offer-sub').textContent = 'Accept this offer or keep playing?';
   dondCurrentOffer = offer;
 }
 

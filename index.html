@@ -870,7 +870,7 @@ const EP=[
   {cat:'TV SHOW',e:'í ¾í¶¸â€â™€ï¸í ½í¶¤í ¼í¼ªï¸âš¡',a:'Agatha All Along'},
   {cat:'TV SHOW',e:'í ½í±‘í ¼í¿¡í ½í°²âš”ï¸',a:'House of the Dragon'},
   {cat:'TV SHOW',e:'í ½íº‚í ½í´«í ¼í·°í ¼í··â™ˆ',a:'Squid Game'},
-  {cat:'TV SHOW',e:'í ¼í½ºí ½í¸í ½í±‹í ¼í¿™ï¸',a:'It's Always Sunny in Philadelphia'},
+  {cat:'TV SHOW',e:'í ¼í½ºí ½í¸í ½í±‹í ¼í¿™ï¸',a:"It's Always Sunny in Philadelphia"},
   {cat:'SONG',e:'í ¾í´”í ½í²§í ¼í¼§ï¸í ¾í»€',a:'Flowers â€” Miley Cyrus'},
   {cat:'SONG',e:'í ½í²™í ½í¹í ½í±âœ¨',a:'Thank U Next â€” Ariana Grande'},
   {cat:'SONG',e:'í ½í°¶â¤ï¸í ½í²‹í ½í±Œ',a:'Golden Retriever â€” Kacey Musgraves'},
@@ -888,7 +888,7 @@ const EP=[
   {cat:'PHRASE',e:'ğŸğŸ·ï¸',a:'Bee label'},
   {cat:'PHRASE',e:'ğŸ¦…ğŸ’­ğŸ‘€',a:'Eagle eye'},
   {cat:'PHRASE',e:'ğŸ’¡âœ‚ï¸âœ‚ï¸',a:'Cut to the chase'},
-]];
+];
 let emojiIdx=0,emojiAnswerShown=false;
 function loadEmoji(i){
   const p=EP[i];
@@ -1125,7 +1125,7 @@ const TFD=[
   {s:"The word quiz was invented as part of a bet.",t:true,f:"Legend says a Dublin theater owner bet in 1791 that he could make a nonsense word famous overnight by writing it on walls across the city. It stuck."},
   {s:"Emojis were invented in the United States.",t:false,f:"Emojis were created by Shigetaka Kurita at NTT DoCoMo in Japan in 1999. The first set had only 176 emojis designed on a 12x12 pixel grid."},
   {s:"Humans are the only animals that blush.",t:true,f:"Charles Darwin called blushing the most peculiar and most human of all expressions. No other animal has been observed blushing from embarrassment."},
-]];
+];
 let tfIdx=0;
 function loadTF(i){
   document.getElementById('tf-counter').textContent=(i+1)+' / '+TFD.length;
@@ -1175,7 +1175,7 @@ const LYR=[
   {a:"Drake ft. 21 Savage â€” Rich Flex (2022)",l:"21, can you do something for me?",b:"Rich flex, ayy",h:"From Her Loss album â€” 21 did not say anything",yt:"gCRDHYYq19U",ts:30},
   {a:"Mitski â€” My Love Mine All Mine (2023)",l:"The moon reflects the sun but the moon does not shine",b:"My love is mine all mine",h:"From The Land Is Inhospitable â€” went viral on TikTok",yt:"YGUv7cFHsk8",ts:55},
   {a:"Zach Bryan ft. Kacey Musgraves â€” I Remember Everything (2023)",l:"I was running through the gravel",b:"On our old dirt road",h:"Won CMA Song of the Year 2023",yt:"sdeV4aF-TGQ",ts:20},
-]];
+];
 let lyrIdx=0,lyrShown=false;
 function loadLyr(i){
   const l=LYR[i];
@@ -1230,7 +1230,7 @@ const PD=[
   {e:'\uD83C\uDFC0',n:'NBA courtside seat (avg regular season)',d:'Mid-tier market team, per game',p:'$1,200'},
   {e:'\uD83D\uDE80',n:'SpaceX Starlink internet (1 month)',d:'Residential standard plan, US',p:'$120'},
   {e:'\uD83C\uDF93',n:'Average 4-year public university tuition',d:'In-state, per year, 2024-2025',p:'$10,662'},
-  {e:'\uD83E\uDDA0',n:'Fenty Beauty Pro Filt\'r Foundation',d:'40ml bottle, retail',p:'$46'},
+  {e:'\uD83E\uDDA0',n:"Fenty Beauty Pro Filt\'r Foundation",d:'40ml bottle, retail',p:'$46'},
   {e:'\uD83D\uDC88',n:"Men\'s haircut at Great Clips",d:'Walk-in, no tip included',p:'$21'},
 ];
 let priceIdx=0;
@@ -1410,7 +1410,7 @@ const PWD=[
   {w:'Hourglass',h:'Sand-based time measurement â€” also a body shape term'},
   {w:'Thunderstorm',h:'Power outage season â€” lightning and heavy rain'},
   {w:'Kaleidoscope',h:'Colorful tube toy â€” shake it and patterns change'},
-]];
+];
 let pwIdx=0,pwWordShown=false;
 function loadPW(i){
   document.getElementById('pw-counter').textContent=(i+1)+' / '+PWD.length;

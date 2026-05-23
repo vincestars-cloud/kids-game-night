@@ -644,7 +644,7 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
       <div class="big-card">
         <div style="color:var(--text2);font-size:13px;margin-bottom:10px;">Hot Seat player looks away — others tap to see word, give ONE-WORD clues</div>
         <div id="pw-word-display" class="password-word-hidden" onclick="togglePWWord()">TAP TO SEE</div>
-        <div style="color:var(--text2);font-size:12px;margin-top:6px;" id="pw-hint"></div>
+        <div style="display:none;" id="pw-hint"></div>
       </div>
     </div>
     <div class="game-controls">
@@ -1234,26 +1234,26 @@ function playLyrClip(){
 
 // PRICE DATA
 const PD=[
-  {e:'\uD83C\uDF57',n:"Chick-fil-A Spicy Deluxe Combo",d:'Large, with waffle fries and lemonade',p:'$13.49'},
-  {e:'\uD83C\uDFAE',n:'Nintendo Switch OLED',d:'Console only, retail price new',p:'$349'},
-  {e:'\uD83C\uDF55',n:"Domino\'s Large 3-Topping Pizza",d:'Carry out, online order price',p:'$14.99'},
-  {e:'\uD83C\uDFA7',n:'AirPods Pro (2nd gen)',d:'With USB-C, Active Noise Cancellation',p:'$249'},
-  {e:'\uD83D\uDCF1',n:'Samsung Galaxy S24 (base model)',d:'128GB, unlocked, new',p:'$799'},
-  {e:'\u2615',n:'Starbucks Venti Caramel Frappuccino',d:'Blended, whole milk, whip',p:'$7.25'},
-  {e:'\uD83D\uDC5F',n:'Air Jordan 1 Retro High OG',d:"Retail, men\'s size 10, new colorway",p:'$180'},
-  {e:'\uD83C\uDFAB',n:'Coachella 3-Day Pass (GA)',d:'General admission, Weekend 1, 2024',p:'$549'},
-  {e:'\uD83D\uDEEB',n:'Round-trip flight ATL to NYC',d:'Economy, booked 2 weeks out',p:'$280'},
-  {e:'\uD83D\uDC15',n:'Golden Retriever puppy (breeder)',d:'AKC registered, includes first vaccines',p:'$1,500'},
-  {e:'\uD83D\uDC87',n:'Dyson Airwrap (complete kit)',d:'Multi-styler, Fuchsia/Nickel',p:'$599'},
-  {e:'\uD83C\uDF9F\uFE0F',n:'Disney World 1-Day Ticket',d:'Magic Kingdom, adult, peak season',p:'$189'},
-  {e:'\uD83D\uDCFA',n:'Netflix Premium (1 month)',d:'4K, 4 screens, no ads',p:'$22.99'},
-  {e:'\uD83D\uDC55',n:'Supreme hoodie (box logo)',d:'Classic box logo, retail drop price',p:'$168'},
-  {e:'\uD83C\uDFB5',n:'Spotify Premium (1 month)',d:'Individual plan, US',p:'$11.99'},
-  {e:'\uD83C\uDFC0',n:'NBA courtside seat (avg regular season)',d:'Mid-tier market team, per game',p:'$1,200'},
-  {e:'\uD83D\uDE80',n:'SpaceX Starlink internet (1 month)',d:'Residential standard plan, US',p:'$120'},
-  {e:'\uD83C\uDF93',n:'Average 4-year public university tuition',d:'In-state, per year, 2024-2025',p:'$10,662'},
-  {e:'\uD83E\uDDA0',n:"Fenty Beauty Pro Filt\'r Foundation",d:'40ml bottle, retail',p:'$46'},
-  {e:'\uD83D\uDC88',n:"Men\'s haircut at Great Clips",d:'Walk-in, no tip included',p:'$21'},
+  {e:'\uD83C\uDF6B',n:'MrBeast Feastables Chocolate Bar',d:'Original chocolate bar, single',p:'$2.99'},
+  {e:'\uD83C\uDF6A',n:'Crumbl Cookie 4-pack box',d:'Classic pink box, 4 cookies',p:'$21.99'},
+  {e:'\uD83C\uDF54',n:"McDonald's Big Mac Meal (large)",d:'Big Mac, large fries, large drink',p:'$13.29'},
+  {e:'\uD83C\uDFAE',n:'PS5 Slim (disc edition)',d:'Console only, retail price',p:'$499'},
+  {e:'\uD83D\uDCF1',n:'iPhone 16 (base model, 128GB)',d:'Unlocked, new',p:'$799'},
+  {e:'\uD83D\uDC5F',n:'Air Jordan 4 Retro (retail)',d:"Men\'s size 10, at release",p:'$210'},
+  {e:'\uD83E\uDD64',n:'Stanley Quencher 40oz Tumbler',d:'With handle, retail price',p:'$45'},
+  {e:'\uD83E\uDDE5',n:'Lululemon Align Leggings (25in)',d:'Nulu fabric, retail',p:'$98'},
+  {e:'\uD83D\uDC36',n:'French Bulldog puppy (breeder)',d:'From reputable breeder, includes vet check',p:'$3,500'},
+  {e:'\uD83D\uDC87',n:'Dyson Airwrap Complete (latest)',d:'Multi-styler and dryer kit',p:'$599'},
+  {e:'\uD83C\uDFAB',n:'Taylor Swift Eras Tour ticket (avg resale)',d:'Floor section, resale market average',p:'$1,200'},
+  {e:'\uD83D\uDE97',n:'Tesla Model Y (base, 2024)',d:'Long Range, retail price',p:'$44,990'},
+  {e:'\uD83C\uDFE0',n:'Average US 1BR apartment rent (monthly)',d:'National median, 2024',p:'$1,500'},
+  {e:'\u231A',n:'Rolex Submariner (no date)',d:'Steel, brand new from authorized dealer',p:'$10,100'},
+  {e:'\uD83C\uDF93',n:'MIT annual tuition (2024-2025)',d:'Undergraduate, does not include room & board',p:'$61,990'},
+  {e:'\u2708\uFE0F',n:'Round-trip flight ATL to Paris',d:'Economy, booked 3 weeks ahead',p:'$850'},
+  {e:'\uD83C\uDFAE',n:'Roblox 10,000 Robux',d:'Digital purchase, in-game currency',p:'$99.99'},
+  {e:'\uD83C\uDF9F\uFE0F',n:'Disney World Annual Pass (Pixie Dust tier)',d:'Lowest tier, FL resident, 2024',p:'$399'},
+  {e:'\uD83D\uDC5C',n:'Louis Vuitton Neverfull MM',d:'Monogram canvas, retail price',p:'$2,100'},
+  {e:'\uD83C\uDFC0',n:'NBA 2K25 (PS5)',d:'Standard edition, digital download',p:'$69.99'},
 ];
 let priceIdx=0;
 function loadPrice(i){
@@ -1304,40 +1304,40 @@ function priceNav(d){priceIdx=(priceIdx+d+PD.length)%PD.length;loadPrice(priceId
 // CONNECTIONS DATA
 const CP=[
   {title:'Puzzle 1',groups:[
-    {label:'Types of bread',color:0,words:['Sourdough','Brioche','Ciabatta','Focaccia']},
-    {label:'Beyonce albums',color:1,words:['Lemonade','Renaissance','Dangerously','4']},
-    {label:'Planet nicknames',color:2,words:['Red Planet','Blue Marble','Ringed Planet','Morning Star']},
+    {label:'Stranger Things characters',color:0,words:['Eleven','Dustin','Joyce','Hopper']},
+    {label:'Olivia Rodrigo songs',color:1,words:['Brutal','Traitor','Good 4 u','Deja Vu']},
+    {label:'Disney villain names',color:2,words:['Ursula','Scar','Gaston','Hans']},
     {label:'Viral dances',color:3,words:['Griddy','Renegade','Woah','Floss']},
   ]},
   {title:'Puzzle 2',groups:[
-    {label:'Things in a backpack',color:0,words:['Pencil','Calculator','Chapstick','Charger']},
-    {label:'School subjects',color:1,words:['Calculus','Biology','English','Theater']},
-    {label:'Lunch table vibes',color:2,words:['Drama','Athletes','Nerds','Floaters']},
-    {label:'Ways to cheat (allegedly)',color:3,words:['Crib sheet','Bathroom break','Shoulder surf','Write on hand']},
+    {label:'Taylor Swift albums',color:0,words:['Fearless','Folklore','Midnights','Speak Now']},
+    {label:'Hogwarts houses',color:1,words:['Gryffindor','Slytherin','Hufflepuff','Ravenclaw']},
+    {label:'Types of fries',color:2,words:['Waffle','Curly','Steak','Crinkle']},
+    {label:'Gen Z words for good',color:3,words:['Slay','Fire','Bussin','No cap']},
   ]},
   {title:'Puzzle 3',groups:[
-    {label:'TikTok sounds',color:0,words:['Oh No','Rasputin','Jiggle Jiggle','Savage']},
-    {label:'Minecraft mobs',color:1,words:['Creeper','Enderman','Blaze','Warden']},
-    {label:'YouTube channels',color:2,words:['MrBeast','MKBHD','Cocomelon','Vsauce']},
-    {label:'Social media apps',color:3,words:['BeReal','Lemon8','Snapchat','Threads']},
+    {label:'Squid Game challenges',color:0,words:['Red Light Green Light','Honeycomb','Tug of War','Marbles']},
+    {label:'Sabrina Carpenter songs',color:1,words:['Espresso','Feather','Nonsense','Please Please Please']},
+    {label:'Disney princess movies (post-2010)',color:2,words:['Tangled','Brave','Moana','Encanto']},
+    {label:'Minecraft ores',color:3,words:['Diamond','Emerald','Amethyst','Netherite']},
   ]},
   {title:'Puzzle 4',groups:[
-    {label:'Fast food chains',color:0,words:['Whataburger','Raising Canes','Shake Shack','Five Guys']},
-    {label:'Spicy things',color:1,words:['Habanero','Sriracha','Wasabi','Ghost pepper']},
-    {label:'Starbucks drinks',color:2,words:['Matcha','Cold brew','Refresher','Frappuccino']},
-    {label:'Viral food trends',color:3,words:['Birria','Smash burger','Butter board','Tini mac']},
+    {label:'Things in a teenager bedroom',color:0,words:['LED strips','Body pillow','Ring light','Poster']},
+    {label:'Roblox games',color:1,words:['Adopt Me','Blox Fruits','Brookhaven','Jailbreak']},
+    {label:'Chick-fil-A menu items',color:2,words:['Nuggets','Waffle Fries','Lemonade','Sandwich']},
+    {label:'NBA superstars',color:3,words:['LeBron','Steph','Giannis','Luka']},
   ]},
   {title:'Puzzle 5',groups:[
-    {label:'NBA superstars',color:0,words:['Wembanyama','Giannis','Curry','Luka']},
-    {label:'Olympic sports',color:1,words:['Biathlon','Skeleton','Luge','Curling']},
-    {label:'Stadium foods',color:2,words:['Pretzel','Nachos','Hot dog','Cotton candy']},
-    {label:'Sports nicknames',color:3,words:['The Goat','King James','Chef Curry','The Greek Freak']},
+    {label:'Netflix originals',color:0,words:['Wednesday','Outer Banks','Bridgerton','Ginny & Georgia']},
+    {label:'Spider-Man actors',color:1,words:['Maguire','Garfield','Holland','Morales']},
+    {label:'Starbucks drink types',color:2,words:['Refresher','Cold brew','Frappuccino','Matcha latte']},
+    {label:'Drake songs',color:3,words:["God's Plan","Hotline Bling","One Dance","Rich Flex"]},
   ]},
   {title:'Puzzle 6',groups:[
-    {label:'Taylor Swift eras',color:0,words:['Fearless','Folklore','Evermore','Midnights']},
-    {label:'Latin genres',color:1,words:['Reggaeton','Corridos','Dembow','Bachata']},
-    {label:'Music festivals',color:2,words:['Coachella','Lollapalooza','Rolling Loud','Bonnaroo']},
-    {label:'Rap beef participants',color:3,words:['Drake','Kendrick','Pusha T','Meek Mill']},
+    {label:'Famous cartoon duos',color:0,words:['SpongeBob & Patrick','Shrek & Donkey','Woody & Buzz','Bluey & Bingo']},
+    {label:'Things that go viral',color:1,words:['Challenge','Beef','Duet','Clip']},
+    {label:'Fast food breakfast items',color:2,words:['McGriddle','Croissan\x27wich','Breakfast Burrito','Hash Brown']},
+    {label:'MrBeast video types',color:3,words:['Last to leave','I spent','Survival','Vs my friends']},
   ]},
 ];
 let connPuzzleIdx=0,connSelected=[],connSolved=[],connWords=[];
@@ -1451,14 +1451,16 @@ function pwNav(d){pwIdx=(pwIdx+d+PWD.length)%PWD.length;loadPW(pwIdx);}
 
 // ========== FAMILY FEUD DATA ==========
 const feudData = [
-  {q:'Name something you do every morning before school',answers:[{text:'Brush teeth',pts:38},{text:'Eat breakfast',pts:24},{text:'Shower / get dressed',pts:18},{text:'Check your phone',pts:12},{text:'Use the bathroom',pts:8}]},
-  {q:'Name a popular TikTok trend',answers:[{text:'Dance challenge',pts:35},{text:'Recipe / cooking video',pts:22},{text:'Lip sync video',pts:18},{text:'POV skit',pts:15},{text:'Transition video',pts:10}]},
-  {q:'Name something that would make a great superpower',answers:[{text:'Invisibility',pts:30},{text:'Flying',pts:28},{text:'Mind reading',pts:20},{text:'Super speed',pts:14},{text:'Time travel',pts:8}]},
-  {q:'Name a reason someone would be late to class',answers:[{text:'Slept through alarm',pts:40},{text:'Traffic or bus was late',pts:22},{text:"Couldn't find something to wear",pts:18},{text:'Forgot something',pts:12},{text:'Talking to friends',pts:8}]},
-  {q:'Name something teens spend too much time doing',answers:[{text:'On phone or social media',pts:45},{text:'Playing video games',pts:28},{text:'Watching Netflix or YouTube',pts:16},{text:'Sleeping',pts:7},{text:'Hanging out with friends',pts:4}]},
-  {q:'Name a famous person who would be fun to hang out with',answers:[{text:'MrBeast',pts:32},{text:'Drake',pts:22},{text:'Taylor Swift',pts:18},{text:'Kevin Hart',pts:15},{text:'Lionel Messi',pts:13}]},
-  {q:"Name something you would find in a teenager's bedroom",answers:[{text:'Phone charger',pts:38},{text:'Clothes on the floor',pts:26},{text:'Gaming console',pts:18},{text:'Posters or LED lights',pts:12},{text:'Snacks',pts:6}]},
-  {q:'Name a food that hits different at 2am',answers:[{text:'Pizza',pts:35},{text:'Ramen or noodles',pts:25},{text:'Chips or snacks',pts:20},{text:"McDonald's",pts:12},{text:'Cereal',pts:8}]},
+  {q:'Name something you do when you get home from school',answers:[{text:'Eat',pts:35},{text:'Go on phone',pts:28},{text:'Change clothes',pts:16},{text:'Watch TV / Netflix',pts:13},{text:'Sleep / nap',pts:8}]},
+  {q:'Name a reason someone unfollows you on social media',answers:[{text:'Too many posts',pts:38},{text:'Annoying or cringe content',pts:26},{text:'You had beef with them',pts:18},{text:'They cleaned up their following',pts:12},{text:'Accidental unfollow',pts:6}]},
+  {q:"Name something people say when they don't want to go somewhere",answers:[{text:"I'm tired",pts:36},{text:"I have no money",pts:25},{text:"I don't feel good",pts:20},{text:"Maybe next time",pts:12},{text:"I have homework",pts:7}]},
+  {q:'Name something you do on a long car ride',answers:[{text:'Sleep',pts:40},{text:'Watch or listen to something',pts:28},{text:'Be on your phone',pts:18},{text:'Eat snacks',pts:10},{text:'Argue with family',pts:4}]},
+  {q:'Name something that would make school better',answers:[{text:'No homework',pts:42},{text:'More breaks / longer lunch',pts:28},{text:'Better food',pts:14},{text:'Start later',pts:10},{text:'No uniforms',pts:6}]},
+  {q:'Name a celebrity you would want as a sibling',answers:[{text:'MrBeast',pts:30},{text:'Dwayne Johnson',pts:25},{text:'Zendaya',pts:20},{text:'Kevin Hart',pts:15},{text:'Cardi B',pts:10}]},
+  {q:"Name something in someone's Uber eats order at midnight",answers:[{text:'Pizza',pts:36},{text:'McDonald\x27s',pts:28},{text:'Chinese food',pts:18},{text:'Wings',pts:12},{text:'Taco Bell',pts:6}]},
+  {q:'Name something kids lie to their parents about',answers:[{text:'Grades or homework',pts:38},{text:'Where they are',pts:28},{text:'Screen time',pts:18},{text:'Who they are with',pts:10},{text:'If they cleaned their room',pts:6}]},
+  {q:'Name something that goes viral on TikTok',answers:[{text:'Dance challenge',pts:35},{text:'Food recipe or mukbang',pts:25},{text:'Funny skit or prank',pts:20},{text:'Transformation video',pts:12},{text:'Pet or animal clip',pts:8}]},
+  {q:'Name something Sarai Legend and Sumaya all have in common',answers:[{text:'Same dad',pts:50},{text:'They are siblings',pts:28},{text:'Love game night',pts:14},{text:'Live in Atlanta',pts:5},{text:'All winners',pts:3}]},
 ];
 const fmQuestions = [
   {q:'Name something you find in a refrigerator',answers:[{text:'Milk',pts:32},{text:'Leftovers',pts:25},{text:'Juice',pts:18},{text:'Cheese',pts:15},{text:'Eggs',pts:10}]},
@@ -1679,7 +1681,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 // ========================================================
 // DEAL OR NO DEAL
 // ========================================================
-const DOND_VALUES = [1, 100, 500, 750, 1000, 5000, 10000, 25000, 40000, 50000, 75000, 100000, 200000, 300000, 400000, 500000, 750000, 1000000, 2500, 15000];
+const DOND_VALUES = [1, 100, 500, 750, 1000, 2500, 5000, 10000, 15000, 25000, 40000, 50000, 75000, 100000, 200000, 300000, 400000, 500000, 750000, 1000000];
 const DOND_ROUNDS = [5, 4, 3, 2, 1, 1, 1]; // cases to open each round
 
 let dondCases = [];
@@ -1856,7 +1858,7 @@ function showBankerOffer() {
   if (casesPlay) casesPlay.style.display = 'none';
   if (phaseStatus) phaseStatus.style.display = 'none';
   document.getElementById('dond-offer-num').textContent = '$' + offer.toLocaleString();
-  document.getElementById('dond-offer-sub').textContent = 'Expected value: $' + Math.round(expectedVal).toLocaleString() + '  \u00b7 ' + Math.round(factor*100) + '% offer';
+  document.getElementById('dond-offer-sub').textContent = 'The Banker is offering ' + Math.round(factor*100) + '% of the average remaining case ($' + Math.round(expectedVal).toLocaleString() + ')';
   dondCurrentOffer = offer;
 }
 
@@ -2171,9 +2173,7 @@ function useLifeline(type){
     if(wwtbamLifelinesUsed.ai)return;wwtbamLifelinesUsed.ai=true;
     document.getElementById("ll-ai").classList.add("used");
     box.style.display="block";
-    const aiMessages=["I've scanned the options. One of these is clearly different from the rest.","My analysis is complete. Think about what you actually know — trust your gut.","The answer exists somewhere in your memory. Take your time.","I\'ve narrowed it down in my circuits. You probably know this one.","Think carefully. Process of elimination works here."];
-    const aiMsg=aiMessages[Math.floor(Math.random()*aiMessages.length)];
-    box.innerHTML='<div class="ai-hint-box"><div style="font-size:12px;color:#9b59b6;margin-bottom:8px;letter-spacing:2px;">🤖 AI HINT</div><div style="font-size:15px;color:#d0d0e0;font-style:italic;">'+aiMsg+'</div></div>';
+    box.innerHTML='<div class="ai-hint-box"><div style="font-size:12px;color:#9b59b6;margin-bottom:8px;letter-spacing:2px;">🤖 AI HINT</div><div style="font-size:16px;color:#d0d0e0;line-height:1.5;">'+q.hint+'</div></div>';
   }else if(type==="friend"){
     if(wwtbamLifelinesUsed.friend)return;wwtbamLifelinesUsed.friend=true;
     document.getElementById("ll-friend").classList.add("used");

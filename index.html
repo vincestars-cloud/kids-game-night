@@ -33,9 +33,9 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
 #nav h1{color:var(--gold);font-size:16px;margin-right:4px;white-space:nowrap;}
 .nav-btn{background:var(--card);color:var(--text);border:1px solid #333;border-radius:20px;padding:4px 10px;font-size:11px;cursor:pointer;white-space:nowrap;}
 .nav-btn:hover,.nav-btn.active{background:var(--blue);color:#fff;border-color:var(--blue);}
-.game-section{display:none;flex-direction:column;overflow:hidden;}
-.game-section.active{display:flex;flex:1;min-height:0;}
-#game-home{padding:20px;overflow-y:auto;}
+.game-section{display:none;flex-direction:column;height:calc(100vh - 52px);overflow:hidden;}
+.game-section.active{display:flex;}
+#game-home{padding:20px;overflow-y:auto;height:calc(100vh - 52px);}
 .game-title{font-size:28px;font-weight:900;color:var(--gold);margin-bottom:6px;}
 .game-subtitle{color:var(--text2);font-size:14px;margin-bottom:16px;}
 .home-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px;}
@@ -2200,7 +2200,7 @@ function useLifeline(type){
       <span id="wwtbam-player-badge" style="margin-left:8px;background:#4a90e222;color:#4a90e2;border:1px solid #4a90e2;border-radius:20px;padding:3px 12px;font-size:13px;font-weight:700;"></span>
       <button class="btn btn-gray btn-sm" style="margin-left:auto;" onclick="initWWTBAM()">Restart</button>
     </div>
-    <div id="wwtbam-age-screen" class="wwtbam-age-select">
+    <div id="wwtbam-age-screen" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;overflow-y:auto;min-height:0;">
       <div style="font-size:28px;font-weight:900;color:#f5a623;text-align:center;">Select the player age group</div>
       <div style="color:#a0a0b0;font-size:15px;text-align:center;">Questions are tailored to their generation, pop culture, and knowledge level</div>
       <div style="display:flex;flex-direction:column;gap:12px;margin-top:8px;">
@@ -2223,7 +2223,7 @@ function useLifeline(type){
         </button>
       </div>
     </div>
-    <div id="wwtbam-game" style="display:none;flex:1;flex-direction:column;overflow:hidden;gap:8px;">
+    <div id="wwtbam-game" style="display:none;flex:1;flex-direction:column;overflow:hidden;gap:8px;min-height:0;">
       <div class="wwtbam-lifelines">
         <div class="lifeline-btn" id="ll-5050" onclick="useLifeline('5050')"><span class="ll-icon">&#9986;&#65039;</span><span>50:50</span></div>
         <div class="lifeline-btn" id="ll-ai" onclick="useLifeline('ai')"><span class="ll-icon">&#129302;</span><span>Ask AI</span></div>
@@ -2246,7 +2246,7 @@ function useLifeline(type){
         </div>
       </div>
     </div>
-    <div id="wwtbam-result" style="display:none;" class="wwtbam-result">
+    <div id="wwtbam-result" style="display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;gap:12px;">
       <div id="wwtbam-result-icon" style="font-size:60px;"></div>
       <div class="wwtbam-result-label" id="wwtbam-result-label"></div>
       <div class="wwtbam-result-amount" id="wwtbam-result-amount"></div>

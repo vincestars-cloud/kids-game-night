@@ -855,18 +855,17 @@ function stopTimer(key){if(timers[key]){clearInterval(timers[key]);delete timers
 
 // EMOJI DATA
 const EP=[
-  {cat:'MOVIE',e:'\u2744\uFE0F\u2764\uFE0F\u2744\uFE0F\u2728',a:'Frozen'},
-  {cat:'MOVIE',e:'\uD83D\uDD2E\uD83D\uDC41\uFE0F\uD83E\uDDF5\uD83C\uDFAA',a:'Coraline'},
-  {cat:'MOVIE',e:'\uD83D\uDC97\uD83D\uDC60\uD83D\uDC85\uD83C\uDFE0',a:'Barbie'},
-  {cat:'MOVIE',e:'\uD83D\uDE0A\uD83D\uDE21\uD83D\uDE30\uD83D\uDC99\uD83E\uDDE0',a:'Inside Out'},
-  {cat:'MOVIE',e:'\uD83C\uDF3A\uD83C\uDFE0\uD83D\uDC9B\u2728\uD83C\uDF3F',a:'Encanto'},
-  {cat:'MOVIE',e:'\uD83D\uDC80\uD83C\uDFB5\uD83C\uDF3A\uD83C\uDFB8\uD83D\uDC36',a:'Coco'},
-  {cat:'MOVIE',e:'\uD83C\uDF0A\uD83C\uDF3A\u2693\uFE0F\uD83D\uDC20',a:'Moana'},
-  {cat:'MOVIE',e:'\uD83D\uDD77\uFE0F\uD83D\uDD78\uFE0F\uD83C\uDF06\u2764\uFE0F',a:'No Way Home'},
-  {cat:'MOVIE',e:'\uD83E\uDD8A\uD83D\uDC3A\uD83D\uDC30\uD83E\uDD81\uD83D\uDC18',a:'Zootopia'},
-  {cat:'MOVIE',e:'\uD83D\uDE80\u2B50\uFE0F\uD83D\uDC4A\uD83D\uDC9A',a:'Guardians of the Galaxy'},
-  {cat:'MOVIE',e:'\uD83C\uDF6B\uD83C\uDFA9\uD83C\uDFED\uD83C\uDF08',a:'Wonka'},
-  {cat:'MOVIE',e:'\uD83D\uDD34\uD83D\uDC3C\uD83C\uDFB5\uD83C\uDFEB',a:'Turning Red'},
+  {cat:'PHRASE',e:'\uD83D\uDEA9\uD83D\uDEA9\uD83D\uDEA9',a:'Red flag'},
+  {cat:'PHRASE',e:'\uD83E\uDDE2\uD83D\uDEAB',a:'No cap'},
+  {cat:'PHRASE',e:'\uD83C\uDFAC\uD83D\uDC51\uD83C\uDF1F',a:'Main character'},
+  {cat:'PHRASE',e:'\u2728\uD83D\uDCC8\uD83C\uDF1F',a:'Glow up'},
+  {cat:'PHRASE',e:'\uD83D\uDCBB\uD83C\uDF3F\uD83D\uDD90\uFE0F',a:'Touch grass'},
+  {cat:'PHRASE',e:'\uD83D\uDC51\uD83D\uDC85\uD83D\uDD25',a:'Slay'},
+  {cat:'PHRASE',e:'\uD83E\uDDE0\uD83C\uDFE0\uD83D\uDCB8',a:'Rent free'},
+  {cat:'PHRASE',e:'\u2705\uD83C\uDFB5\u2728',a:'Vibe check'},
+  {cat:'PHRASE',e:'\uD83E\uDD16\uD83D\uDCAC\uD83D\uDD04',a:'NPC'},
+  {cat:'PHRASE',e:'\uD83D\uDCE4\u2728\uD83D\uDC85',a:"It's giving"},
+  {cat:'PHRASE',e:'\uD83D\uDC94\uD83D\uDC94',a:'Heartbreak'},
   {cat:'TV SHOW',e:'\uD83D\uDD26\uD83D\uDEB2\uD83D\uDC66\uD83D\uDC7B',a:'Stranger Things'},
   {cat:'TV SHOW',e:'\uD83E\uDD91\uD83C\uDFAE\uD83D\uDCB0\u2620\uFE0F',a:'Squid Game'},
   {cat:'TV SHOW',e:'\uD83C\uDF44\uD83D\uDD2B\uD83C\uDF3F\uD83D\uDE14',a:'The Last of Us'},
@@ -881,18 +880,20 @@ const EP=[
   {cat:'SONG',e:'\u2600\uFE0F\uD83D\uDD2A\u2764\uFE0F\uD83C\uDF19',a:'Cruel Summer \u2014 Taylor Swift'},
   {cat:'SONG',e:'\u2615\uD83D\uDC8B\u2728\uD83E\uDD0D',a:'Espresso \u2014 Sabrina Carpenter'},
   {cat:'SONG',e:'\uD83D\uDE24\uD83D\uDC94\uD83C\uDFB8\uD83D\uDC4A',a:'Good 4 U \u2014 Olivia Rodrigo'},
-  {cat:'PHRASE',e:'\uD83D\uDEA9\uD83D\uDEA9\uD83D\uDEA9',a:'Red flag'},
-  {cat:'PHRASE',e:'\uD83E\uDDE2\uD83D\uDEAB',a:'No cap'},
-  {cat:'PHRASE',e:'\uD83C\uDFAC\uD83D\uDC51\uD83C\uDF1F',a:'Main character'},
-  {cat:'PHRASE',e:'\u2728\uD83D\uDCC8\uD83C\uDF1F',a:'Glow up'},
-  {cat:'PHRASE',e:'\uD83D\uDCBB\uD83C\uDF3F\uD83D\uDD90\uFE0F',a:'Touch grass'},
-  {cat:'PHRASE',e:'\uD83D\uDC51\uD83D\uDC85\uD83D\uDD25',a:'Slay'},
-  {cat:'PHRASE',e:'\uD83E\uDDE0\uD83C\uDFE0\uD83D\uDCB8',a:'Rent free'},
-  {cat:'PHRASE',e:'\u2705\uD83C\uDFB5\u2728',a:'Vibe check'},
-  {cat:'PHRASE',e:'\uD83E\uDD16\uD83D\uDCAC\uD83D\uDD04',a:'NPC'},
-  {cat:'PHRASE',e:'\uD83D\uDCE4\u2728\uD83D\uDC85',a:"It's giving"},
-  {cat:'PHRASE',e:'\uD83D\uDC94\uD83D\uDC94',a:'Heartbreak'},
+  {cat:'MOVIE',e:'\u2744\uFE0F\u2764\uFE0F\u2744\uFE0F\u2728',a:'Frozen'},
+  {cat:'MOVIE',e:'\uD83D\uDD2E\uD83D\uDC41\uFE0F\uD83E\uDDF5\uD83C\uDFAA',a:'Coraline'},
+  {cat:'MOVIE',e:'\uD83D\uDC97\uD83D\uDC60\uD83D\uDC85\uD83C\uDFE0',a:'Barbie'},
+  {cat:'MOVIE',e:'\uD83D\uDE0A\uD83D\uDE21\uD83D\uDE30\uD83D\uDC99\uD83E\uDDE0',a:'Inside Out'},
+  {cat:'MOVIE',e:'\uD83C\uDF3A\uD83C\uDFE0\uD83D\uDC9B\u2728\uD83C\uDF3F',a:'Encanto'},
+  {cat:'MOVIE',e:'\uD83D\uDC80\uD83C\uDFB5\uD83C\uDF3A\uD83C\uDFB8\uD83D\uDC36',a:'Coco'},
+  {cat:'MOVIE',e:'\uD83C\uDF0A\uD83C\uDF3A\u2693\uFE0F\uD83D\uDC20',a:'Moana'},
+  {cat:'MOVIE',e:'\uD83E\uDD8A\uD83D\uDC3A\uD83D\uDC30\uD83E\uDD81\uD83D\uDC18',a:'Zootopia'},
+  {cat:'MOVIE',e:'\uD83C\uDF6B\uD83C\uDFA9\uD83C\uDFED\uD83C\uDF08',a:'Wonka'},
+  {cat:'MOVIE',e:'\uD83E\uDDB8\uD83D\uDD34\u26A1\uFE0F\uD83E\uDD16',a:'Iron Man'},
+  {cat:'MOVIE',e:'\uD83D\uDFE2\uD83E\uDDCD\uD83C\uDFF0\uD83D\uDC34',a:'Shrek'},
+  {cat:'MOVIE',e:'\u26A1\uFE0F\uD83E\uDDD9\uD83C\uDFEB\uD83E\uDD86',a:'Harry Potter'},
 ];
+
 
 
 let emojiIdx=0,emojiAnswerShown=false;
@@ -2170,7 +2171,9 @@ function useLifeline(type){
     if(wwtbamLifelinesUsed.ai)return;wwtbamLifelinesUsed.ai=true;
     document.getElementById("ll-ai").classList.add("used");
     box.style.display="block";
-    box.innerHTML='<div class="ai-hint-box"><div style="font-size:12px;color:#9b59b6;margin-bottom:8px;letter-spacing:2px;">🤖 AI HINT</div><div style="font-size:16px;color:#d0d0e0;line-height:1.5;">'+q.hint+'</div></div>';
+    const aiMessages=["I've scanned the options. One of these is clearly different from the rest.","My analysis is complete. Think about what you actually know — trust your gut.","The answer exists somewhere in your memory. Take your time.","I\'ve narrowed it down in my circuits. You probably know this one.","Think carefully. Process of elimination works here."];
+    const aiMsg=aiMessages[Math.floor(Math.random()*aiMessages.length)];
+    box.innerHTML='<div class="ai-hint-box"><div style="font-size:12px;color:#9b59b6;margin-bottom:8px;letter-spacing:2px;">🤖 AI HINT</div><div style="font-size:15px;color:#d0d0e0;font-style:italic;">'+aiMsg+'</div></div>';
   }else if(type==="friend"){
     if(wwtbamLifelinesUsed.friend)return;wwtbamLifelinesUsed.friend=true;
     document.getElementById("ll-friend").classList.add("used");

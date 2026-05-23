@@ -1235,11 +1235,11 @@ function playLyrClip(){
 // PRICE DATA
 const PD=[
   {e:'\uD83C\uDF6B',n:'MrBeast Feastables Chocolate Bar',d:'Original chocolate bar, single',p:'$2.99'},
-  {e:'\uD83C\uDF6A',n:'Crumbl Cookie 4-pack box',d:'Classic pink box, 4 cookies',p:'$21.99'},
-  {e:'\uD83C\uDF54',n:"McDonald's Big Mac Meal (large)",d:'Big Mac, large fries, large drink',p:'$13.29'},
+  {e:'\uD83C\uDF6A',n:'Crumbl Cookie 4-pack box',d:'Classic pink box, 4 cookies',p:'$15.99'},
+  {e:'\uD83C\uDF54',n:"McDonald's Big Mac Meal (large)",d:'Big Mac, large fries, large drink',p:'$8.49'},
   {e:'\uD83C\uDFAE',n:'PS5 Slim (disc edition)',d:'Console only, retail price',p:'$499'},
   {e:'\uD83D\uDCF1',n:'iPhone 16 (base model, 128GB)',d:'Unlocked, new',p:'$799'},
-  {e:'\uD83D\uDC5F',n:'Air Jordan 4 Retro (retail)',d:"Men\'s size 10, at release",p:'$210'},
+  {e:'\uD83D\uDC5F',n:'Air Jordan 4 Retro (retail)',d:"Men\'s size 10, at release",p:'$220'},
   {e:'\uD83E\uDD64',n:'Stanley Quencher 40oz Tumbler',d:'With handle, retail price',p:'$45'},
   {e:'\uD83E\uDDE5',n:'Lululemon Align Leggings (25in)',d:'Nulu fabric, retail',p:'$98'},
   {e:'\uD83D\uDC36',n:'French Bulldog puppy (breeder)',d:'From reputable breeder, includes vet check',p:'$3,500'},
@@ -1247,11 +1247,11 @@ const PD=[
   {e:'\uD83C\uDFAB',n:'Taylor Swift Eras Tour ticket (avg resale)',d:'Floor section, resale market average',p:'$1,200'},
   {e:'\uD83D\uDE97',n:'Tesla Model Y (base, 2024)',d:'Long Range, retail price',p:'$44,990'},
   {e:'\uD83C\uDFE0',n:'Average US 1BR apartment rent (monthly)',d:'National median, 2024',p:'$1,500'},
-  {e:'\u231A',n:'Rolex Submariner (no date)',d:'Steel, brand new from authorized dealer',p:'$10,100'},
+  {e:'\u231A',n:'Rolex Submariner (no date)',d:'Steel, brand new from authorized dealer',p:'$9,500'},
   {e:'\uD83C\uDF93',n:'MIT annual tuition (2024-2025)',d:'Undergraduate, does not include room & board',p:'$61,990'},
   {e:'\u2708\uFE0F',n:'Round-trip flight ATL to Paris',d:'Economy, booked 3 weeks ahead',p:'$850'},
   {e:'\uD83C\uDFAE',n:'Roblox 10,000 Robux',d:'Digital purchase, in-game currency',p:'$99.99'},
-  {e:'\uD83C\uDF9F\uFE0F',n:'Disney World Annual Pass (Pixie Dust tier)',d:'Lowest tier, FL resident, 2024',p:'$399'},
+  {e:'\uD83C\uDF9F\uFE0F',n:'Disney World Annual Pass (Pixie Dust tier)',d:'Lowest tier, FL resident, 2024',p:'$489'},
   {e:'\uD83D\uDC5C',n:'Louis Vuitton Neverfull MM',d:'Monogram canvas, retail price',p:'$2,100'},
   {e:'\uD83C\uDFC0',n:'NBA 2K25 (PS5)',d:'Standard edition, digital download',p:'$69.99'},
 ];
@@ -1693,6 +1693,7 @@ let dondPhase = 'setup';
 let dondBanked = [null, null, null];
 let dondPlayedOrder = [];
 let dondCurrentOffer = 0;
+let dondOfferHistory = [];
 
 function initDOND() {
   const shuffled = [...DOND_VALUES].sort(() => Math.random() - 0.5);
@@ -1702,6 +1703,7 @@ function initDOND() {
   dondRound = 0;
   dondOpenedThisRound = 0;
   dondPhase = 'setup';
+  dondOfferHistory = [];
   document.getElementById('dond-setup').style.display = 'flex';
   document.getElementById('dond-play').style.display = 'none';
   document.getElementById('dond-turn-badge').textContent = '';
@@ -1860,6 +1862,8 @@ function showBankerOffer() {
   document.getElementById('dond-offer-num').textContent = '$' + offer.toLocaleString();
   document.getElementById('dond-offer-sub').textContent = 'Accept this offer or keep playing?';
   dondCurrentOffer = offer;
+  dondOfferHistory.push(offer);
+  renderDondOfferHistory();
 }
 
 function dondDeal() {
@@ -1892,7 +1896,7 @@ function dondNoDeal() {
     dondRevealOwnCase();
     return;
   }
-  if (remaining.length <= 3 && remaining.length >= 1) {
+  if (remaining.length === 1) {
     dondPhase = 'final';
     var swapBtns = remaining.map(function(r) {
       var ri = dondCases.indexOf(r);
@@ -1909,6 +1913,21 @@ function dondNoDeal() {
   }
   dondPhase = 'play';
   renderDondPlay();
+}
+
+function renderDondOfferHistory() {
+  var el = document.getElementById('dond-offer-history');
+  if (!el) return;
+  if (dondOfferHistory.length === 0) {
+    el.innerHTML = '<div style="color:#555;font-size:11px;text-align:center;margin-top:4px;">No offers yet</div>';
+    return;
+  }
+  el.innerHTML = dondOfferHistory.map(function(o, i) {
+    return '<div style="background:#1a1a3e;border:1px solid #4a90e244;border-radius:6px;padding:4px 6px;margin-bottom:4px;text-align:center;">' +
+      '<div style="font-size:9px;color:#9b59b6;letter-spacing:1px;">OFFER ' + (i+1) + '</div>' +
+      '<div style="font-size:13px;font-weight:900;color:#f5a623;">$' + o.toLocaleString() + '</div>' +
+      '</div>';
+  }).join('');
 }
 
 function dondKeep() {
@@ -2240,10 +2259,16 @@ function useLifeline(type){
           </div>
           <div class="dond-cases" id="dond-cases-play" style="flex:1;overflow:hidden;"></div>
         </div>
-        <!-- Right: player scores -->
-        <div style="width:110px;flex-shrink:0;">
-          <div style="font-size:11px;color:#a0a0b0;text-align:center;margin-bottom:4px;letter-spacing:1px;">BANKED</div>
-          <div id="dond-player-scores"></div>
+        <!-- Right: player scores + offer history -->
+        <div style="width:120px;flex-shrink:0;display:flex;flex-direction:column;gap:8px;overflow-y:auto;">
+          <div>
+            <div style="font-size:11px;color:#a0a0b0;text-align:center;margin-bottom:4px;letter-spacing:1px;">BANKED</div>
+            <div id="dond-player-scores"></div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:#a0a0b0;text-align:center;margin-bottom:4px;letter-spacing:1px;">OFFERS</div>
+            <div id="dond-offer-history"><div style="color:#555;font-size:11px;text-align:center;margin-top:4px;">No offers yet</div></div>
+          </div>
         </div>
       </div>
     </div>

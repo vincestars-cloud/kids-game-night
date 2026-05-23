@@ -329,7 +329,7 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
     <div class="game-subtitle">11 games ready. Edit player names on the left. Click any game to start!</div>
     <div class="home-grid">
       <div class="home-card" onclick="showGame('emoji')"><div class="icon">&#127917;</div><h3>Emoji Decoder</h3><p>40 puzzles — movies, shows, songs, phrases</p></div>
-      <div class="home-card" onclick="showGame('jeopardy')"><div class="icon">&#128250;</div><h3>Jeopardy Blast</h3><p>5 categories, harder questions!</p></div>
+      <div class="home-card" onclick="showGame('jeopardy')"><div class="icon">&#128250;</div><h3>Jeopardy Blast</h3><p>Pop Culture, Sports, Disney, Lyrics, Internet</p></div>
       <div class="home-card" onclick="showGame('flags')"><div class="icon">&#127988;</div><h3>Flag Flash</h3><p>30 countries, 15-second timer</p></div>
       <div class="home-card" onclick="showGame('draw')"><div class="icon">&#9999;&#65039;</div><h3>Draw That!</h3><p>50 words — draw it, others guess!</p></div>
       <div class="home-card" onclick="showGame('brainrot')"><div class="icon">&#129504;</div><h3>Brain Rot Trivia</h3><p>20 harder Gen Z internet culture Q's</p></div>
@@ -338,8 +338,8 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
       <div class="home-card" onclick="showGame('price')"><div class="icon">&#128176;</div><h3>Price Is Right</h3><p>Guess real prices — 20 products</p></div>
       <div class="home-card" onclick="showGame('connections')"><div class="icon">&#128279;</div><h3>Connections</h3><p>Group 16 words into 4 categories</p></div>
       <div class="home-card" onclick="showGame('password')"><div class="icon">&#128273;</div><h3>Password / Hot Seat</h3><p>One-word clues, 30 words</p></div>
-      <div class="home-card" onclick="showGame('feud')" style="border:2px solid var(--gold);"><div class="icon">&#127942;</div>
-<div class="home-card" onclick="showGame('dond')"><div class="icon">&#128188;</div><h3>Deal or No Deal</h3><p>20 briefcases, banker offers, Deal or No Deal! Each player takes a turn.</p></div><h3>Family Feud</h3><p>NEW! Survey says... 8 rounds!</p></div>
+      <div class="home-card" onclick="showGame('feud')"><div class="icon">&#127942;</div><h3>Family Feud</h3><p>8 rounds + Fast Money. Type answers, fuzzy match!</p></div>
+      <div class="home-card" onclick="showGame('dond')"><div class="icon">&#128188;</div><h3>Deal or No Deal</h3><p>20 briefcases, banker offers. Each player takes a turn!</p></div>
       <div class="home-card" onclick="showGame('wwtbam')"><div class="icon">&#128176;</div><h3>Who Wants to Be a Millionaire?</h3><p>Age-based questions, 3 lifelines, prize ladder. Pick your age group!</p></div>
     </div>
   </div>
@@ -479,7 +479,8 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
         <circle class="timer-ring" cx="35" cy="35" r="30" id="br-ring" stroke="var(--purple)"/>
         <text class="timer-num" x="35" y="35" id="br-tnum">20</text>
       </svg>
-      <button class="btn btn-green btn-sm" onclick="startTimer('br',20)">&#9654;</button>
+      <button class="btn btn-red" style="font-weight:900;font-size:13px;padding:8px 14px;" onclick="startTimer('br',5)">&#9889; BUZZ IN 5s</button>
+      <button class="btn btn-green btn-sm" onclick="startTimer('br',20)">&#9654; 20s</button>
       <button class="btn btn-gray btn-sm" onclick="stopTimer('br')">&#9646;&#9646;</button>
     </div>
   </div>
@@ -559,13 +560,28 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
         <div class="product-emoji" id="price-emoji"></div>
         <div class="product-display" id="price-name">Loading...</div>
         <div class="product-desc" id="price-desc"></div>
-        <div style="font-size:13px;color:var(--text2);margin-bottom:8px;">What does this cost?</div>
-        <div class="price-reveal" id="price-answer" onclick="togglePrice()">Tap to reveal price</div>
+        <div style="font-size:12px;color:var(--text2);margin-bottom:10px;font-weight:700;letter-spacing:1px;">LOCK IN YOUR GUESSES (closest without going over wins):</div>
+        <div style="display:flex;gap:10px;justify-content:center;margin-bottom:10px;flex-wrap:wrap;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+            <label style="font-size:11px;color:#a0a0b0;font-weight:700;letter-spacing:1px;">LEGEND</label>
+            <input id="pg1" type="number" min="0" placeholder="$" style="width:90px;background:#16213e;border:2px solid #4a90e2;color:#e0e0e0;font-size:20px;font-weight:700;padding:8px 6px;border-radius:8px;text-align:center;outline:none;" />
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+            <label style="font-size:11px;color:#a0a0b0;font-weight:700;letter-spacing:1px;">SUMAYA</label>
+            <input id="pg2" type="number" min="0" placeholder="$" style="width:90px;background:#16213e;border:2px solid #4a90e2;color:#e0e0e0;font-size:20px;font-weight:700;padding:8px 6px;border-radius:8px;text-align:center;outline:none;" />
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+            <label style="font-size:11px;color:#a0a0b0;font-weight:700;letter-spacing:1px;">SARAI</label>
+            <input id="pg3" type="number" min="0" placeholder="$" style="width:90px;background:#16213e;border:2px solid #4a90e2;color:#e0e0e0;font-size:20px;font-weight:700;padding:8px 6px;border-radius:8px;text-align:center;outline:none;" />
+          </div>
+        </div>
+        <button id="price-guess-btn" class="btn btn-gold" onclick="lockPriceGuesses()" style="margin:0 auto 8px;display:block;font-size:14px;padding:10px 24px;">&#128274; Lock &amp; Reveal</button>
+        <div id="price-result" style="display:none;text-align:center;margin:6px 0;"></div>
+        <div class="price-reveal" id="price-answer">Price appears after locking guesses</div>
       </div>
     </div>
     <div class="game-controls">
       <button class="btn btn-gray btn-sm" onclick="priceNav(-1)">&#8592; Prev</button>
-      <button class="btn btn-gold btn-sm" onclick="togglePrice()">Reveal</button>
       <button class="btn btn-blue btn-sm" onclick="priceNav(1)">Next &#8594;</button>
       <svg class="timer-inline" viewBox="0 0 70 70">
         <circle class="timer-bg" cx="35" cy="35" r="30"/>
@@ -625,7 +641,7 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
   </div>
 
   <!-- FAMILY FEUD -->
-  <div id="game-feud" class="game-section">
+  <div id="game-feud" class="game-section" style="padding:12px 16px;">
   <div style="padding:8px 0 0; display:flex; gap:8px; align-items:center;">
     <button class="back-btn btn btn-gray btn-sm" onclick="showGame('home')">&#8592; Home</button>
     <span style="font-size:20px;font-weight:900;color:#f5a623;margin-left:8px;">&#127942; Family Feud</span>
@@ -708,6 +724,7 @@ function showGame(id){
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   const sec=document.getElementById('game-'+id);
   if(sec)sec.classList.add('active');
+  window.scrollTo(0,0);
   document.querySelectorAll('.nav-btn').forEach(b=>{
     if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes("'"+id+"'"))b.classList.add('active');
   });
@@ -751,46 +768,45 @@ function stopTimer(key){if(timers[key]){clearInterval(timers[key]);delete timers
 
 // EMOJI DATA
 const EP=[
-  {cat:'MOVIE',e:'\uD83E\uDD81\uD83D\uDC51\uD83C\uDF05',a:'The Lion King'},
-  {cat:'MOVIE',e:'\uD83D\uDD77\uFE0F\uD83D\uDC66\uD83C\uDFD9\uFE0F',a:'Spider-Man'},
-  {cat:'MOVIE',e:'\uD83E\uDDCA\u2744\uFE0F\uD83D\uDC78',a:'Frozen'},
-  {cat:'MOVIE',e:'\uD83D\uDC20\uD83D\uDD35\uD83C\uDF0A',a:'Finding Nemo'},
-  {cat:'MOVIE',e:'\u26A1\uD83E\uDDD9\u200D\u2642\uFE0F\uD83C\uDFEB',a:'Harry Potter'},
-  {cat:'MOVIE',e:'\uD83E\uDDC5\uD83D\uDC09\uD83C\uDFDE\uFE0F',a:'Shrek'},
-  {cat:'MOVIE',e:'\uD83E\uDD16\u2764\uFE0F\uD83C\uDF31',a:'WALL-E'},
-  {cat:'MOVIE',e:'\uD83E\uDD87\uD83C\uDCCF\uD83C\uDF03',a:'The Dark Knight'},
-  {cat:'MOVIE',e:'\uD83D\uDC7C\uD83C\uDF0A\uD83D\uDD31',a:'The Little Mermaid'},
-  {cat:'MOVIE',e:'\uD83C\uDF39\uD83E\uDDCC\uD83D\uDD6F\uFE0F',a:'Beauty and the Beast'},
-  {cat:'MOVIE',e:'\uD83C\uDFAD\uD83C\uDFAA\uD83E\uDD39',a:'The Greatest Showman'},
-  {cat:'MOVIE',e:'\uD83C\uDF00\u23F0\uD83D\uDD01',a:'Groundhog Day'},
-  {cat:'MOVIE',e:'\uD83C\uDFB8\uD83D\uDC80\uD83C\uDDF2\uD83C\uDDFD',a:'Coco'},
-  {cat:'MOVIE',e:'\uD83C\uDFCE\uFE0F\u26A1\uD83C\uDFC1',a:'Cars'},
-  {cat:'MOVIE',e:'\uD83D\uDC00\uD83D\uDC68\u200D\uD83C\uDF73\uD83C\uDF72',a:'Ratatouille'},
-  {cat:'TV SHOW',e:'\uD83E\uDDEA\uD83D\uDFE6\uD83C\uDF73',a:'Breaking Bad'},
-  {cat:'TV SHOW',e:'\uD83D\uDC09\uD83C\uDFF0\u2694\uFE0F',a:'Game of Thrones'},
-  {cat:'TV SHOW',e:'\uD83E\uDDDF\u200D\u2642\uFE0F\uD83D\uDD2B\uD83C\uDF3E',a:'The Walking Dead'},
-  {cat:'TV SHOW',e:'\uD83C\uDF55\uD83D\uDECB\uFE0F\uD83D\uDC6B\uD83D\uDE02',a:'Friends'},
-  {cat:'TV SHOW',e:'\uD83D\uDD26\uD83D\uDC7E\uD83C\uDFE1',a:'Stranger Things'},
-  {cat:'TV SHOW',e:'\uD83E\uDD91\uD83C\uDFAE\uD83D\uDC80',a:'Squid Game'},
-  {cat:'TV SHOW',e:'\uD83D\uDFE1\uD83C\uDF54\uD83C\uDF0A',a:'SpongeBob SquarePants'},
-  {cat:'TV SHOW',e:'\uD83D\uDC8E\uD83D\uDC51\uD83C\uDFF4',a:'Peaky Blinders'},
-  {cat:'TV SHOW',e:'\u2696\uFE0F\uD83D\uDC69\u200D\u2696\uFE0F\uD83D\uDCDA',a:'Suits'},
-  {cat:'TV SHOW',e:'\uD83C\uDF93\uD83D\uDD2C\uD83D\uDC8A',a:"Grey's Anatomy"},
-  {cat:'SONG',e:'\uD83C\uDF03\uD83D\uDC83\uD83C\uDFA4',a:'Shake It Off \u2014 Taylor Swift'},
-  {cat:'SONG',e:'\u2602\uFE0F\uD83C\uDF27\uFE0F\uD83D\uDC94',a:'Umbrella \u2014 Rihanna'},
-  {cat:'SONG',e:'\uD83C\uDF3B\uD83D\uDD77\uFE0F\uD83C\uDFB5',a:'Sunflower \u2014 Post Malone'},
-  {cat:'SONG',e:'\uD83D\uDC8A\uD83D\uDD76\uFE0F\uD83C\uDFD9\uFE0F',a:'Blinding Lights \u2014 The Weeknd'},
-  {cat:'SONG',e:'\uD83D\uDC0E\uD83E\uDD20\uD83C\uDFDC\uFE0F',a:'Old Town Road \u2014 Lil Nas X'},
-  {cat:'SONG',e:'\uD83D\uDD25\uD83D\uDE97\uD83D\uDCA8',a:'Fast Car \u2014 Tracy Chapman'},
-  {cat:'SONG',e:'\uD83C\uDF0A\uD83C\uDFC4\uD83D\uDD37',a:'Levitating \u2014 Dua Lipa'},
-  {cat:'SONG',e:'\uD83C\uDF51\uD83C\uDF3F\uD83C\uDFB8',a:'Peaches \u2014 Justin Bieber'},
-  {cat:'PHRASE',e:'\uD83D\uDC26\uD83E\uDEA8\uD83D\uDC80',a:'Kill two birds with one stone'},
-  {cat:'PHRASE',e:'\uD83C\uDF27\uFE0F\u2601\uFE0F\uD83C\uDF08',a:'Every cloud has a silver lining'},
-  {cat:'PHRASE',e:'\uD83D\uDC31\uD83D\uDCE6\uD83D\uDC80',a:'Curiosity killed the cat'},
-  {cat:'PHRASE',e:'\uD83D\uDC18\uD83D\uDEAA',a:'Elephant in the room'},
-  {cat:'PHRASE',e:'\uD83D\uDD25\uD83E\uDD44',a:'Bite the bullet'},
-  {cat:'PHRASE',e:'\uD83E\uDD4A\uD83D\uDCA7\uD83E\uDEA3',a:'Drop in the bucket'},
-  {cat:'PHRASE',e:'\uD83D\uDC1F\uD83C\uDFA3\uD83D\uDD19',a:'Plenty of fish in the sea'},
+  {cat:'MOVIE',e:'\uD83D\uDE00\uD83D\uDE22\uD83D\uDE20\uD83D\uDE31\uD83C\uDFA0',a:'Inside Out'},
+  {cat:'MOVIE',e:'\uD83D\uDC3E\uD83D\uDC51\uD83C\uDF0D\u26AB',a:'Black Panther'},
+  {cat:'MOVIE',e:'\uD83C\uDF3A\uD83C\uDF0A\u2B50',a:'Moana'},
+  {cat:'MOVIE',e:'\uD83E\uDD20\uD83D\uDE80\u2728\uD83D\uDC94',a:'Toy Story'},
+  {cat:'MOVIE',e:'\uD83D\uDC68\u200D\uD83D\uDC69\u200D\uD83D\uDC67\u200D\uD83D\uDC66\uD83E\uDDB8\uD83D\uDCAA',a:'The Incredibles'},
+  {cat:'MOVIE',e:'\uD83C\uDF7A\uD83D\uDD6F\uFE0F\uD83C\uDDF8\uD83C\uDDFE',a:'Encanto'},
+  {cat:'MOVIE',e:'\uD83C\uDFF9\uD83D\uDC67\uD83D\uDD25\uD83C\uDFDF\uFE0F',a:'The Hunger Games'},
+  {cat:'MOVIE',e:'\uD83D\uDFE1\uD83D\uDE08\uD83C\uDF4C',a:'Minions'},
+  {cat:'MOVIE',e:'\uD83D\uDEE1\uFE0F\u2B50\uD83D\uDC75',a:'Captain America'},
+  {cat:'MOVIE',e:'\uD83D\uDD70\uFE0F\uD83E\uDD7A\uD83C\uDF31',a:'Turning Red'},
+  {cat:'MOVIE',e:'\uD83C\uDFB9\uD83D\uDC74\u2728\uD83C\uDF0C',a:'Soul'},
+  {cat:'MOVIE',e:'\uD83D\uDC57\uD83E\uDD73\uD83D\uDCDA\uD83C\uDFEB',a:'Clueless'},
+  {cat:'MOVIE',e:'\uD83D\uDC60\uD83C\uDF55\uD83D\uDCF8\uD83D\uDC51',a:'Mean Girls'},
+  {cat:'MOVIE',e:'\uD83D\uDD77\uFE0F\u269B\uFE0F\uD83E\uDD78',a:'No Way Home'},
+  {cat:'MOVIE',e:'\uD83D\uDC4A\uD83D\uDE80\uD83C\uDF0C',a:'Guardians of the Galaxy'},
+  {cat:'TV SHOW',e:'\uD83C\uDFDD\uFE0F\uD83D\uDC9B\uD83C\uDF39',a:'Love Island'},
+  {cat:'TV SHOW',e:'\u2702\uFE0F\uD83D\uDC70\uD83C\uDFEB\uD83D\uDDA4',a:'Wednesday'},
+  {cat:'TV SHOW',e:'\uD83D\uDC36\uD83C\uDF08\uD83C\uDFE0\uD83D\uDE02',a:'Bluey'},
+  {cat:'TV SHOW',e:'\uD83D\uDFE1\uD83C\uDF69\uD83C\uDFE0\uD83D\uDE04',a:'The Simpsons'},
+  {cat:'TV SHOW',e:'\uD83C\uDFC4\u200D\u2642\uFE0F\uD83D\uDCB0\uD83C\uDF0A\uD83C\uDFD6\uFE0F',a:'Outer Banks'},
+  {cat:'TV SHOW',e:'\uD83C\uDF43\uD83D\uDC9A\u2764\uFE0F\uD83D\uDCDA',a:'Heartstopper'},
+  {cat:'TV SHOW',e:'\uD83D\uDCDA\uD83D\uDE2D\uD83C\uDDEE\uD83C\uDDF3\uD83C\uDFEB',a:'Never Have I Ever'},
+  {cat:'TV SHOW',e:'\uD83D\uDC8A\uD83D\uDC40\uD83C\uDF1F\uD83D\uDC94',a:'Euphoria'},
+  {cat:'TV SHOW',e:'\uD83D\uDCBC\uD83D\uDC54\uD83E\uDD1D\uD83D\uDCB0',a:'Suits'},
+  {cat:'TV SHOW',e:'\uD83D\uDEAB\uD83D\uDE10\uD83C\uDFEB\uD83D\uDCF1',a:'Social Media (Black Mirror)'},
+  {cat:'SONG',e:'\uD83D\uDE97\uD83E\uDD35\uD83D\uDC94\uD83D\uDE2D',a:"drivers license \u2014 Olivia Rodrigo"},
+  {cat:'SONG',e:'\u2615\uD83D\uDC83\uD83D\uDC40\uD83D\uDCA4',a:'Espresso \u2014 Sabrina Carpenter'},
+  {cat:'SONG',e:'\uD83D\uDD70\uFE0F\u2764\uFE0F\uD83C\uDF39\uD83C\uDF1F',a:'As It Was \u2014 Harry Styles'},
+  {cat:'SONG',e:'\uD83D\uDE20\uD83D\uDE08\uD83D\uDD25\uD83D\uDCA2',a:'Good 4 U \u2014 Olivia Rodrigo'},
+  {cat:'SONG',e:'\uD83E\uDDE8\u2600\uFE0F\u2728\uD83D\uDC83',a:'Butter \u2014 BTS'},
+  {cat:'SONG',e:'\uD83C\uDF21\uFE0F\uD83C\uDF0A\uD83D\uDCAD\uD83D\uDE34',a:'Heat Waves \u2014 Glass Animals'},
+  {cat:'SONG',e:'\uD83C\uDF38\uD83D\uDCAA\uD83E\uDD34\uD83C\uDF3C',a:'Flowers \u2014 Miley Cyrus'},
+  {cat:'SONG',e:'\uD83E\uDDB8\u200D\u2640\uFE0F\u2764\uFE0F\uD83D\uDD2D',a:'Anti-Hero \u2014 Taylor Swift'},
+  {cat:'PHRASE',e:'\uD83E\uDDCA\uD83D\uDE0A\uD83D\uDCAC',a:'Break the ice'},
+  {cat:'PHRASE',e:'\u2615\uD83D\uDCA6\uD83D\uDC40',a:'Spill the tea'},
+  {cat:'PHRASE',e:'\uD83C\uDF27\uFE0F\uD83E\uDD22',a:'Under the weather'},
+  {cat:'PHRASE',e:'\uD83D\uDD28\uD83D\uDCA1\u2705',a:'Hit the nail on the head'},
+  {cat:'PHRASE',e:'\uD83D\uDC37\u2708\uFE0F\uD83C\uDF08',a:'When pigs fly'},
+  {cat:'PHRASE',e:'\uD83D\uDCDA\uD83D\uDC40\uD83D\uDD0D',a:'Read between the lines'},
 ];
 let emojiIdx=0,emojiAnswerShown=false;
 function loadEmoji(i){
@@ -816,34 +832,35 @@ function toggleEmojiAnswer(){
 function emojiNav(d){emojiIdx=(emojiIdx+d+EP.length)%EP.length;loadEmoji(emojiIdx);}
 
 // JEOPARDY DATA
-const jCats=['Brain Rot','World Geography','Science & Space','Music','Flag Quiz'];
+const jCats=['Pop Culture','Sports & Athletes','Disney & Pixar','Finish The Lyric','Internet Moments'];
 const jData=[
-  [{pts:100,q:"What does 'bussin' mean?",a:"Extremely good, usually referring to food"},
-   {pts:200,q:"What game made the word 'sus' famous?",a:"Among Us"},
-   {pts:300,q:"What does it mean if someone calls you an 'NPC'?",a:"Non-Playable Character \u2014 means you act like a background character with no original thought"},
-   {pts:400,q:"What is the 'Sigma male' meme about?",a:"A lone wolf who doesn't need social validation but still succeeds \u2014 the 'solitary apex predator' outside the normal social hierarchy"},
-   {pts:500,q:"Who created Skibidi Toilet, and in what year?",a:"DaFuq!?Boom! \u2014 launched February 2023 on YouTube"}],
-  [{pts:100,q:"What is the capital of Australia?",a:"Canberra (NOT Sydney or Melbourne)"},
-   {pts:200,q:"What is the only country with a non-rectangular flag?",a:"Nepal \u2014 it has a double-pennon (stacked triangle) shape"},
-   {pts:300,q:"Name the 7 countries of Central America",a:"Guatemala, Belize, Honduras, El Salvador, Nicaragua, Costa Rica, Panama"},
-   {pts:400,q:"What tiny country is completely surrounded by Italy?",a:"San Marino (also Vatican City)"},
-   {pts:500,q:"What is the world's newest recognized country (2011)?",a:"South Sudan \u2014 gained independence July 9, 2011"}],
-  [{pts:100,q:"How many bones are in the adult human body?",a:"206 bones"},
-   {pts:200,q:"What planet has the most moons in our solar system?",a:"Saturn \u2014 146 confirmed moons as of 2024"},
-   {pts:300,q:"What is the hottest planet, and why NOT Mercury?",a:"Venus \u2014 its thick CO2 atmosphere traps heat (greenhouse effect), making it hotter than Mercury"},
-   {pts:400,q:"What is the speed of light in a vacuum?",a:"299,792,458 m/s \u2014 about 186,000 miles/sec or 670 million mph"},
-   {pts:500,q:"What is the boundary around a black hole beyond which nothing can escape?",a:"The Event Horizon"}],
-  [{pts:100,q:"Which rapper has the most Billboard #1 hits as solo/lead?",a:"Drake \u2014 14 solo #1 hits on the Hot 100 as of 2024"},
-   {pts:200,q:"What does BTS stand for?",a:"Bangtan Sonyeondan \u2014 'Bulletproof Boy Scouts' or 'Beyond the Scene'"},
-   {pts:300,q:"Which female artist holds the record for most Billboard Hot 100 #1s?",a:"Mariah Carey \u2014 19 #1 hits"},
-   {pts:400,q:"What year did Kendrick Lamar's 'Not Like Us' Drake diss drop?",a:"2024 \u2014 it debuted at #1 and spent multiple weeks there"},
-   {pts:500,q:"What note is 'A4' in standard music tuning, and why does it matter?",a:"440 Hz \u2014 it's the international standard pitch all instruments tune to"}],
-  [{pts:100,q:"This flag has a simple red circle on white",a:"Japan",flag:'jp'},
-   {pts:200,q:"This flag features a blue globe with stars and a yellow diamond",a:"Brazil",flag:'br'},
-   {pts:300,q:"This is the world's only non-rectangular national flag",a:"Nepal",flag:'np'},
-   {pts:400,q:"This flag is half white, half red, separated by a serrated edge with 5 triangles",a:"Bahrain",flag:'bh'},
-   {pts:500,q:"This flag has a red background with a yellow sun-like design (tunduk/yurt roof)",a:"Kyrgyzstan",flag:'kg'}],
-];
+  [{pts:100,q:"What character does Zendaya play in Euphoria?",a:"Rue Bennett — a teenage girl navigating addiction and high school."},
+   {pts:200,q:"Who plays Wednesday Addams in Netflix's Wednesday?",a:"Jenna Ortega — she also choreographed the viral dance scene herself."},
+   {pts:300,q:"What is Bluey's dad's name?",a:"Bandit Heeler. Mom is Chilli. They're Australian Blue Heeler dogs."},
+   {pts:400,q:"What Netflix show from South Korea features deadly children's games for cash prize?",a:"Squid Game — Season 1 dropped in 2021 and became Netflix's biggest launch ever."},
+   {pts:500,q:"Which Taylor Swift era has the snake imagery and dark moody aesthetic?",a:"Reputation (2017) — the dark era after the Kanye/Kim drama where she leaned fully into the villain narrative."}],
+  [{pts:100,q:"What sport does Simone Biles compete in?",a:"Gymnastics — she returned at Paris 2024 Olympics and won gold again after her mental health break at Tokyo 2021."},
+   {pts:200,q:"How many NBA Championship rings does LeBron James have?",a:"4 rings: Miami Heat (2012, 2013), Cleveland Cavaliers (2016), LA Lakers (2020)."},
+   {pts:300,q:"What country did Lionel Messi lead to a World Cup win in 2022?",a:"Argentina — their first World Cup since 1986. Messi won the Golden Ball award as tournament's best player."},
+   {pts:400,q:"What pop star is Travis Kelce (Kansas City Chiefs tight end) dating?",a:"Taylor Swift — started dating in 2023. She attended multiple Chiefs games and the Super Bowl."},
+   {pts:500,q:"What NFL receiver's Griddy touchdown dance was added to Fortnite?",a:"Justin Jefferson (Minnesota Vikings) — the Griddy became the most iconic TD celebration of the era."}],
+  [{pts:100,q:"Who is the villain in The Little Mermaid?",a:"Ursula the Sea Witch — she tricks Ariel into trading her voice for legs."},
+   {pts:200,q:"What is the name of Andy's cowboy toy in Toy Story?",a:"Woody — voiced by Tom Hanks. His full name is Woody Pride."},
+   {pts:300,q:"In Inside Out, what is the name of Riley's childhood imaginary friend?",a:"Bing Bong — part elephant, cat, and dolphin. He sacrifices himself so Joy can escape the memory dump."},
+   {pts:400,q:"What country is Moana set in, and what does she have a special connection with?",a:"Polynesia (island of Motunui) — she has a special connection with the ocean itself, which chooses her."},
+   {pts:500,q:"In Pixar's Up, what is Carl's late wife's name and what was their shared dream?",a:"Ellie — their dream was to move to Paradise Falls in South America. Carl fulfills it after she passes."}],
+  [{pts:100,q:"Fill in: 'You belong with me, you belong with ___'",a:"Me — Taylor Swift, 'You Belong With Me' (2008). One of her most iconic music videos."},
+   {pts:200,q:"Fill in: 'I got my driver\'s license last week... still see your face in the ___ lights'",a:"Traffic — Olivia Rodrigo, 'drivers license' (2021). First song to debut #1 on both major charts simultaneously."},
+   {pts:300,q:"Fill in: 'That is that me espresso, that is that me ___'",a:"Espresso — Sabrina Carpenter (2024). Summer 2024's inescapable song. 'I can\'t relate to desperation.'"},
+   {pts:400,q:"Fill in: 'They not like us, they not like us, they not like ___'",a:"Us — Kendrick Lamar's Drake diss 'Not Like Us' (2024). Debuted at #1. He performed it at the Super Bowl."},
+   {pts:500,q:"Fill in this legendary Rick Roll: 'Never gonna give you up, never gonna let you down, never gonna run around and ___'",a:"Desert you — Rick Astley (1987). Congratulations, you just got rickrolled. The video has over 1.5 billion views."}],
+  [{pts:100,q:"What were the two color options people saw in 'The Dress' 2015 viral debate?",a:"Blue and black OR white and gold. It was actually blue and black. Science says lighting perception varies by person."},
+   {pts:200,q:"What does it mean when a tweet gets 'ratioed'?",a:"Replies outnumber likes — meaning most people disagree with you. Getting ratioed is very embarrassing online."},
+   {pts:300,q:"What was the first YouTube video to reach 1 billion views?",a:"Gangnam Style by PSY (2012) — so popular it broke YouTube's view counter, which wasn't built for that many zeros."},
+   {pts:400,q:"What mobile game had people walking into traffic staring at their phones when it launched in 2016?",a:"Pokémon GO — the AR game sent millions outside. People trespassed at government buildings, crashed cars, and servers collapsed."},
+   {pts:500,q:"What does 'quiet quitting' mean as a 2022 workplace trend?",a:"Doing exactly your job description — no more, no less. Not actually quitting, but refusing to go above and beyond for a company that doesn't reward it."}],
+]
+
 let jUsed=Array.from({length:5},()=>Array(5).fill(false));
 function buildJBoard(){
   const b=document.getElementById('jeopardy-board');
@@ -954,26 +971,26 @@ function drawNav(d){drawIdx=(drawIdx+d+drawWords.length)%drawWords.length;loadDr
 
 // BRAIN ROT DATA
 const BRQ=[
-  {q:"What does 'no cap' mean?",opts:["Without a hat","Telling the truth / not lying","Unlimited","Moving fast"],c:1,exp:'"No cap" = no lie. "Cap" means a lie or exaggeration.'},
-  {q:"What game made the word 'sus' famous?",opts:["Roblox","Minecraft","Among Us","Fortnite"],c:2,exp:'Sus (suspicious) exploded from Among Us (2020).'},
-  {q:"What does 'delulu' mean?",opts:["Feeling lazy","Delusional \u2014 living in fantasy","Really cool","Very hungry"],c:1,exp:'"Delulu" = delusional. Used for parasocial fan obsessions.'},
-  {q:"What is a 'W' vs 'L' in internet slang?",opts:["Win vs Loss","Work vs Life","Weird vs Lame","White vs Light"],c:0,exp:'"W" = Win. "L" = Loss. "Taking the L" = accepting defeat.'},
-  {q:"What does 'rizzing someone up' mean?",opts:["Making them cry","Flirting / charming someone with natural charisma","Starting a fight","Ignoring them"],c:1,exp:'"Rizz" = natural charm. To "rizz up" = to attract someone effortlessly.'},
-  {q:"What is special about the Sigma male in the meme hierarchy?",opts:["He is OUTSIDE the Alpha-Beta hierarchy \u2014 the lone wolf who wins alone","He is above Alpha","He is below Beta","Same as Alpha"],c:0,exp:"Sigma is OUTSIDE the standard hierarchy \u2014 lone wolf who doesn't play the social game but still wins."},
-  {q:"Who is Kai Cenat and what record did he break?",opts:["YouTube subscriber record","Twitch subscriber record (multiple times)","TikTok follower record","Instagram live record"],c:1,exp:'Kai Cenat broke Twitch subscriber records multiple times with his subathons.'},
-  {q:"What does 'caught in 4K' mean?",opts:["Watching in 4K resolution","Caught red-handed with undeniable evidence","Being filmed secretly","Winning 4,000 coins"],c:1,exp:'"Caught in 4K" = caught doing something wrong with crystal-clear proof.'},
-  {q:"What is a 'beige flag' in dating slang?",opts:["A serious red flag","A great green flag","A quirky but harmless trait","A friend zone signal"],c:2,exp:"Beige flag = weird quirk that's neither good nor bad. Just odd."},
-  {q:"What does 'understood the assignment' mean?",opts:["Did their homework","Cheated on a test","Perfectly nailed the vibe or task","Read all instructions"],c:2,exp:'"Understood the assignment" = went ALL in on the vibe \u2014 maximum effort in exactly the right direction.'},
-  {q:"What does 'NPC behavior' mean?",opts:["Playing video games all day","Acting mindlessly like a background character with no original thought","Being extremely quiet","Following trends"],c:1,exp:'NPC = Non-Playable Character. Acting scripted, predictable, without authentic thought.'},
-  {q:"What does IYKYK mean?",opts:["I'll Yield, Keep Your Kindness","If You Know You Know","I Yelled, Keep Your Knowledge","It's Your Kind of Karma"],c:1,exp:'IYKYK = "If You Know, You Know" \u2014 for inside jokes only certain people get.'},
-  {q:"What is 'the ick'?",opts:["A gross food","A sudden feeling of disgust that kills attraction","Being sick","An internet glitch"],c:1,exp:'"Getting the ick" = sudden irrational disgust triggered by a small weird thing someone does.'},
-  {q:"What does 'hitting a griddy' refer to?",opts:["A football penalty","A viral dance celebration move","Grinding homework","Playing defense"],c:1,exp:'The Griddy is a dance popularized by NFL receiver Justin Jefferson.'},
-  {q:"What does 'living rent free in my head' mean?",opts:["Not paying rent","Thinking about something constantly without stopping","Having free mental space","Being relaxed"],c:1,exp:'Something "living rent free in your head" = takes up mental space constantly without you wanting it to.'},
-  {q:"What does 'this ain\u2019t it chief' mean?",opts:["You're lost","This is bad / wrong / not the move","Your boss is calling","Going the wrong way"],c:1,exp:'"This ain\'t it chief" = this is bad or off-base. Calling something out as a bad idea.'},
-  {q:"What is the 'Ohio' meme about?",opts:["Ohio is boring","Ohio represents where bizarre, surreal things happen","Ohio has weird laws","Ohio is where most memes started"],c:1,exp:'The "only in Ohio" meme = absurd videos captioned "only in Ohio" even when filmed elsewhere.'},
-  {q:"What does 'slay' mean in modern slang?",opts:["A sword attack","Looking amazing / crushing it / absolutely nailing something","Feeling tired","Killing in a game"],c:1,exp:'"Slay" = doing something impressively, looking incredible, or absolutely nailing it.'},
-  {q:"What does 'it\u2019s giving [word]' mean?",opts:["Donating something","Something has that specific vibe or energy","Being overly generous","Sharing information"],c:1,exp:'"It\'s giving [adjective]" = this has that specific energy. "It\'s giving villain era."'},
-  {q:"What does 'main character energy' mean?",opts:["First player in a game","Acting like the protagonist of your own story \u2014 confident, noticed, special","Having the most followers","Being team captain"],c:1,exp:'"Main character energy" = acting like the protagonist of life \u2014 confident, dramatic, noticed.'},
+  {q:"Which 2023 viral trend revealed that men constantly think about a specific ancient civilization?",opts:["Ancient Egypt","The Roman Empire","Medieval Europe","The Wild West"],c:1,exp:'Women asked guys "how often do you think about the Roman Empire?" The answers were always "all the time." It became a massive meme proving men\'s brains are constantly in ancient Rome.'},
+  {q:"What does 'mid' mean as Gen Z slang?",opts:["Middle school","Mediocre — average, nothing special, barely okay","A midnight snack","The middle of an argument"],c:1,exp:'"Mid" = average or mediocre. The worst insult because it means you weren\'t even interesting enough to be bad. "That movie was mid" is devastating.'},
+  {q:"What does 'opp' mean?",opts:["An opportunity","Opponent or enemy — someone who\'s against you","A police officer","A game option"],c:1,exp:'"Opp" = opponent or opposition. Your opp is your rival or enemy. Comes from rap culture.'},
+  {q:"What does 'bussin\\'\\'' mean?",opts:["Getting on the bus","Something is extremely good — especially food","Breaking something","Causing trouble"],c:1,exp:'"Bussin\\'\\'' = amazing, incredible, fire. Almost always about food. "This Chick-fil-A is bussin bussin" = it\'s delicious on another level.'},
+  {q:"What does \'touch grass\' mean?",opts:["Play a lawn sport","Log off and go outside — stop being chronically online","Start a garden","Exercise"],c:1,exp:'"Touch grass" = go outside, disconnect, reconnect with reality. Said to people who have been way too deep in internet drama and lost perspective.'},
+  {q:"What does getting \'ratioed\' mean on Twitter/X?",opts:["Your aspect ratio is off","Your tweet got more replies than likes — usually means people disagree","Comparing follower counts","Sharing statistics"],c:1,exp:'Getting ratioed = your tweet has way more angry replies than likes. A sign you said something wrong, dumb, or controversial. Very embarrassing.'},
+  {q:"Who went viral in 2024 saying \'very demure, very mindful, very cutesy\'?",opts:["Charli D\'Amelio","Addison Rae","Jools Lebron","Alix Earle"],c:2,exp:'Jools Lebron (also known as Joolie) became massive in August 2024 with her "very demure" TikToks promoting quiet, mindful behavior. It got brand deals within days.'},
+  {q:"What does entering your \'villain arc\' mean?",opts:["Writing a villain\'s backstory","Deciding to stop people-pleasing and unapologetically do what you want","Getting cancelled as an influencer","A dark TV storyline"],c:1,exp:'Villain arc = you\'re done accommodating everyone. You\'re putting yourself first now, consequences be damned. "I\'m in my villain arc" = unbothered mode activated.'},
+  {q:"What does \'no shot\' mean in slang?",opts:["A zero score in a sport","Absolutely not — there is no way that is true or happening","Choosing not to drink","Missing a free throw"],c:1,exp:'"No shot she said that" = I cannot believe / there is absolutely no way. Used to express disbelief or denial.'},
+  {q:"What is a parasocial relationship?",opts:["Long distance dating","A one-sided emotional bond — fans feeling close to a celebrity who doesn\'t know them","An online relationship","Being friends with someone who ignores you"],c:1,exp:'Parasocial = you watch a streamer every day and feel like you KNOW them personally — but they don\'t know you exist. The emotional connection only goes one way.'},
+  {q:"What does \'ate and left no crumbs\' mean?",opts:["Ate all the party food","Executed something absolutely perfectly with flawless results","Left a situation quietly","Won by a huge margin"],c:1,exp:'"Ate and left no crumbs" = nailed it completely. No evidence of effort, no mistakes — just perfect results. One of the highest compliments.'},
+  {q:"What does \'ghosting\' someone mean?",opts:["Dressing as a ghost","Completely cutting off contact without any explanation","Talking behind someone\'s back","Unfollowing on social media"],c:1,exp:'Ghosting = suddenly stopping all communication — no texts, no calls, no explanation. You just vanish like a ghost. Extremely common in modern dating.'},
+  {q:"What does \'red flag\' mean in dating slang?",opts:["Someone who looks amazing","A warning sign that someone might be toxic or harmful","Someone being too clingy","A physical feature you notice"],c:1,exp:'Red flag = a behavior that warns you someone might be problematic. "He texted his ex on our first date... red flag." Green flags are the opposite.'},
+  {q:"What does \'lowkey\' mean?",opts:["Speaking quietly","Somewhat, secretly, or quietly — not making it a big deal","Having low energy","Underground music"],c:1,exp:'"Lowkey" = kind of, a little, quietly, or secretly. "I lowkey love this song" = I like it but I\'m not broadcasting it. Understated.'},
+  {q:"What does being in your \'era\' mean?",opts:["A time period in history","A current personal phase or identity you\'re fully embodying right now","An album release cycle","A school year"],c:1,exp:'"I\'m in my unbothered era" = this is who I am right now and I\'m fully committed to it. Inspired by Taylor Swift\'s Eras Tour concept.'},
+  {q:"What does \'go off\' mean when someone says it encouragingly?",opts:["Leave immediately","Keep speaking freely with no filter — I support you expressing yourself fully","Lose your temper","End the conversation"],c:1,exp:'"Go off" or "go off queen" = keep going, I support it, express yourself fully without holding back.'},
+  {q:"What does GRWM stand for?",opts:["Get Ready With Me","Give Respect When Merited","Great Reaction Worth Making","Girls Really Want More"],c:0,exp:'"GRWM" = Get Ready With Me. A video format where creators film themselves doing makeup, getting dressed, or preparing for something while talking to the camera.'},
+  {q:"What does \'cringe\' mean when used as an adjective?",opts:["Something cold","So awkward or try-hard that it makes you uncomfortable watching","Angry feeling","Boring content"],c:1,exp:'"Cringe" = secondhand embarrassment. Something so awkward it makes you physically uncomfortable to witness. "That TikTok was so cringe."'},
+  {q:"What does \'highkey\' mean?",opts:["High volume music","Very much, obviously, not hiding it at all — the opposite of lowkey","High energy","A music genre"],c:1,exp:'"Highkey" = very obviously, not secretly, making it a whole thing. "I highkey stan this artist" = I publicly and unapologetically love them. The bold version of lowkey.'},
+  {q:"What does \'it\'s giving [word]\' mean?",opts:["Donating something","Something has a specific vibe or energy — it radiates that feeling","Being overly generous","Sharing information"],c:1,exp:'"It\'s giving [X]" = this has that exact energy or vibe. "It\'s giving main character" means this radiates main character energy. The ultimate vibe descriptor.'},
 ];
 let brIdx=0;
 function loadBR(i){
@@ -1100,28 +1117,28 @@ function lyrNav(d){lyrIdx=(lyrIdx+d+LYR.length)%LYR.length;loadLyr(lyrIdx);}
 
 // PRICE DATA
 const PD=[
-  {e:'\uD83C\uDF54',n:"McDonald's Big Mac Meal",d:'Large size, with fries and drink',p:'$9.49'},
-  {e:'\uD83C\uDFA7',n:'Apple AirPods (2nd gen)',d:'Standard, no noise cancellation',p:'$129'},
-  {e:'\uD83D\uDC5F',n:'Nike Air Force 1',d:"Classic white leather, men's size 10",p:'$115'},
-  {e:'\uD83D\uDCF1',n:'iPhone 15 (base model)',d:'128GB, unlocked',p:'$799'},
-  {e:'\uD83C\uDFAE',n:'PlayStation 5 Console',d:'Disc version, new',p:'$499'},
-  {e:'\u2615',n:'Starbucks Venti Latte',d:'Hot, whole milk, no modifications',p:'$7.45'},
-  {e:'\uD83D\uDCBB',n:'MacBook Air M2',d:'8GB RAM, 256GB SSD',p:'$1,099'},
-  {e:'\uD83D\uDE97',n:'Toyota Camry (2024)',d:'LE trim, base model, new',p:'$28,400'},
-  {e:'\uD83C\uDFE0',n:'Average US Home',d:'Median sale price 2024',p:'$420,000'},
-  {e:'\uD83C\uDF77',n:'Olive Garden Never Ending Pasta',d:'Per person, dine-in',p:'$14.99'},
-  {e:'\uD83E\uDDB5',n:'Ozempic (1 month, no insurance)',d:'Semaglutide 0.5mg pen',p:'$935'},
-  {e:'\uD83C\uDFA7',n:'Beats Studio Pro',d:'Over-ear wireless headphones',p:'$349'},
-  {e:'\uD83D\uDCFA',n:'55" Samsung QLED 4K TV',d:'Q60C series, 2023',p:'$599'},
-  {e:'\uD83E\uDDF4',n:'Stanley 40oz Quencher',d:'Original tumbler, retail',p:'$45'},
-  {e:'\uD83D\uDC8E',n:'1-carat diamond ring',d:'Average engagement ring, 14k gold',p:'$4,500'},
-  {e:'\uD83C\uDFAB',n:'Taylor Swift Eras Tour ticket',d:'Average resale price, floor',p:'$1,300'},
-  {e:'\u26BD',n:'Adidas soccer cleats',d:'Predator Club mid-range',p:'$75'},
-  {e:'\uD83D\uDE97\u26A1',n:'Tesla Model 3',d:'Standard range, 2024',p:'$38,990'},
-  {e:'\uD83D\uDCDA',n:'College textbook (used)',d:'Average price, major university',p:'$73'},
-  {e:'\uD83C\uDFAA',n:'Six Flags annual pass',d:'Gold pass, one park',p:'$89'},
+  {e:'\uD83C\uDF57',n:"Chick-fil-A Spicy Deluxe Combo",d:'Large, with waffle fries and lemonade',p:'$13.49'},
+  {e:'\uD83C\uDFAE',n:'Nintendo Switch OLED',d:'Console only, retail price new',p:'$349'},
+  {e:'\uD83C\uDF55',n:"Domino\'s Large 3-Topping Pizza",d:'Carry out, online order price',p:'$14.99'},
+  {e:'\uD83C\uDFA7',n:'AirPods Pro (2nd gen)',d:'With USB-C, Active Noise Cancellation',p:'$249'},
+  {e:'\uD83D\uDCF1',n:'Samsung Galaxy S24 (base model)',d:'128GB, unlocked, new',p:'$799'},
+  {e:'\u2615',n:'Starbucks Venti Caramel Frappuccino',d:'Blended, whole milk, whip',p:'$7.25'},
+  {e:'\uD83D\uDC5F',n:'Air Jordan 1 Retro High OG',d:"Retail, men\'s size 10, new colorway",p:'$180'},
+  {e:'\uD83C\uDFAB',n:'Coachella 3-Day Pass (GA)',d:'General admission, Weekend 1, 2024',p:'$549'},
+  {e:'\uD83D\uDEEB',n:'Round-trip flight ATL to NYC',d:'Economy, booked 2 weeks out',p:'$280'},
+  {e:'\uD83D\uDC15',n:'Golden Retriever puppy (breeder)',d:'AKC registered, includes first vaccines',p:'$1,500'},
+  {e:'\uD83D\uDC87',n:'Dyson Airwrap (complete kit)',d:'Multi-styler, Fuchsia/Nickel',p:'$599'},
+  {e:'\uD83C\uDF9F\uFE0F',n:'Disney World 1-Day Ticket',d:'Magic Kingdom, adult, peak season',p:'$189'},
+  {e:'\uD83D\uDCFA',n:'Netflix Premium (1 month)',d:'4K, 4 screens, no ads',p:'$22.99'},
+  {e:'\uD83D\uDC55',n:'Supreme hoodie (box logo)',d:'Classic box logo, retail drop price',p:'$168'},
+  {e:'\uD83C\uDFB5',n:'Spotify Premium (1 month)',d:'Individual plan, US',p:'$11.99'},
+  {e:'\uD83C\uDFC0',n:'NBA courtside seat (avg regular season)',d:'Mid-tier market team, per game',p:'$1,200'},
+  {e:'\uD83D\uDE80',n:'SpaceX Starlink internet (1 month)',d:'Residential standard plan, US',p:'$120'},
+  {e:'\uD83C\uDF93',n:'Average 4-year public university tuition',d:'In-state, per year, 2024-2025',p:'$10,662'},
+  {e:'\uD83E\uDDA0',n:'Fenty Beauty Pro Filt\'r Foundation',d:'40ml bottle, retail',p:'$46'},
+  {e:'\uD83D\uDC88',n:"Men\'s haircut at Great Clips",d:'Walk-in, no tip included',p:'$21'},
 ];
-let priceIdx=0,priceShown=false;
+let priceIdx=0;
 function loadPrice(i){
   const p=PD[i];
   document.getElementById('price-counter').textContent=(i+1)+' / '+PD.length;
@@ -1129,15 +1146,41 @@ function loadPrice(i){
   document.getElementById('price-name').textContent=p.n;
   document.getElementById('price-desc').textContent=p.d;
   const ans=document.getElementById('price-answer');
-  ans.textContent='Tap to reveal price';ans.classList.remove('shown');
-  priceShown=false;
+  ans.textContent='Price appears after locking guesses';ans.classList.remove('shown');
+  ['pg1','pg2','pg3'].forEach(id=>{const el=document.getElementById(id);if(el){el.value='';el.style.background='#16213e';el.style.borderColor='#4a90e2';}});
+  const res=document.getElementById('price-result');if(res){res.style.display='none';res.innerHTML='';}
+  const btn=document.getElementById('price-guess-btn');if(btn){btn.disabled=false;btn.style.opacity='1';}
 }
-function togglePrice(){
+function lockPriceGuesses(){
   const p=PD[priceIdx];
+  const actual=parseFloat(p.p.replace(/[$,]/g,''));
+  const names=['Legend','Sumaya','Sarai'];
+  const guesses=[
+    parseFloat(document.getElementById('pg1').value)||0,
+    parseFloat(document.getElementById('pg2').value)||0,
+    parseFloat(document.getElementById('pg3').value)||0
+  ];
   const ans=document.getElementById('price-answer');
-  if(!priceShown){ans.textContent=p.p;ans.classList.add('shown');}
-  else{ans.textContent='Tap to reveal price';ans.classList.remove('shown');}
-  priceShown=!priceShown;
+  ans.textContent=p.p;ans.classList.add('shown');
+  let best=0;let winners=[];
+  guesses.forEach((g,i)=>{if(g>0&&g<=actual&&g>best){best=g;winners=[i];}else if(g>0&&g<=actual&&g===best)winners.push(i);});
+  guesses.forEach((g,i)=>{
+    const el=document.getElementById('pg'+(i+1));if(!el||g<=0)return;
+    if(winners.includes(i)){el.style.background='#00d4aa33';el.style.borderColor='#00d4aa';}
+    else if(g>actual){el.style.background='#e9456033';el.style.borderColor='#e94560';}
+    else{el.style.background='#f5a62333';el.style.borderColor='#f5a623';}
+  });
+  const res=document.getElementById('price-result');
+  if(winners.length>0){
+    const wn=winners.map(i=>names[i]).join(' & ');
+    res.innerHTML='<div class="badge-correct" style="font-size:17px;padding:8px 20px;">&#127942; '+wn+' wins! ($'+guesses[winners[0]].toLocaleString()+')</div>';
+  }else if(guesses.every(g=>g>actual||g<=0)){
+    res.innerHTML='<div class="badge-wrong" style="font-size:15px;padding:8px 16px;">Everyone overbid! Nobody wins this round.</div>';
+  }else{
+    res.innerHTML='<div class="badge-wrong" style="font-size:15px;padding:8px 16px;">No valid guesses under $'+actual.toLocaleString()+'.</div>';
+  }
+  res.style.display='block';
+  const btn=document.getElementById('price-guess-btn');if(btn){btn.disabled=true;btn.style.opacity='0.4';}
 }
 function priceNav(d){priceIdx=(priceIdx+d+PD.length)%PD.length;loadPrice(priceIdx);}
 
@@ -2008,7 +2051,7 @@ function useLifeline(type){
 </script>
 
   <!-- DEAL OR NO DEAL -->
-  <div id="game-dond" class="game-section">
+  <div id="game-dond" class="game-section" style="padding:12px 16px;">
     <div style="display:flex;align-items:center;gap:8px;padding-bottom:8px;flex-shrink:0;">
       <button class="btn btn-gray btn-sm" onclick="showGame('home')">&#8592; Home</button>
       <span style="font-size:20px;font-weight:900;color:#f5a623;">&#128188; Deal or No Deal</span>
@@ -2069,7 +2112,7 @@ function useLifeline(type){
 
 
   <!-- WHO WANTS TO BE A MILLIONAIRE -->
-  <div id="game-wwtbam" class="game-section">
+  <div id="game-wwtbam" class="game-section" style="padding:12px 16px;">
     <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;padding-bottom:8px;">
       <button class="btn btn-gray btn-sm" onclick="showGame('home')">&#8592; Home</button>
       <span style="font-size:20px;font-weight:900;color:#f5a623;">&#128176; Who Wants to Be a Millionaire?</span>

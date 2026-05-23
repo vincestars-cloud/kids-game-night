@@ -546,10 +546,14 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
         <div class="lyric-blank" id="lyr-blank" onclick="toggleLyric()">Tap to reveal next line</div>
         <div class="lyric-hint" id="lyr-hint"></div>
       </div>
+      <div id="lyr-yt-container" style="width:100%;max-width:640px;aspect-ratio:16/9;border-radius:12px;overflow:hidden;display:none;margin-top:12px;flex-shrink:0;">
+        <iframe id="lyr-yt-frame" width="100%" height="100%" frameborder="0" allow="autoplay;encrypted-media" allowfullscreen style="border:none;border-radius:12px;"></iframe>
+      </div>
     </div>
     <div class="game-controls">
       <button class="btn btn-gray btn-sm" onclick="lyrNav(-1)">&#8592; Prev</button>
       <button class="btn btn-gold btn-sm" onclick="toggleLyric()">Reveal</button>
+      <button class="btn btn-red btn-sm" onclick="playLyrClip()">&#9654; Play Clip</button>
       <button class="btn btn-blue btn-sm" onclick="lyrNav(1)">Next &#8594;</button>
       <svg class="timer-inline" viewBox="0 0 70 70">
         <circle class="timer-bg" cx="35" cy="35" r="30"/>
@@ -847,46 +851,44 @@ function stopTimer(key){if(timers[key]){clearInterval(timers[key]);delete timers
 
 // EMOJI DATA
 const EP=[
-  {cat:'MOVIE',e:'\uD83D\uDE00\uD83D\uDE22\uD83D\uDE20\uD83D\uDE31\uD83C\uDFA0',a:'Inside Out'},
-  {cat:'MOVIE',e:'\uD83D\uDC3E\uD83D\uDC51\uD83C\uDF0D\u26AB',a:'Black Panther'},
-  {cat:'MOVIE',e:'\uD83C\uDF3A\uD83C\uDF0A\u2B50',a:'Moana'},
-  {cat:'MOVIE',e:'\uD83E\uDD20\uD83D\uDE80\u2728\uD83D\uDC94',a:'Toy Story'},
-  {cat:'MOVIE',e:'\uD83D\uDC68\u200D\uD83D\uDC69\u200D\uD83D\uDC67\u200D\uD83D\uDC66\uD83E\uDDB8\uD83D\uDCAA',a:'The Incredibles'},
-  {cat:'MOVIE',e:'\uD83C\uDF7A\uD83D\uDD6F\uFE0F\uD83C\uDDF8\uD83C\uDDFE',a:'Encanto'},
-  {cat:'MOVIE',e:'\uD83C\uDFF9\uD83D\uDC67\uD83D\uDD25\uD83C\uDFDF\uFE0F',a:'The Hunger Games'},
-  {cat:'MOVIE',e:'\uD83D\uDFE1\uD83D\uDE08\uD83C\uDF4C',a:'Minions'},
-  {cat:'MOVIE',e:'\uD83D\uDEE1\uFE0F\u2B50\uD83D\uDC75',a:'Captain America'},
-  {cat:'MOVIE',e:'\uD83D\uDD70\uFE0F\uD83E\uDD7A\uD83C\uDF31',a:'Turning Red'},
-  {cat:'MOVIE',e:'\uD83C\uDFB9\uD83D\uDC74\u2728\uD83C\uDF0C',a:'Soul'},
-  {cat:'MOVIE',e:'\uD83D\uDC57\uD83E\uDD73\uD83D\uDCDA\uD83C\uDFEB',a:'Clueless'},
-  {cat:'MOVIE',e:'\uD83D\uDC60\uD83C\uDF55\uD83D\uDCF8\uD83D\uDC51',a:'Mean Girls'},
-  {cat:'MOVIE',e:'\uD83D\uDD77\uFE0F\u269B\uFE0F\uD83E\uDD78',a:'No Way Home'},
-  {cat:'MOVIE',e:'\uD83D\uDC4A\uD83D\uDE80\uD83C\uDF0C',a:'Guardians of the Galaxy'},
-  {cat:'TV SHOW',e:'\uD83C\uDFDD\uFE0F\uD83D\uDC9B\uD83C\uDF39',a:'Love Island'},
-  {cat:'TV SHOW',e:'\u2702\uFE0F\uD83D\uDC70\uD83C\uDFEB\uD83D\uDDA4',a:'Wednesday'},
-  {cat:'TV SHOW',e:'\uD83D\uDC36\uD83C\uDF08\uD83C\uDFE0\uD83D\uDE02',a:'Bluey'},
-  {cat:'TV SHOW',e:'\uD83D\uDFE1\uD83C\uDF69\uD83C\uDFE0\uD83D\uDE04',a:'The Simpsons'},
-  {cat:'TV SHOW',e:'\uD83C\uDFC4\u200D\u2642\uFE0F\uD83D\uDCB0\uD83C\uDF0A\uD83C\uDFD6\uFE0F',a:'Outer Banks'},
-  {cat:'TV SHOW',e:'\uD83C\uDF43\uD83D\uDC9A\u2764\uFE0F\uD83D\uDCDA',a:'Heartstopper'},
-  {cat:'TV SHOW',e:'\uD83D\uDCDA\uD83D\uDE2D\uD83C\uDDEE\uD83C\uDDF3\uD83C\uDFEB',a:'Never Have I Ever'},
-  {cat:'TV SHOW',e:'\uD83D\uDC8A\uD83D\uDC40\uD83C\uDF1F\uD83D\uDC94',a:'Euphoria'},
-  {cat:'TV SHOW',e:'\uD83D\uDCBC\uD83D\uDC54\uD83E\uDD1D\uD83D\uDCB0',a:'Suits'},
-  {cat:'TV SHOW',e:'\uD83D\uDEAB\uD83D\uDE10\uD83C\uDFEB\uD83D\uDCF1',a:'Social Media (Black Mirror)'},
-  {cat:'SONG',e:'\uD83D\uDE97\uD83E\uDD35\uD83D\uDC94\uD83D\uDE2D',a:"drivers license \u2014 Olivia Rodrigo"},
-  {cat:'SONG',e:'\u2615\uD83D\uDC83\uD83D\uDC40\uD83D\uDCA4',a:'Espresso \u2014 Sabrina Carpenter'},
-  {cat:'SONG',e:'\uD83D\uDD70\uFE0F\u2764\uFE0F\uD83C\uDF39\uD83C\uDF1F',a:'As It Was \u2014 Harry Styles'},
-  {cat:'SONG',e:'\uD83D\uDE20\uD83D\uDE08\uD83D\uDD25\uD83D\uDCA2',a:'Good 4 U \u2014 Olivia Rodrigo'},
-  {cat:'SONG',e:'\uD83E\uDDE8\u2600\uFE0F\u2728\uD83D\uDC83',a:'Butter \u2014 BTS'},
-  {cat:'SONG',e:'\uD83C\uDF21\uFE0F\uD83C\uDF0A\uD83D\uDCAD\uD83D\uDE34',a:'Heat Waves \u2014 Glass Animals'},
-  {cat:'SONG',e:'\uD83C\uDF38\uD83D\uDCAA\uD83E\uDD34\uD83C\uDF3C',a:'Flowers \u2014 Miley Cyrus'},
-  {cat:'SONG',e:'\uD83E\uDDB8\u200D\u2640\uFE0F\u2764\uFE0F\uD83D\uDD2D',a:'Anti-Hero \u2014 Taylor Swift'},
-  {cat:'PHRASE',e:'\uD83E\uDDCA\uD83D\uDE0A\uD83D\uDCAC',a:'Break the ice'},
-  {cat:'PHRASE',e:'\u2615\uD83D\uDCA6\uD83D\uDC40',a:'Spill the tea'},
-  {cat:'PHRASE',e:'\uD83C\uDF27\uFE0F\uD83E\uDD22',a:'Under the weather'},
-  {cat:'PHRASE',e:'\uD83D\uDD28\uD83D\uDCA1\u2705',a:'Hit the nail on the head'},
-  {cat:'PHRASE',e:'\uD83D\uDC37\u2708\uFE0F\uD83C\uDF08',a:'When pigs fly'},
-  {cat:'PHRASE',e:'\uD83D\uDCDA\uD83D\uDC40\uD83D\uDD0D',a:'Read between the lines'},
-];
+  {cat:'MOVIE',e:'â„ï¸â„ï¸â¤ï¸â„ï¸',a:'Frozen'},
+  {cat:'MOVIE',e:'í ¾í¶í ½í°ºâ€œí ½í¸´â€',a:'Zootopia'},
+  {cat:'MOVIE',e:'í ¾í´—âœ¨í ¼í¼Œí ½íº€',a:'Wish'},
+  {cat:'MOVIE',e:'í ½í°•í ¼í¿ í ¼í¼§ï¸í ¼í¼ªï¸',a:'Twisters'},
+  {cat:'MOVIE',e:'í ¼í¼¹â›°ï¸í ½í±’â°',a:'Sound of Music'},
+  {cat:'MOVIE',e:'í ¾í´µí ½íº—í ¼í¿í ½í²¨',a:'Fast and Furious'},
+  {cat:'MOVIE',e:'í ¼í½•í ½í¸‡í ½í¶¤í ¼í½”',a:'Five Nights at Freddys'},
+  {cat:'MOVIE',e:'í ¾íµ¸í ½íµ¸ï¸â¤ï¸í ¼í½³',a:'No Way Home'},
+  {cat:'MOVIE',e:'í ¼í½¨â›¸ï¸í ½í°§âœ¨',a:'Happy Feet'},
+  {cat:'MOVIE',e:'í ¼í¾¸í ½í±ï¸í ½í²Ží ½í¸œ',a:'School of Rock'},
+  {cat:'MOVIE',e:'í ¼í¿ â›°ï¸í ¾í¶´âœ¨',a:'Encanto'},
+  {cat:'MOVIE',e:'í ½íº€í ½í²¥â­í ¼í¼Œ',a:'Guardians of the Galaxy'},
+  {cat:'TV SHOW',e:'í ¾íµ—í ½í°“í ½í°„í ½í¸±',a:'Stranger Things'},
+  {cat:'TV SHOW',e:'í ¼í¿´â˜ ï¸í ¼í¿ï¸í ¼í¼Š',a:'One Piece'},
+  {cat:'TV SHOW',e:'í ¼í¾®í ½í²€í ¼í½“í ½í¸‚',a:'The Last of Us'},
+  {cat:'TV SHOW',e:'í ½í²°í ½íº«í ¼í¿«í ½í²¥',a:'Breaking Bad'},
+  {cat:'TV SHOW',e:'í ¾í¶¸â€â™€ï¸í ½í¶¤í ¼í¼ªï¸âš¡',a:'Agatha All Along'},
+  {cat:'TV SHOW',e:'í ½í±‘í ¼í¿¡í ½í°²âš”ï¸',a:'House of the Dragon'},
+  {cat:'TV SHOW',e:'í ½íº‚í ½í´«í ¼í·°í ¼í··â™ˆ',a:'Squid Game'},
+  {cat:'TV SHOW',e:'í ¼í½ºí ½í¸Ží ½í±‹í ¼í¿™ï¸',a:'It's Always Sunny in Philadelphia'},
+  {cat:'SONG',e:'í ¾í´”í ½í²§í ¼í¼§ï¸í ¾í»€',a:'Flowers â€” Miley Cyrus'},
+  {cat:'SONG',e:'í ½í²™í ½í¹í ½í±âœ¨',a:'Thank U Next â€” Ariana Grande'},
+  {cat:'SONG',e:'í ½í°¶â¤ï¸í ½í²‹í ½í±Œ',a:'Golden Retriever â€” Kacey Musgraves'},
+  {cat:'SONG',e:'í ¼í½‘í ¼í½‘í ¼í½‘â˜ï¸',a:'Peach â€” Doja Cat'},
+  {cat:'SONG',e:'í ¼í¼®í ¾í´ â¤ï¸í ¼í½·',a:'Tequila â€” Dan and Shay'},
+  {cat:'SONG',e:'í ½í´¥í ½í²í ½í±©í ¼í¿¿',a:'APT â€” Rose and Bruno Mars'},
+  {cat:'PHRASE',e:'í ½í²Žâž¡ï¸í ½í°¶',a:'Diamond in the rough'},
+  {cat:'PHRASE',e:'í ½í¹Ší ½íº¢',a:'Bite the bullet'},
+  {cat:'PHRASE',e:'í ½í´¥í ½í°­',a:'Hot dog'},
+  {cat:'PHRASE',e:'í ¼í¼ˆâ˜ ï¸',a:'Over my dead body'},
+  {cat:'PHRASE',e:'í ¼í½®í ½í²¨í ½í±',a:'Piece of cake'},
+  {cat:'PHRASE',e:'í ½í²¤í ½í¸´í ½íº¶â€â™‚ï¸',a:'Sleep walk'},
+  {cat:'PHRASE',e:'â¤ï¸í ½í²”â¤ï¸',a:'Heartbreak'},
+  {cat:'PHRASE',e:'í ½í±€â˜•í ¾íµµ',a:'Eye of the storm'},
+  {cat:'PHRASE',e:'ðŸðŸ·ï¸',a:'Bee label'},
+  {cat:'PHRASE',e:'ðŸ¦…ðŸ’­ðŸ‘€',a:'Eagle eye'},
+  {cat:'PHRASE',e:'ðŸ’¡âœ‚ï¸âœ‚ï¸',a:'Cut to the chase'},
+]];
 let emojiIdx=0,emojiAnswerShown=false;
 function loadEmoji(i){
   const p=EP[i];
@@ -975,16 +977,16 @@ function resetJeopardy(){jUsed=Array.from({length:5},()=>Array(5).fill(false));b
 
 // FLAG FLASH DATA
 const flagData=[
-  {code:'us',name:'United States'},{code:'gb',name:'United Kingdom'},{code:'fr',name:'France'},
-  {code:'de',name:'Germany'},{code:'jp',name:'Japan'},{code:'br',name:'Brazil'},
-  {code:'mx',name:'Mexico'},{code:'ca',name:'Canada'},{code:'au',name:'Australia'},
-  {code:'in',name:'India'},{code:'ng',name:'Nigeria'},{code:'ar',name:'Argentina'},
-  {code:'se',name:'Sweden'},{code:'no',name:'Norway'},{code:'tr',name:'Turkey'},
-  {code:'sa',name:'Saudi Arabia'},{code:'th',name:'Thailand'},{code:'np',name:'Nepal'},
-  {code:'bh',name:'Bahrain'},{code:'kg',name:'Kyrgyzstan'},{code:'bt',name:'Bhutan'},
-  {code:'pg',name:'Papua New Guinea'},{code:'mv',name:'Maldives'},{code:'om',name:'Oman'},
-  {code:'uy',name:'Uruguay'},{code:'ge',name:'Georgia'},{code:'az',name:'Azerbaijan'},
-  {code:'kh',name:'Cambodia'},{code:'la',name:'Laos'},{code:'tz',name:'Tanzania'},
+  {code:'it',name:'Italy'},{code:'es',name:'Spain'},{code:'kr',name:'South Korea'},
+  {code:'za',name:'South Africa'},{code:'cn',name:'China'},{code:'ru',name:'Russia'},
+  {code:'pt',name:'Portugal'},{code:'nl',name:'Netherlands'},{code:'eg',name:'Egypt'},
+  {code:'pk',name:'Pakistan'},{code:'co',name:'Colombia'},{code:'ke',name:'Kenya'},
+  {code:'gh',name:'Ghana'},{code:'ph',name:'Philippines'},{code:'vn',name:'Vietnam'},
+  {code:'id',name:'Indonesia'},{code:'nz',name:'New Zealand'},{code:'ch',name:'Switzerland'},
+  {code:'at',name:'Austria'},{code:'be',name:'Belgium'},{code:'gr',name:'Greece'},
+  {code:'il',name:'Israel'},{code:'ie',name:'Ireland'},{code:'cl',name:'Chile'},
+  {code:'pe',name:'Peru'},{code:'cz',name:'Czech Republic'},{code:'pl',name:'Poland'},
+  {code:'ro',name:'Romania'},{code:'ma',name:'Morocco'},{code:'et',name:'Ethiopia'},
 ];
 let flagIdx=0,flagShuffled=[...flagData];
 function shuffleFlags(){flagShuffled=[...flagData].sort(()=>Math.random()-0.5);flagIdx=0;loadFlag(0);}
@@ -1098,32 +1100,32 @@ function brNav(d){brIdx=(brIdx+d+BRQ.length)%BRQ.length;loadBR(brIdx);}
 
 // TRUE/FALSE DATA
 const TFD=[
-  {s:"A day on Venus is longer than a year on Venus.",t:true,f:"Venus rotates so slowly (243 Earth days) that its day is longer than its 225-day orbit around the Sun!"},
-  {s:"Goldfish only have a 3-second memory.",t:false,f:"Total myth. Goldfish remember things for months â€” scientists have trained them to navigate mazes they learned weeks earlier."},
-  {s:"The Eiffel Tower can grow up to 15 cm taller in summer.",t:true,f:"Iron expands with heat. The tower grows about 6 inches (15 cm) in summer temperatures."},
-  {s:"Penguins live in the Arctic (North Pole).",t:false,f:"Penguins live in the Antarctic (South Pole) and South America. Polar bears are in the Arctic â€” the two animals never meet in the wild."},
-  {s:"A bolt of lightning is 5 times hotter than the surface of the Sun.",t:true,f:"Lightning reaches ~30,000 Kelvin. The Sun surface is ~5,778 Kelvin. Lightning wins by 5x!"},
-  {s:"The Great Wall of China is visible from space with the naked eye.",t:false,f:"Confirmed false by astronauts. It is only as wide as a highway â€” too narrow to spot from orbit even with binoculars."},
-  {s:"Honey is the only food that never expires.",t:true,f:"Honey low moisture and acidity prevent bacterial growth. Edible 3,000-year-old honey was found perfectly preserved in Egyptian tombs."},
-  {s:"Sharks are the only animal that never gets cancer.",t:false,f:"Sharks CAN and do get cancer. This myth was invented to sell shark cartilage supplements. Multiple sharks with tumors have been documented."},
-  {s:"Cleopatra lived closer in time to the Moon landing than to the building of the Great Pyramids.",t:true,f:"Pyramids ~2500 BC. Cleopatra ~50 BC. Moon landing 1969. Cleopatra is 500 years closer to us than to the pyramids."},
-  {s:"Sound travels faster in air than in water.",t:false,f:"Sound travels 4x FASTER in water (1,480 m/s) than in air (343 m/s) â€” water molecules are packed tighter together."},
-  {s:"Scotland national animal is the unicorn.",t:true,f:"The unicorn has been Scotland official national animal since the 12th century â€” representing independence and power."},
-  {s:"Coca-Cola was originally green.",t:false,f:"Coca-Cola has NEVER been green. The drink has always been caramel-colored. Only some early glass bottles had a slight green tint."},
-  {s:"Roblox was created before Minecraft.",t:true,f:"Roblox launched in 2006. Minecraft launched in 2009. Roblox is 3 full years older."},
-  {s:"The Sahara is the world largest desert.",t:false,f:"The Antarctic Desert is the largest at 5.5 million sq miles. The Sahara is the largest HOT desert but ranks number 3 overall."},
-  {s:"YouTube was originally designed as a dating website.",t:true,f:"The founders launched YouTube in 2005 with the tagline Tune In Hook Up as a video dating platform. It pivoted fast."},
-  {s:"Lightning never strikes the same place twice.",t:false,f:"FALSE. Lightning absolutely strikes the same place repeatedly. The Empire State Building gets hit 20-25 times per year."},
-  {s:"The word nerd first appeared in a Dr. Seuss book.",t:true,f:"Nerd first appeared in If I Ran the Zoo (1950) â€” years before its modern slang usage spread."},
-  {s:"Bulls are attracted to the color red.",t:false,f:"Bulls are red-green colorblind â€” they cannot see red differently from green. They charge because of the cape MOVEMENT, not its color."},
-  {s:"France is the most visited country in the world.",t:true,f:"France consistently tops global tourism with 80-100 million visitors per year â€” more than any other country."},
-  {s:"You swallow about 8 spiders in your sleep every year.",t:false,f:"Complete myth with no scientific basis. Spiders actively avoid warm-blooded animals and snoring vibrations repel them immediately."},
-  {s:"Humans share about 50 percent of their DNA with bananas.",t:true,f:"We share 50-60 percent of our DNA with bananas â€” all life shares genes for basic cellular functions like energy production."},
-  {s:"Humans only use 10 percent of their brains.",t:false,f:"Total myth. Brain scans show we use virtually all brain regions â€” different areas activate for different tasks throughout the day."},
-  {s:"Butterflies taste with their feet.",t:true,f:"Butterflies have chemoreceptors on their tarsi (feet) â€” they identify plants and detect sugar just by landing on them."},
-  {s:"Napoleon Bonaparte was extremely short for a man of his era.",t:false,f:"Napoleon was about 5 foot 7 inches (170 cm) â€” perfectly average for a French man in the 1800s. The short Napoleon myth was British wartime propaganda."},
-  {s:"A group of flamingos is officially called a flamboyance.",t:true,f:"Correct! A group of flamingos = a flamboyance. A group of crows = a murder. A group of owls = a parliament."},
-];
+  {s:"Hot dogs are technically a sandwich.",t:true,f:"By the USDA definition a sandwich is meat between bread. Hot dog bread is connected on one side but it qualifies. Hotly debated."},
+  {s:"Cardi B and Offset are currently married.",t:false,f:"They divorced in 2024. They had been on and off since 2017 and share two kids together."},
+  {s:"The TikTok ban in the US actually went into effect briefly in January 2025.",t:true,f:"TikTok went dark for US users for about 14 hours on January 19 2025 before coming back online after Trump signaled he would not enforce the ban immediately."},
+  {s:"Kendrick Lamar performed at the 2025 Super Bowl halftime show.",t:true,f:"He headlined Super Bowl LIX in New Orleans and performed Not Like Us live for the first time on a major stage."},
+  {s:"Water can boil and freeze at the same time.",t:true,f:"This is called the triple point â€” a specific temperature and pressure where water exists simultaneously as solid liquid and gas. Wild but real."},
+  {s:"The first iPhone had a removable battery.",t:false,f:"Apple never made the original iPhone battery removable. Steve Jobs chose sealed design for aesthetics despite huge backlash."},
+  {s:"Dolphins sleep with one eye open.",t:true,f:"Dolphins practice unihemispheric sleep â€” half the brain sleeps while the other stays awake to breathe and watch for threats."},
+  {s:"Chappell Roan won a Grammy in 2025.",t:true,f:"She won Best New Artist at the 2025 Grammys. She almost pulled out of performing over labor disputes but stayed."},
+  {s:"Beyonce won Album of the Year for Cowboy Carter at the 2025 Grammys.",t:false,f:"Beyonce lost Album of the Year again despite massive critical acclaim. Sabrina Carpenter and others were also nominated."},
+  {s:"In the US you can legally drive at age 15 in some states.",t:true,f:"Several states including South Dakota and Montana allow supervised driving permits at 14 or 15 years old."},
+  {s:"Cats can taste sweet flavors.",t:false,f:"Cats lack the taste receptor for sweetness. They literally cannot taste sugar â€” which is why they are indifferent to desserts."},
+  {s:"The fidget spinner was originally invented to help kids with ADHD.",t:true,f:"Catherine Hettinger patented a spinning toy in 1993 to help autistic and anxious children. She let the patent expire and never profited from the boom."},
+  {s:"A group of cats is called a clowder.",t:true,f:"Clowder is the official collective noun for a group of cats. Other fun ones: a murder of crows and a parliament of owls."},
+  {s:"Siri was not made by Apple.",t:true,f:"Siri was developed by SRI International from DARPA research. Apple acquired the company in 2010 and integrated it into the iPhone 4S."},
+  {s:"The Great Wall of China was built in one dynasty.",t:false,f:"The wall was built over many centuries by multiple dynasties â€” mainly the Qin Han and Ming dynasties. It took thousands of years to complete."},
+  {s:"An octopus has three hearts.",t:true,f:"Two hearts pump blood through the gills and one pumps it through the body. Their blood is also blue because it uses copper instead of iron."},
+  {s:"Minecraft was briefly banned in Turkey.",t:true,f:"Turkey tried to ban Minecraft in 2015 citing violence and values concerns before international backlash led to the effort being dropped."},
+  {s:"Instagram was originally called Picstagram.",t:false,f:"Instagram was originally called Burbn â€” named after bourbon. Kevin Systrom stripped it down and renamed it Instagram from instant camera and telegram."},
+  {s:"Playing video games can actually improve hand-eye coordination.",t:true,f:"Multiple studies including surgical simulations show gamers have faster reaction times and better fine motor control. Surgeons who game make fewer errors."},
+  {s:"The color orange is named after the fruit.",t:true,f:"Before oranges arrived in Europe there was no word for the color. People just called it yellow-red or red. The fruit came first then the color name."},
+  {s:"Taylor Swift holds the record for most Grammy wins by any artist ever.",t:false,f:"Beyonce holds the all-time record with 32 Grammys as of 2024. Taylor has won 14. They are in different leagues for now."},
+  {s:"You can hear a whale song from 500 miles away underwater.",t:true,f:"Blue whale calls are so low-pitched and powerful they can travel over 500 miles through ocean channels. It is essentially natural long-distance communication."},
+  {s:"The word quiz was invented as part of a bet.",t:true,f:"Legend says a Dublin theater owner bet in 1791 that he could make a nonsense word famous overnight by writing it on walls across the city. It stuck."},
+  {s:"Emojis were invented in the United States.",t:false,f:"Emojis were created by Shigetaka Kurita at NTT DoCoMo in Japan in 1999. The first set had only 176 emojis designed on a 12x12 pixel grid."},
+  {s:"Humans are the only animals that blush.",t:true,f:"Charles Darwin called blushing the most peculiar and most human of all expressions. No other animal has been observed blushing from embarrassment."},
+]];
 let tfIdx=0;
 function loadTF(i){
   document.getElementById('tf-counter').textContent=(i+1)+' / '+TFD.length;
@@ -1153,27 +1155,27 @@ function tfNav(d){tfIdx=(tfIdx+d+TFD.length)%TFD.length;loadTF(tfIdx);}
 
 // LYRICS DATA
 const LYR=[
-  {a:"Taylor Swift \u2014 Shake It Off (2014)",l:"'Cause the players gonna play, play, play, play, play",b:"And the haters gonna hate, hate, hate, hate, hate",h:"Shake it off, shake it off"},
-  {a:"Olivia Rodrigo \u2014 drivers license (2021)",l:"I got my driver's license last week",b:"Just like we always talked about",h:"2021 breakup anthem"},
-  {a:"Drake \u2014 God's Plan (2018)",l:"She said, do you love me? I tell her, only partly",b:"I only love my bed and my mama, I'm sorry",h:"Billboard record-breaker"},
-  {a:"Billie Eilish \u2014 bad guy (2019)",l:"I'm the bad guy...",b:"Duh",h:"Just two letters"},
-  {a:"Dua Lipa \u2014 Levitating (2020)",l:"I got you, moonlight, you're my starlight",b:"I need you all night, come on, dance with me",h:"Disco-pop banger"},
-  {a:"Post Malone ft. Swae Lee \u2014 Sunflower (2018)",l:"Every time I'm leavin' on you",b:"You don't make it easy, no",h:"Spider-Man: Into the Spider-Verse"},
-  {a:"Harry Styles \u2014 As It Was (2022)",l:"You know it's not the same as it was",b:"As it was, as it was",h:"Most streamed song of 2022"},
-  {a:"The Weeknd \u2014 Blinding Lights (2019)",l:"I've been tryna call",b:"I've been on my own for long enough",h:"Retro synth-wave smash"},
-  {a:"SZA \u2014 Kill Bill (2022)",l:"I might kill my ex, not the best idea",b:"His new girlfriend's next, how'd I get here?",h:"SOS album"},
-  {a:"Lil Nas X \u2014 Old Town Road (2019)",l:"I'm gonna take my horse to the old town road",b:"I'm gonna ride 'til I can't no more",h:"Longest-running #1 ever at the time"},
-  {a:"Doja Cat \u2014 Say So (2019)",l:"Day to night to morning, keep with me in the moment",b:"I'd let you had I known it, why don't you say so?",h:"TikTok viral hit"},
-  {a:"Kendrick Lamar \u2014 Not Like Us (2024)",l:"They not like us, they not like us",b:"They not like us",h:"The Drake diss that broke records"},
-  {a:"Glass Animals \u2014 Heat Waves (2020)",l:"Sometimes all I think about is you",b:"Late nights in the middle of June",h:"Minecraft videos made it blow up"},
-  {a:"Ariana Grande \u2014 7 Rings (2019)",l:"I want it, I got it, I want it, I got it",b:"You like my hair? Gee, thanks, just bought it",h:"I see it, I like it, I want it, I got it"},
-  {a:"Justin Bieber ft. Daniel Caesar \u2014 Peaches (2021)",l:"I got my peaches out in Georgia",b:"I got my weed from California",h:"Justice album"},
-  {a:"Bad Bunny \u2014 Tit\u00ED Me Pregunt\u00F3 (2022)",l:"Mi tit\u00ED me pregunt\u00F3 que cu\u00E1ndo la voy a llevar a bailar",b:"Un reggaet\u00F3n bien viejo de los de antes",h:"Un Verano Sin Ti album"},
-  {a:"Ice Spice \u2014 Princess Diana (2023)",l:"He wanna know why I'm so cold, like the middle of winter",b:"I'm a princess, I don't need no crown",h:"No relation to the actual Princess Diana"},
-  {a:"Tyler the Creator \u2014 SORRY NOT SORRY (2024)",l:"Karma's gonna come collect your debt",b:"You know what you did, you know what you did",h:"Chromakopia album"},
-  {a:"Sabrina Carpenter \u2014 Espresso (2024)",l:"I'm working late 'cause I'm a singer",b:"And that's just how I live my life",h:"Biggest song of summer 2024"},
-  {a:"Toto \u2014 Africa (1982)",l:"I stopped an old man along the way",b:"Hoping to find some long forgotten words or ancient melodies",h:"The internet's favorite classic ever"},
-];
+  {a:"Beyonce â€” Texas Hold Em (2024)",l:"I don't wanna fight no more",b:"Turn it down, turn it down",h:"Her first country number one â€” surprise release",yt:"SRw3HBSQ40Q",ts:60},
+  {a:"Charli XCX â€” 360 (2024)",l:"I'm so Julia, kinda hot, kinda smart",b:"I'm so Charli, I'm so Charli",h:"From the Brat album â€” summer 2024",yt:"OSvqNh1r2dc",ts:38},
+  {a:"Olivia Rodrigo â€” good 4 u (2021)",l:"Well, good for you, I guess you moved on really easily",b:"You found a new girl and it only took a couple weeks",h:"The pop-punk revenge era",yt:"gNi_6U5Pm_o",ts:30},
+  {a:"Dua Lipa â€” Houdini (2023)",l:"I know what I want and I want it",b:"I know what I need, can you give it to me?",h:"From Future Nostalgia follow-up era",yt:"bqqimDkObsc",ts:42},
+  {a:"SZA â€” Snooze (2022)",l:"Would you lie for me?",b:"Take a bullet to the brain for me?",h:"From the SOS album â€” fan favorite slow jam",yt:"GYCsBdbx5Z8",ts:22},
+  {a:"Gracie Abrams â€” That's So True (2024)",l:"I know that I should not be calling",b:"But it's Friday night and I'm too drunk",h:"Her breakthrough hit â€” late 2024",yt:"JkPRCVSv_Bg",ts:18},
+  {a:"Kendrick Lamar â€” Humble (2017)",l:"Sit down, be humble",b:"Bitch, sit down, be humble",h:"The music video is all black and white â€” iconic",yt:"tvTRZJ-4EyI",ts:44},
+  {a:"Taylor Swift â€” Anti-Hero (2022)",l:"It's me, hi, I'm the problem, it's me",b:"At tea time, everybody agrees",h:"Biggest hit from Midnights",yt:"b1kbLwvqugk",ts:48},
+  {a:"Billie Eilish â€” Birds of a Feather (2024)",l:"I want to be with you",b:"Want to be your only one",h:"From Hit Me Hard and Soft â€” emotional slow build",yt:"e3p_P3PjNEI",ts:25},
+  {a:"Morgan Wallen â€” Last Night (2023)",l:"Last night, we let the liquor talk",b:"You made a mess of me",h:"Country-pop crossover â€” longest running number 1 of 2023",yt:"H6bxVKIb8Lk",ts:15},
+  {a:"Ice Spice ft. Nicki Minaj â€” Barbie World (2023)",l:"I'm a Barbie girl in a Barbie world",b:"Everything is plastic, it's fantastic",h:"From the Barbie movie soundtrack â€” sampled Aqua",yt:"TSL7HuQ0-SM",ts:10},
+  {a:"Doechii â€” Nissan Altima (2024)",l:"I pull up in a Nissan Altima",b:"Lookin' like a Benz",h:"She won Best Rap Album at 2025 Grammys",yt:"qdE_GKZS4ug",ts:20},
+  {a:"Chappell Roan â€” Good Luck Babe (2024)",l:"You can kiss a hundred boys in bars",b:"Shoot another shot, try to stop the feeling",h:"Her breakout hit â€” impossible to avoid in 2024",yt:"hLEwnBEcJEo",ts:35},
+  {a:"Sabrina Carpenter â€” Please Please Please (2024)",l:"I know that you're trouble",b:"Since the day that we met, I am terrified",h:"Her second massive hit of summer 2024",yt:"6fQ31kPo7xs",ts:28},
+  {a:"Noah Kahan â€” Stick Season (2022)",l:"I'll trade Alaska for Nashville",b:"Tennessee is not that far",h:"Vermont folk singer who blew up on Spotify and TikTok",yt:"gvCdXPIcwAs",ts:30},
+  {a:"The Weeknd â€” Save Your Tears (2020)",l:"I saw you dancing in a crowded room",b:"You look so happy when I'm not with you",h:"From After Hours album â€” one of his best",yt:"XXYlFuWEuKI",ts:12},
+  {a:"Bad Bunny â€” Un Verano Sin Ti track: Me Porto Bonito (2022)",l:"Me porto bonito contigo",b:"Curame, acariciame, enganame",h:"Chencho Corleone feature â€” number 1 globally",yt:"GVQqQcMpKSM",ts:18},
+  {a:"Drake ft. 21 Savage â€” Rich Flex (2022)",l:"21, can you do something for me?",b:"Rich flex, ayy",h:"From Her Loss album â€” 21 did not say anything",yt:"gCRDHYYq19U",ts:30},
+  {a:"Mitski â€” My Love Mine All Mine (2023)",l:"The moon reflects the sun but the moon does not shine",b:"My love is mine all mine",h:"From The Land Is Inhospitable â€” went viral on TikTok",yt:"YGUv7cFHsk8",ts:55},
+  {a:"Zach Bryan ft. Kacey Musgraves â€” I Remember Everything (2023)",l:"I was running through the gravel",b:"On our old dirt road",h:"Won CMA Song of the Year 2023",yt:"sdeV4aF-TGQ",ts:20},
+]];
 let lyrIdx=0,lyrShown=false;
 function loadLyr(i){
   const l=LYR[i];
@@ -1192,7 +1194,21 @@ function toggleLyric(){
   else{blank.textContent='Tap to reveal next line';blank.classList.remove('shown');}
   lyrShown=!lyrShown;
 }
-function lyrNav(d){lyrIdx=(lyrIdx+d+LYR.length)%LYR.length;loadLyr(lyrIdx);}
+function lyrNav(d){
+  lyrIdx=(lyrIdx+d+LYR.length)%LYR.length;
+  const c=document.getElementById('lyr-yt-container');if(c)c.style.display='none';
+  const f=document.getElementById('lyr-yt-frame');if(f)f.src='';
+  loadLyr(lyrIdx);
+}
+function playLyrClip(){
+  const l=LYR[lyrIdx];
+  if(!l.yt){return;}
+  const container=document.getElementById('lyr-yt-container');
+  const frame=document.getElementById('lyr-yt-frame');
+  const start=Math.max(0,(l.ts||0));
+  frame.src='https://www.youtube.com/embed/'+l.yt+'?start='+start+'&autoplay=1';
+  container.style.display='block';
+}
 
 // PRICE DATA
 const PD=[
@@ -1364,17 +1380,37 @@ function connReset(){connSelected=[];connSolved=[];loadConnPuzzle(connPuzzleIdx)
 
 // PASSWORD DATA
 const PWD=[
-  {w:'Invisible',h:"Can't see it"},{w:'Thunder',h:'Sound after lightning'},{w:'Champagne',h:'Bubbly celebration drink'},
-  {w:'Hibernate',h:'Bears do this in winter'},{w:'Labyrinth',h:'Maze with no exits'},{w:'Spaghetti',h:'Long pasta'},
-  {w:'Telescope',h:'Sees far away stars'},{w:'Avalanche',h:'Snow falling fast down mountain'},{w:'Disguise',h:'Costume to hide identity'},
-  {w:'Olympics',h:'Sports every 4 years'},{w:'Jealousy',h:'Envious feeling'},{w:'Quicksand',h:'Sinking trap'},
-  {w:'Satellite',h:'Orbits in space'},{w:'Ambiguous',h:'Could mean two things'},{w:'Carnival',h:'Rides, cotton candy'},
-  {w:'Symphony',h:'Orchestra playing together'},{w:'Chameleon',h:'Color-changing reptile'},{w:'Conspiracy',h:'Secret plot'},
-  {w:'Surrender',h:'Giving up, white flag'},{w:'Microscope',h:'Makes tiny things visible'},{w:'Catastrophe',h:'Disaster'},
-  {w:'Democracy',h:'People vote'},{w:'Turbulence',h:'Bumpy airplane ride'},{w:'Epidemic',h:'Widespread illness'},
-  {w:'Parachute',h:'Slows your fall'},{w:'Archaeology',h:'Digging up history'},{w:'Quarantine',h:'Isolation for illness'},
-  {w:'Adrenaline',h:'Fight-or-flight hormone'},{w:'Skyscraper',h:'Very tall building'},{w:'Hypnotize',h:'Put in a trance'},
-];
+  {w:'Astronaut',h:'Career that requires training in Houston'},
+  {w:'Tornado',h:'Chaser follows this across the midwest'},
+  {w:'Pickpocket',h:'Classic theme park warning â€” watch your stuff'},
+  {w:'Cathedral',h:'Gothic architecture â€” Notre Dame is the most famous'},
+  {w:'Submarine',h:'Yellow one famously featured in a Beatles song'},
+  {w:'Chandelier',h:'Fancy ceiling light â€” also a Sia song'},
+  {w:'Wilderness',h:'Scouts spend time here â€” no wifi'},
+  {w:'Trapeze',h:'Circus skill performed very high up without a net'},
+  {w:'Monsoon',h:'Southeast Asia gets a full season of this'},
+  {w:'Barbecue',h:'Summer tradition â€” charcoal or gas is the big debate'},
+  {w:'Trampoline',h:'Jumping equipment â€” gymnastics training tool'},
+  {w:'Cinnamon',h:'Spice that goes in churros and snickerdoodles'},
+  {w:'Jackhammer',h:'Very loud construction tool â€” sidewalk destroyer'},
+  {w:'Dandelion',h:'Yellow weed that turns white and fluffy â€” you blow on it'},
+  {w:'Blueprint',h:'Architect draws one before construction starts'},
+  {w:'Racetrack',h:'NASCAR and Formula 1 both use versions of this'},
+  {w:'Stalagmite',h:'Grows up from the floor of a cave'},
+  {w:'Porcupine',h:'Slow animal with built-in defense system'},
+  {w:'Catapult',h:'Medieval siege weapon â€” flings heavy objects'},
+  {w:'Whirlpool',h:'Dangerous water spiral â€” also a kitchen appliance brand'},
+  {w:'Crocodile',h:'Longer snout than an alligator â€” can be found in Florida'},
+  {w:'Greenhouse',h:'Glass building that grows plants year-round'},
+  {w:'Sandcastle',h:'Beach activity instantly destroyed by a wave'},
+  {w:'Bullseye',h:'Center of a target â€” also a Toy Story dog'},
+  {w:'Dragonfly',h:'Fast hovering insect near water â€” iridescent wings'},
+  {w:'Overtime',h:'Extra period in sports when tied after regulation'},
+  {w:'Fireworks',h:'July 4th tradition â€” banned in many counties'},
+  {w:'Hourglass',h:'Sand-based time measurement â€” also a body shape term'},
+  {w:'Thunderstorm',h:'Power outage season â€” lightning and heavy rain'},
+  {w:'Kaleidoscope',h:'Colorful tube toy â€” shake it and patterns change'},
+]];
 let pwIdx=0,pwWordShown=false;
 function loadPW(i){
   document.getElementById('pw-counter').textContent=(i+1)+' / '+PWD.length;
@@ -1621,7 +1657,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 // ========================================================
 // DEAL OR NO DEAL
 // ========================================================
-const DOND_VALUES = [1, 5, 10, 25, 50, 75, 100, 150, 200, 250, 300, 400, 500, 750, 1000, 1500, 2000, 3500, 5000, 10000];
+const DOND_VALUES = [1, 100, 500, 750, 1000, 5000, 10000, 25000, 40000, 50000, 75000, 100000, 200000, 300000, 400000, 500000, 750000, 1000000, 2500, 15000];
 const DOND_ROUNDS = [5, 4, 3, 2, 1, 1, 1]; // cases to open each round
 
 let dondCases = [];
@@ -1715,7 +1751,7 @@ function renderDondCases() {
       div.innerHTML = '<span class="case-num">' + c.num + '</span><span class="case-val">YOUR CASE</span>';
     } else if (c.opened) {
       div.className = 'dond-case opened';
-      div.innerHTML = '<span class="case-num">' + c.num + '</span><span class="case-val">' + c.val.toLocaleString() + '</span>';
+      div.innerHTML = '<span class="case-num">' + c.num + '</span><span class="case-val">$' + c.val.toLocaleString() + '</span>';
     } else {
       div.className = 'dond-case';
       div.innerHTML = '<span class="case-num">' + c.num + '</span>';
@@ -1732,10 +1768,10 @@ function renderDondValueBoard() {
   const openedVals = dondCases.filter(c => c.opened).map(c => c.val);
   DOND_VALUES.forEach(v => {
     const gone = openedVals.includes(v);
-    const tier = v >= 1000 ? 'high' : v >= 200 ? 'mid' : 'low';
+    const tier = v >= 100000 ? 'high' : v >= 10000 ? 'mid' : 'low';
     const pill = document.createElement('div');
     pill.className = 'dond-val-pill ' + (gone ? 'gone' : tier);
-    pill.textContent = v >= 1000 ? (v/1000) + 'K' : v;
+    pill.textContent = v >= 1000000 ? '$1M' : v >= 1000 ? '$' + (v/1000) + 'K' : '$' + v;
     board.appendChild(pill);
   });
 }
@@ -1753,7 +1789,7 @@ function renderDondPlayerScores() {
     div.innerHTML =
       '<div style="font-size:11px;color:#a0a0b0;">' + name + '</div>' +
       '<div style="font-size:' + (banked !== null ? '18px' : '13px') + ';font-weight:900;color:' + (banked !== null ? '#00d4aa' : '#555') + ';">' +
-      (banked !== null ? banked.toLocaleString() : (i === dondContestant ? '\u25b6' : '\u2014')) +
+      (banked !== null ? '$' + banked.toLocaleString() : (i === dondContestant ? '\u25b6' : '\u2014')) +
       '</div>';
     pbox.appendChild(div);
   });
@@ -1797,22 +1833,22 @@ function showBankerOffer() {
   if (bankerBox) bankerBox.style.display = 'block';
   if (casesPlay) casesPlay.style.display = 'none';
   if (phaseStatus) phaseStatus.style.display = 'none';
-  document.getElementById('dond-offer-num').textContent = offer.toLocaleString() + ' pts';
-  document.getElementById('dond-offer-sub').textContent = 'Expected value: ' + Math.round(expectedVal).toLocaleString() + ' pts \u00b7 ' + Math.round(factor*100) + '% offer';
+  document.getElementById('dond-offer-num').textContent = '$' + offer.toLocaleString();
+  document.getElementById('dond-offer-sub').textContent = 'Expected value: $' + Math.round(expectedVal).toLocaleString() + '  \u00b7 ' + Math.round(factor*100) + '% offer';
   dondCurrentOffer = offer;
 }
 
 function dondDeal() {
   dondBanked[dondContestant] = dondCurrentOffer;
-  if (typeof addScore === 'function') addScore(dondContestant + 1, dondCurrentOffer);
+  if (typeof addScore === 'function') addScore(dondContestant, dondCurrentOffer);
   const nameEl = document.getElementById('pname' + dondContestant);
   const name = (nameEl && nameEl.value) ? nameEl.value : ['Legend','Sumaya','Sarai'][dondContestant];
   const myVal = dondCases[dondMyCase].val;
   document.getElementById('dond-banker-box').style.display = 'none';
   document.getElementById('dond-result-box').style.display = 'block';
   document.getElementById('dond-result-label').textContent = name + ' took the deal!';
-  document.getElementById('dond-result-val').textContent = dondCurrentOffer.toLocaleString() + ' pts';
-  document.getElementById('dond-result-sub').textContent = 'Your case had ' + myVal.toLocaleString() + ' pts. ' + (dondCurrentOffer >= myVal ? '\u2705 Good deal!' : '\ud83d\ude2c Your case was worth more!');
+  document.getElementById('dond-result-val').textContent = '$' + dondCurrentOffer.toLocaleString();
+  document.getElementById('dond-result-sub').textContent = 'Your case had $' + myVal.toLocaleString() + '. ' + (dondCurrentOffer >= myVal ? '\u2705 Good deal!' : '\ud83d\ude2c Your case was worth more!');
   dondPhase = 'result';
   renderDondPlayerScores();
   dondPlayedOrder.push(dondContestant);
@@ -1832,15 +1868,17 @@ function dondNoDeal() {
     dondRevealOwnCase();
     return;
   }
-  if (remaining.length === 1) {
+  if (remaining.length <= 3 && remaining.length >= 1) {
     dondPhase = 'final';
-    const other = remaining[0];
-    const otherIdx = dondCases.indexOf(other);
+    var swapBtns = remaining.map(function(r) {
+      var ri = dondCases.indexOf(r);
+      return '<button class="btn btn-blue" onclick="dondSwap(' + ri + ')">Swap for Case ' + r.num + '</button>';
+    }).join('');
     if (phaseStatus) phaseStatus.innerHTML =
-      '<b style="color:#f5a623;">FINAL DECISION:</b> Keep your case OR swap for Case ' + other.num + '?<br>' +
-      '<div style="display:flex;gap:8px;justify-content:center;margin-top:8px;">' +
+      '<b style="color:#f5a623;">FINAL DECISION:</b> Keep your case OR swap?<br>' +
+      '<div style="display:flex;gap:8px;justify-content:center;margin-top:8px;flex-wrap:wrap;">' +
       '<button class="btn btn-green" onclick="dondKeep()">Keep My Case</button>' +
-      '<button class="btn btn-blue" onclick="dondSwap(' + otherIdx + ')">Swap for Case ' + other.num + '</button>' +
+      swapBtns +
       '</div>';
     renderDondCases();
     return;
@@ -1854,7 +1892,7 @@ function dondKeep() {
   const nameEl = document.getElementById('pname' + dondContestant);
   const name = (nameEl && nameEl.value) ? nameEl.value : ['Legend','Sumaya','Sarai'][dondContestant];
   dondBanked[dondContestant] = myVal;
-  if (typeof addScore === 'function') addScore(dondContestant + 1, myVal);
+  if (typeof addScore === 'function') addScore(dondContestant, myVal);
   dondShowFinalResult(name, myVal, 'kept their case');
 }
 
@@ -1864,8 +1902,8 @@ function dondSwap(otherIdx) {
   const nameEl = document.getElementById('pname' + dondContestant);
   const name = (nameEl && nameEl.value) ? nameEl.value : ['Legend','Sumaya','Sarai'][dondContestant];
   dondBanked[dondContestant] = swappedVal;
-  if (typeof addScore === 'function') addScore(dondContestant + 1, swappedVal);
-  dondShowFinalResult(name, swappedVal, 'swapped! (original had ' + originalVal.toLocaleString() + ' pts)');
+  if (typeof addScore === 'function') addScore(dondContestant, swappedVal);
+  dondShowFinalResult(name, swappedVal, 'swapped! (original had $' + originalVal.toLocaleString() + ')');
 }
 
 function dondRevealOwnCase() {
@@ -1873,7 +1911,7 @@ function dondRevealOwnCase() {
   const nameEl = document.getElementById('pname' + dondContestant);
   const name = (nameEl && nameEl.value) ? nameEl.value : ['Legend','Sumaya','Sarai'][dondContestant];
   dondBanked[dondContestant] = myVal;
-  if (typeof addScore === 'function') addScore(dondContestant + 1, myVal);
+  if (typeof addScore === 'function') addScore(dondContestant, myVal);
   dondShowFinalResult(name, myVal, 'went all the way!');
 }
 
@@ -1885,7 +1923,7 @@ function dondShowFinalResult(name, val, sub) {
   if (casesPlay) casesPlay.style.display = 'none';
   if (resultBox) resultBox.style.display = 'block';
   document.getElementById('dond-result-label').textContent = name + ' ' + sub;
-  document.getElementById('dond-result-val').textContent = val.toLocaleString() + ' pts';
+  document.getElementById('dond-result-val').textContent = '$' + val.toLocaleString();
   document.getElementById('dond-result-sub').textContent = 'Points added to ' + name + "'s scoreboard!";
   dondPhase = 'result';
   renderDondPlayerScores();
@@ -1916,71 +1954,69 @@ const WWTBAM_LADDER=[
 ];
 const FRIEND_NAMES=["Jake","Maya","Alex","Jordan","Sam","Riley","Tyler","Morgan"];
 const WWTBAM_QUESTIONS={11:[
-    {q:"What animal is Bluey from the hit kids show?",opts:["Labrador", "Blue Heeler", "Border Collie", "Dalmatian"],c:1,hint:"Bluey is an Australian cattle dog. The show is set in Brisbane.",tier:1},
-    {q:"In Minecraft, what material makes the strongest tools?",opts:["Gold", "Iron", "Diamond", "Wood"],c:2,hint:"Diamond is the hardest craftable resource in Minecraft.",tier:1},
-    {q:"How many legs does a spider have?",opts:["6", "8", "10", "4"],c:1,hint:"Spiders are arachnids. Insects have 6 legs, arachnids have 8.",tier:1},
-    {q:"What is the capital city of the United States?",opts:["New York City", "Los Angeles", "Chicago", "Washington D.C."],c:3,hint:"Built specifically to be the capital. Named after the first US president.",tier:1},
-    {q:"In Adopt Me on Roblox, what do you primarily collect and trade?",opts:["Weapons", "Pets", "Houses", "Cars"],c:1,hint:"The game core loop involves hatching eggs and collecting creatures.",tier:1},
-    {q:"What color is SpongeBob SquarePants?",opts:["Orange", "Blue", "Yellow", "Green"],c:2,hint:"He lives in Bikini Bottom and works at the Krusty Krab.",tier:1},
-    {q:"What planet is known as the Red Planet?",opts:["Venus", "Jupiter", "Saturn", "Mars"],c:3,hint:"NASA has sent several rovers here. Elon Musk wants to colonize it.",tier:1},
-    {q:"In Among Us, what are the bad guys called?",opts:["Killers", "Traitors", "Impostors", "Saboteurs"],c:2,hint:"There are 1-3 of them. Their job is to eliminate crewmates without being voted out.",tier:1},
-    {q:"What does NPC stand for in gaming?",opts:["Non-Playable Character", "New Player Control", "Night Play Category", "Network Player Clan"],c:0,hint:"These are background characters in video games controlled by the computer.",tier:2},
-    {q:"Who created Skibidi Toilet?",opts:["MrBeast", "PewDiePie", "DaFuq Boom", "Markiplier"],c:2,hint:"A small YouTube channel that blew up in 2023 with a bizarre animated series.",tier:2},
-    {q:"What does POV mean on TikTok?",opts:["Play Of Video", "Point Of View", "People On Video", "Part Of Vlog"],c:1,hint:"When someone does a POV video, they show a scenario from one specific person perspective.",tier:2},
-    {q:"How many colors are in a standard rainbow?",opts:["5", "6", "7", "8"],c:2,hint:"ROY G BIV: Red, Orange, Yellow, Green, Blue, Indigo, Violet.",tier:2},
-    {q:"What is the name of Peppa Pig little brother?",opts:["George", "Henry", "Charlie", "Max"],c:0,hint:"He loves dinosaurs and his favorite toy is called Mr. Dinosaur.",tier:2},
-    {q:"In Minecraft, what do you get when you kill an Ender Dragon?",opts:["Diamond sword", "Dragon egg plus XP", "A new biome", "Elytra wings"],c:1,hint:"Defeating the final boss drops this unique item plus massive experience points.",tier:2},
-    {q:"In Among Us, how do crewmates win?",opts:["Complete all assigned tasks", "Vote out all Impostors", "Find the Impostor hideout", "Collect all sabotage parts"],c:0,hint:"Crewmates win by completing all their tasks OR voting out all Impostors.",tier:2},
-    {q:"What does www stand for in a website address?",opts:["World Wide Web", "Wireless Web Works", "Web World Wide", "World Web Wire"],c:0,hint:"Tim Berners-Lee invented this in 1989. These three letters precede almost every website URL.",tier:3},
-    {q:"What is the fastest land animal on Earth?",opts:["Lion", "Greyhound", "Cheetah", "Pronghorn"],c:2,hint:"This spotted African big cat can reach 70-75 mph in short bursts.",tier:3},
-    {q:"In what country was Minecraft originally created?",opts:["USA", "UK", "Sweden", "Canada"],c:2,hint:"Markus Notch Persson created it. Same country as IKEA and ABBA.",tier:3},
-    {q:"What does the G in GIF stand for?",opts:["Global", "Graphic", "Generated", "Google"],c:1,hint:"It is a type of image format. The pronunciation debate is one of the oldest internet arguments.",tier:3},
-    {q:"Which planet has the most moons in our solar system?",opts:["Jupiter", "Uranus", "Neptune", "Saturn"],c:3,hint:"As of 2024, this ringed planet has 146 confirmed moons.",tier:3},
-    {q:"What is the name of the Roblox currency?",opts:["RobuxCoins", "Robux", "RobloxBucks", "R-Coins"],c:1,hint:"You use this to buy avatar items, game passes, and premium features.",tier:3},
-    {q:"What year was YouTube founded?",opts:["2003", "2004", "2005", "2006"],c:2,hint:"Three former PayPal employees created it. Google bought it the following year for 1.65 billion dollars.",tier:3}
+    {q:"What is SpongeBob best friend name?",opts:["Sandy","Gary","Patrick","Squidward"],c:2,hint:"He is a pink starfish who lives under a rock next door.",tier:1},
+    {q:"In Minecraft, what do you need to make a cake?",opts:["Wheat, eggs, milk, sugar","Flour, butter, cream, vanilla","Bread, berries, honey, eggs","Corn, sugar, butter, milk"],c:0,hint:"You need a bucket of milk, sugar, wheat, and eggs. Cows and chickens are your friends here.",tier:1},
+    {q:"What is the name of Moana island?",opts:["Hawaii","Motunui","Bora Bora","Samoa"],c:1,hint:"It starts with M. The ocean calls to her from the shore of this island.",tier:1},
+    {q:"What color is Pikachu?",opts:["Orange","Blue","Red","Yellow"],c:3,hint:"This Pokemon uses electricity. Its cheeks are red circles.",tier:1},
+    {q:"In Roblox Adopt Me, what do you hatch to get pets?",opts:["Treasure chests","Eggs","Cocoons","Mystery boxes"],c:1,hint:"You buy them from the nursery and wait for them to hatch.",tier:1},
+    {q:"In Minecraft, what happens when you sleep in a bed during a thunderstorm?",opts:["Lightning strikes you","The storm gets worse","You skip to day","You get extra hearts"],c:2,hint:"Sleeping always skips to daytime regardless of what weather is happening.",tier:2},
+    {q:"What country is the cartoon Bluey set in?",opts:["UK","USA","Australia","Canada"],c:2,hint:"Think kangaroos, the outback, and accents. Brisbane specifically.",tier:2},
+    {q:"Who is Elsa sister in Frozen?",opts:["Belle","Rapunzel","Anna","Merida"],c:2,hint:"She has red hair and falls in love with a guy who sells ice.",tier:2},
+    {q:"What does NPC mean in video games?",opts:["No Player Can","Night Play Controller","Non-Playable Character","New Player Clan"],c:2,hint:"Villagers in Minecraft are this. Characters that walk around doing things automatically.",tier:2},
+    {q:"In Among Us, how many Impostors are there usually?",opts:["4","1 to 3","5","0"],c:1,hint:"It depends on lobby settings but the default is usually just 1 or 2 hidden among the crew.",tier:2},
+    {q:"What is the name of the toy cowboy in Toy Story?",opts:["Buzz","Rex","Woody","Hamm"],c:2,hint:"Tom Hanks voices him. He has a pull string on his back that plays phrases.",tier:2},
+    {q:"What planet has rings around it?",opts:["Jupiter","Mars","Saturn","Uranus"],c:2,hint:"It is the sixth planet from the sun. Its rings are made of ice and rock.",tier:2},
+    {q:"What does the Ender Dragon drop in Minecraft when defeated?",opts:["A diamond sword","A golden apple","A dragon egg","An elytra"],c:2,hint:"Only one exists in the whole world. You cannot hatch it but you can display it.",tier:2},
+    {q:"What is the name of Squidward instrument?",opts:["Flute","Trumpet","Clarinet","Saxophone"],c:2,hint:"He thinks he is amazing at it but SpongeBob and Patrick do not agree.",tier:3},
+    {q:"How many Chaos Emeralds are there in the Sonic games?",opts:["5","6","7","8"],c:2,hint:"Sonic needs all of them to go Super Sonic. Count the colors of the rainbow plus one.",tier:3},
+    {q:"What is a creeper most afraid of in Minecraft?",opts:["Water","Ocelots and cats","Skeletons","TNT"],c:1,hint:"This passive pet animal scares them away. You can tame a wild one with fish.",tier:3},
+    {q:"In Roblox, what is the name of the currency used to buy items?",opts:["RobloxCoins","Blocks","Robux","R-Bucks"],c:2,hint:"It sounds like the game name. You use it to buy avatar outfits and game passes.",tier:3},
+    {q:"What does the G stand for in GIF?",opts:["Google","Graphics","Global","Generated"],c:1,hint:"GIF stands for something Interchange Format. The G is short for visual output.",tier:3},
+    {q:"What year was Minecraft first released to the public?",opts:["2009","2010","2011","2012"],c:0,hint:"Notch released the early alpha version. It became one of the best-selling games ever.",tier:3},
+    {q:"In SpongeBob, what is the name of the secret Krabby Patty formula holder?",opts:["The Safe","The Vault","The Secret Formula","The Recipe Box"],c:2,hint:"Mr. Krabs keeps it locked away. Plankton has been trying to steal it for decades.",tier:3}
   ],15:[
-    {q:"Who sings drivers license (2021)?",opts:["Taylor Swift", "Billie Eilish", "Olivia Rodrigo", "Sabrina Carpenter"],c:2,hint:"She went from Disney to a record-breaking solo debut.",tier:1},
-    {q:"What does rizz mean?",opts:["Being rich", "Natural charm and charisma", "Moving fast", "Being very funny"],c:1,hint:"Someone with this has the effortless ability to attract others. Tom Holland claimed he has zero of it.",tier:1},
-    {q:"What app did TikTok replace or rebrand from?",opts:["Vine", "Dubsmash", "Musical.ly", "Kwai"],c:2,hint:"The original app focused on lip-syncing videos. ByteDance merged it into TikTok in 2018.",tier:1},
-    {q:"What streaming service is Euphoria on?",opts:["Netflix", "Disney Plus", "Amazon Prime", "HBO Max"],c:3,hint:"Zendaya stars as Rue. The show sparked major beauty trends with elaborate eye makeup looks.",tier:1},
-    {q:"What K-pop group has members RM, Jin, Suga, J-Hope, Jimin, V, and Jungkook?",opts:["BLACKPINK", "EXO", "BTS", "TWICE"],c:2,hint:"This 7-member group broke multiple Billboard records. Their fanbase is called ARMY.",tier:1},
-    {q:"What does GRWM stand for?",opts:["Get Ready With Me", "Give Respect When Merited", "Great Reaction Worth Making", "Girls Really Want More"],c:0,hint:"Popular format where creators film themselves applying makeup or getting dressed while talking.",tier:1},
-    {q:"Who plays Rue in Euphoria?",opts:["Millie Bobby Brown", "Sydney Sweeney", "Hunter Schafer", "Zendaya"],c:3,hint:"She is also known for playing MJ in the Spider-Man MCU films and won two Emmys for this role.",tier:1},
-    {q:"What is a nepo baby?",opts:["A celebrity who acts young", "A celebrity child who benefits from parents industry connections", "A baby influencer on Instagram", "Someone who never leaves their hometown"],c:1,hint:"Nepo is short for nepotism. The term went viral in late 2022 after a New York Magazine feature.",tier:2},
-    {q:"In Fortnite, what is a Victory Royale?",opts:["A special skin reward", "Being the last player or team standing", "Winning 100 matches in a season", "A limited-time game mode"],c:1,hint:"This phrase appears on screen at the end of every Fortnite match for the winner.",tier:2},
-    {q:"What is Brat Summer based on?",opts:["Being athletic and outdoorsy all summer", "Charli XCX album with carefree messy party girl energy", "Being demanding and spoiled like a celebrity", "A viral TikTok dance challenge in 2023"],c:1,hint:"Charli XCX album Brat in 2024 sparked a massive aesthetic trend. Bright green, carefree, nightlife attitude. Even Kamala Harris campaign went Brat.",tier:2},
-    {q:"Which singer album SOUR featured drivers license deja vu and good 4 u?",opts:["Doja Cat", "Billie Eilish", "Olivia Rodrigo", "Gracie Abrams"],c:2,hint:"This was her debut album released in 2021. All three songs charted extremely high simultaneously.",tier:2},
-    {q:"What does understood the assignment mean?",opts:["Did all their homework", "Perfectly delivered exactly what was expected or more", "Read all the rules carefully", "Agreed with what someone said"],c:1,hint:"If someone understood the assignment, they went all-in on the vibe with maximum effort.",tier:2},
-    {q:"What is Kai Cenat known for?",opts:["Being a professional gamer", "Record-breaking Twitch subathons", "YouTube cooking videos", "A viral dance challenge"],c:1,hint:"He broke Twitch subscriber records multiple times and became the most subscribed streamer.",tier:2},
-    {q:"Which Love Island UK season is widely considered the most iconic?",opts:["Season 2 2016", "Season 4 2018", "Season 6 2020", "Season 3 2017"],c:1,hint:"Dani Dyer and Jack Fincham won this season. It was the highest-rated in the show history.",tier:3},
-    {q:"What does delulu mean in internet slang?",opts:["Very tired", "Delusional about a crush or celebrity", "Extremely hungry", "A dance style"],c:1,hint:"Shortening of delusional. Often used for people with unrealistic beliefs about celebrities.",tier:3},
-    {q:"Who performed at the Super Bowl LVIII halftime show in 2024?",opts:["Taylor Swift", "Beyonce", "Usher", "Drake"],c:2,hint:"He brought out a massive list of surprise guests including Alicia Keys, HER, Lil Jon, and Ludacris.",tier:3},
-    {q:"What is the beige flag in dating slang?",opts:["A serious red flag warning", "A quirky but harmless personal trait", "A good sign about someone", "A sign someone is boring"],c:1,hint:"Unlike red flags or green flags, this describes something odd that is neither negative nor positive.",tier:3},
-    {q:"Sabrina Carpenter Espresso was the biggest song of which summer?",opts:["Summer 2022", "Summer 2023", "Summer 2024", "Summer 2025"],c:2,hint:"That is that me espresso became one of the most viral audio clips on TikTok.",tier:3},
-    {q:"What does caught in 4K mean?",opts:["Watching something in 4K resolution", "Being caught doing something wrong with clear undeniable evidence", "Being filmed without permission", "A photography term"],c:1,hint:"The 4K refers to high-definition video quality. The evidence is crystal clear and undeniable.",tier:3},
-    {q:"What is main character energy?",opts:["Being the team captain", "Acting like you are the confident protagonist of your own story", "Having the most followers", "Being the loudest person in a room"],c:1,hint:"When someone has this, they move through life as if the world revolves around them.",tier:3}
+    {q:"What does slay mean in Gen Z slang?",opts:["Mess up badly","Do something exceptionally well","Sleep in","Be mean to someone"],c:1,hint:"You say this when someone looks incredible or performs perfectly. Beyonce slays.",tier:1},
+    {q:"Which show features humor about Irish teenage girls?",opts:["Derry Girls","Sex Education","Never Have I Ever","Skam"],c:0,hint:"Set in Northern Ireland in the 1990s. All the main characters go to an all-girls Catholic school.",tier:1},
+    {q:"What Netflix show features a Korean survival competition for cash?",opts:["Money Heist","Squid Game","Alice in Borderland","Sweet Home"],c:1,hint:"456 players, childhood games, deadly consequences. Season 2 dropped in December 2024.",tier:1},
+    {q:"Who sings Espresso and Please Please Please?",opts:["Olivia Rodrigo","Doja Cat","Sabrina Carpenter","Gracie Abrams"],c:2,hint:"She was on the Disney show Girl Meets World and became the biggest pop star of 2024.",tier:1},
+    {q:"What does no cap mean?",opts:["Without a hat","No limit","Telling the truth, no lying","Not caring"],c:2,hint:"Cap means a lie. So no cap means the opposite. No cap that was the best meal I ever had.",tier:1},
+    {q:"What platform is Kai Cenat most famous for?",opts:["YouTube","Instagram","TikTok","Twitch"],c:3,hint:"He broke the all-time subscriber record multiple times on this live-streaming platform.",tier:2},
+    {q:"What does the slang word cheugy mean?",opts:["Extremely cool","Outdated and trying too hard to be trendy","Being generous","Moving fast"],c:1,hint:"Things that are this were trendy around 2015-2018 but now feel old. Skinny jeans and chevron patterns.",tier:2},
+    {q:"In Fortnite, what is the name of the in-game currency?",opts:["Gold Bars","V-Bucks","Battle Pass","Coins"],c:1,hint:"You use these to buy skins and the Battle Pass. They can be purchased with real money.",tier:2},
+    {q:"Who plays Wednesday Addams in the Netflix show Wednesday?",opts:["Millie Bobby Brown","Emma Myers","Jenna Ortega","Hunter Schafer"],c:2,hint:"She also choreographed the viral dancing scene herself. She took inspiration from old goth music videos.",tier:2},
+    {q:"What does rizz mean?",opts:["Being very rich","Natural charm or charisma that attracts others","Having a good outfit","Being very funny"],c:1,hint:"Someone with good rizz effortlessly attracts people. Tom Holland famously said he has zero rizz.",tier:2},
+    {q:"What K-pop group has members RM, Jin, Suga, J-Hope, Jimin, V, and Jungkook?",opts:["TWICE","BLACKPINK","EXO","BTS"],c:3,hint:"Their fanbase is called ARMY. They broke multiple Billboard records and sold out stadiums worldwide.",tier:2},
+    {q:"What does delulu mean online?",opts:["Very tired","Having delusional beliefs especially about celebrities","Extremely hungry","A dance style"],c:1,hint:"Short for delusional. Delulu is the solulu is the ironic phrase that goes with it.",tier:2},
+    {q:"What does understood the assignment mean?",opts:["Finished homework","Delivered exactly what was needed with full commitment","Agreed with someone","Read the instructions"],c:1,hint:"Said when someone went all-in on a vibe, outfit, or task with perfect execution. No notes.",tier:2},
+    {q:"What Olivia Rodrigo album came after SOUR?",opts:["BRUTAL","GOOD 4 U","GUTS","LACY"],c:2,hint:"Released in 2023. Lead single was vampire. She cut her hair and the era was more rock-influenced.",tier:3},
+    {q:"What does 4B mean as a movement?",opts:["Four best friends","A feminist movement rejecting dating and marriage","Four basic fashion colors","A K-pop ranking system"],c:1,hint:"It started in South Korea. Gained massive attention in the US in November 2024 after election results.",tier:3},
+    {q:"Who performed at the 2024 Super Bowl halftime show?",opts:["Taylor Swift","Beyonce","Usher","Drake"],c:2,hint:"He brought out Alicia Keys, Lil Jon, Ludacris, and many others in a high-energy show.",tier:3},
+    {q:"What does caught in 4K mean?",opts:["Watching in 4K resolution","Being caught doing something wrong with clear evidence","Being filmed without permission","A photography award"],c:1,hint:"The 4K refers to crystal clear video quality. There is no way to deny what happened.",tier:3},
+    {q:"Which Taylor Swift album is associated with snake imagery and the villain era?",opts:["Evermore","Folklore","Reputation","Midnights"],c:2,hint:"She leaned into being the villain after a very public feud. TV black and white aesthetic.",tier:3},
+    {q:"What does main character energy mean?",opts:["Being team captain","Moving through life like you are the confident protagonist of your own story","Having the most followers","Being the loudest in the room"],c:1,hint:"Think of a movie where everyone else is a background character. You are not.",tier:3},
+    {q:"What is Brat Summer based on?",opts:["Being athletic all summer","Charli XCX album about carefree party girl energy","Being spoiled like a celebrity","A viral TikTok dance"],c:1,hint:"Charli XCX dropped the album Brat in 2024. Bright green. Carefree. Unbothered. Even Kamala campaign used it.",tier:3}
   ],17:[
-    {q:"Who won Love Island UK 2023?",opts:["Molly-Mae and Tommy", "Jess Harding and Sammy Root", "Ekin-Su and Davide", "Paige and Finn"],c:1,hint:"The winners were the fan favorites that season. Jess was a beautician and Sammy was a business owner.",tier:1},
-    {q:"What rapper had the biggest beef with Drake in 2024?",opts:["J. Cole", "The Game", "Pusha T", "Kendrick Lamar"],c:3,hint:"His diss track Not Like Us became a number 1 hit and he performed it at the Super Bowl halftime show in 2025.",tier:1},
-    {q:"What does the ick mean in dating culture?",opts:["A gross food", "A sudden irrational disgust that kills your attraction to someone", "Being sick", "An awkward moment on a date"],c:1,hint:"Once you get this, you cannot unsee it. Something small can trigger it and suddenly you are completely turned off.",tier:1},
-    {q:"What year did Beyonce release Renaissance Act I?",opts:["2021", "2022", "2023", "2024"],c:1,hint:"It was a surprise drop with no prior single. The album leaned into dance, disco, and house music.",tier:1},
-    {q:"What does IYKYK mean?",opts:["I Will Yield Keep Your Kindness", "If You Know You Know", "I Yelled Keep Your Knowledge", "It Is Your Kind of Knowledge"],c:1,hint:"Posted when sharing inside jokes only specific people will understand. You either get it or you do not.",tier:1},
-    {q:"Kendrick Lamar Not Like Us is a diss track against which artist?",opts:["J. Cole", "Travis Scott", "Drake", "Future"],c:2,hint:"They not like us became a number 1 anthem on the Hot 100.",tier:1},
-    {q:"Who is Nicki Minaj most famous rap rival?",opts:["Cardi B", "Megan Thee Stallion", "Doja Cat", "Iggy Azalea"],c:0,hint:"Their feud is one of the most documented in hip-hop history. Tension peaked around 2018 at a Fashion Week incident.",tier:1},
-    {q:"What album did SZA release in December 2022?",opts:["CTRL", "Z", "SOS", "Good Days"],c:2,hint:"It included Kill Bill, Shirt, and many other hits. Her second studio album, broke streaming records.",tier:2},
-    {q:"What is dark academia as an aesthetic?",opts:["Goth fashion focused on black clothing", "Subculture centered on classic literature Gothic architecture and moody intellectual vibes", "Horror movies with academic settings", "A TikTok trend about studying at night"],c:1,hint:"Think Oxbridge libraries, tweed, candles, old books, rainy autumn days. Popularized on Tumblr and TikTok.",tier:2},
-    {q:"What is the correct term for when an AI generates false information confidently?",opts:["Glitching", "Hallucinating", "Dreaming", "Confabulating"],c:1,hint:"This word was adopted from psychology. It describes when an AI produces plausible-sounding but made-up facts.",tier:2},
-    {q:"Who hosts Love Island UK from 2023 onwards?",opts:["Laura Whitmore", "Caroline Flack", "Maya Jama", "Emma Willis"],c:2,hint:"She took over in 2023. She is a TV presenter who was previously in a relationship with Stormzy.",tier:2},
-    {q:"What does the 4B movement refer to?",opts:["A fashion trend with four basic colors", "A South Korean feminist movement with no dating marriage or sex with men", "A K-pop fan club ranking system", "A TikTok challenge about four boundaries"],c:1,hint:"The 4B comes from four Korean words all starting with bi meaning no. It gained huge attention in November 2024.",tier:2},
-    {q:"What Netflix show features teenagers at a prestigious school in Madrid?",opts:["Money Heist", "Cable Girls", "Elite", "Control Z"],c:2,hint:"It mixes murder mysteries with teenage drama. Known for its diverse cast and plot twists.",tier:2},
-    {q:"What Beyonce album marked her official pivot to country music in 2024?",opts:["Renaissance Act II", "Cowboy Carter", "Lemonade 2", "Texas Summer"],c:1,hint:"She dropped it in March 2024. It was a statement about Black artists roots in country music history. Lead single Texas Hold Em was her first country number one.",tier:3},
-    {q:"Kendrick Lamar performed at Super Bowl LIX in 2025. What city was it in?",opts:["Miami", "Los Angeles", "Las Vegas", "New Orleans"],c:3,hint:"The Superdome. He performed Not Like Us live for the first time at a major stage.",tier:3},
-    {q:"What is normcore as a fashion aesthetic?",opts:["Maximalist colorful fashion", "Deliberately unremarkable average basic clothing as a fashion statement", "Nostalgia-based 90s revival looks", "Athletic wear worn casually"],c:1,hint:"A 2014 trend concept: wearing dad jeans, white sneakers, and plain t-shirts on PURPOSE.",tier:3},
-    {q:"What UK Love Island concept involves the public voting in a new bombshell?",opts:["Casa Amor", "The Hideaway", "The Dumping", "Movie Night"],c:0,hint:"Arguably the most dramatic moment of every Love Island series. Islanders are split up and tempted by 6 new singles.",tier:3},
-    {q:"In AI, what does LLM stand for?",opts:["Large Language Model", "Linked Learning Machine", "Linear Logic Module", "Low Latency Mechanism"],c:0,hint:"ChatGPT, Claude, and Gemini are all examples. They are trained on massive text datasets.",tier:3},
-    {q:"What does it mean when someone says you are in your flop era?",opts:["You are very clumsy and accident-prone", "You are publicly underperforming after a previous peak", "You keep canceling plans on friends", "You are dating someone friends disapprove of"],c:1,hint:"Used when a celeb or creator declines after a peak moment. The opposite is a glow up era.",tier:3},
-    {q:"What song did Kendrick Lamar perform LAST at the 2025 Super Bowl halftime show?",opts:["Not Like Us", "Humble", "DNA", "Alright"],c:0,hint:"He saved the most pointed song for last, turning a pop culture event into a statement.",tier:3}
-  ]};
+    {q:"What rapper defeated Drake in the biggest rap beef of 2024?",opts:["J. Cole","Future","Pusha T","Kendrick Lamar"],c:3,hint:"His diss track Not Like Us went to number 1. He performed it at the Super Bowl halftime show in 2025.",tier:1},
+    {q:"What does the ick mean in dating?",opts:["A gross food","A sudden feeling of disgust that kills attraction","Being sick","An awkward moment"],c:1,hint:"Once you get it you cannot unsee it. Something small like chewing loud can trigger it and you are completely turned off.",tier:1},
+    {q:"Which city hosted Super Bowl LIX in 2025?",opts:["Miami","Las Vegas","Los Angeles","New Orleans"],c:3,hint:"The Superdome. Kendrick Lamar headlined. The city is famous for Mardi Gras and jazz.",tier:1},
+    {q:"What is the name of Beyonce 2024 country album?",opts:["Renaissance Act II","Lemonade 2","Cowboy Carter","Texas Hold Em"],c:2,hint:"She dropped it in March 2024. Lead single Texas Hold Em made history as her first country number one.",tier:1},
+    {q:"What does IYKYK mean?",opts:["I Will Yield Keep Your Kindness","If You Know You Know","It Is Your Kind of Knowledge","I Yelled Keep Your Knowledge"],c:1,hint:"Used when posting an inside joke or reference that only specific people will understand.",tier:1},
+    {q:"What SZA album from 2022 featured Kill Bill and Shirt?",opts:["CTRL","Z","SOS","Lana"],c:2,hint:"Her second studio album. The title is an emergency distress signal. Broke streaming records.",tier:2},
+    {q:"Who hosts Love Island UK from 2023?",opts:["Laura Whitmore","Caroline Flack","Emma Willis","Maya Jama"],c:3,hint:"She took over in 2023 after previous hosts. She was in a relationship with Stormzy.",tier:2},
+    {q:"What does the term AI hallucination mean?",opts:["The AI crashes","The AI generates confident but completely false information","The AI gets confused by images","The AI produces weird art"],c:1,hint:"Borrowed from psychology. ChatGPT and other AI tools sometimes invent facts that sound totally real.",tier:2},
+    {q:"What does dark academia mean as an aesthetic?",opts:["Goth fashion focused on black","Subculture centered on classic literature moody intellectual vibes and Gothic architecture","Horror movies in academic settings","A TikTok night-study trend"],c:1,hint:"Think tweed, old books, candles, rain, Oxford libraries. Very romanticized scholarly atmosphere.",tier:2},
+    {q:"What is normcore fashion?",opts:["Maximalist colorful fashion","Wearing deliberately plain average clothing as a statement","Nostalgia-based 90s fashion","Athletic wear worn casually"],c:1,hint:"It was a 2014 concept. Wearing dad jeans, plain white sneakers, and basic tees on PURPOSE as a fashion choice.",tier:2},
+    {q:"What UK Love Island twist separates couples and tempts them with new singles?",opts:["Casa Amor","The Hideaway","Movie Night","The Dumping"],c:0,hint:"The most dramatic twist of every series. Islanders are split across two villas and tested.",tier:2},
+    {q:"In AI what does LLM stand for?",opts:["Large Language Model","Linked Learning Machine","Linear Logic Module","Low Latency Mechanism"],c:0,hint:"ChatGPT, Claude, and Gemini are all examples. They are trained on huge amounts of text data.",tier:2},
+    {q:"What does it mean to be in your flop era?",opts:["Being very clumsy","Publicly underperforming after a previous peak","Canceling plans on friends","Dating someone your friends dislike"],c:1,hint:"Used when a celebrity or creator declines after their peak moment. Opposite of a glow-up era.",tier:2},
+    {q:"What Netflix Spanish show features elite teenagers and murder mysteries in Madrid?",opts:["Money Heist","Cable Girls","Elite","Control Z"],c:2,hint:"Known for its diverse cast, shocking plot twists, and multiple seasons. Las Encinas school.",tier:3},
+    {q:"What does the term nepo baby refer to?",opts:["A celebrity who acts childish","A celebrity who benefits from famous parents industry connections","A baby influencer on Instagram","Someone who never leaves hometown"],c:1,hint:"Short for nepotism baby. The term went viral after a 2022 New York Magazine deep dive.",tier:3},
+    {q:"Which Love Island UK season is widely considered the most iconic?",opts:["Season 2 2016","Season 4 2018","Season 3 2017","Season 6 2020"],c:0,hint:"Dani Dyer and Jack Fincham won. It was the highest-rated season and launched multiple celebrity careers.",tier:3},
+    {q:"What Kendrick Lamar song did he close the 2025 Super Bowl halftime show with?",opts:["Humble","DNA","Alright","Not Like Us"],c:3,hint:"He saved the most pointed diss for last in front of 100 million viewers. A statement moment.",tier:3},
+    {q:"What does the 4B feminist movement stand for?",opts:["Four boundaries women set","Four Korean words all starting with bi meaning no","Four basic rights for women","Four B-list celebrities who started it"],c:1,hint:"South Korean feminist movement. Gained global attention in November 2024. No dating, no marriage, no sex, no childbirth.",tier:3},
+    {q:"What is the meaning of parasocial relationship in internet culture?",opts:["Long distance dating","A one-sided bond where fans feel close to someone who does not know they exist","Being friends online but not in person","Following someone obsessively on social media"],c:1,hint:"You watch a streamer every day and feel like you know them personally. They have no idea who you are.",tier:3},
+    {q:"What does chronically online mean?",opts:["Being addicted to working","Spending so much time online you have lost touch with how normal people think","Posting content every hour","Being famous on the internet"],c:1,hint:"Used to describe people whose entire worldview and humor is shaped by internet culture. Touch grass is the cure.",tier:3}
+  ]}
 let wwtbamAge=11,wwtbamPlayerIdx=0,wwtbamQuestions=[],wwtbamQIdx=0,wwtbamSafeHaven=0;
 let wwtbamLifelinesUsed={ff:false,ai:false,friend:false};
 let wwtbamEliminated=[],wwtbamAnswered=false;
@@ -2097,7 +2133,7 @@ function endWWTBAM(outcome,pts){
   document.getElementById("wwtbam-result-label").textContent=labels[outcome];
   document.getElementById("wwtbam-result-amount").textContent=pts.toLocaleString()+" pts";
   document.getElementById("wwtbam-result-sub").textContent=subs[outcome];
-  if(pts>0)addScore(wwtbamPlayerIdx+1,pts);
+  if(pts>0)addScore(wwtbamPlayerIdx,pts);
 }
 function useLifeline(type){
   if(wwtbamAnswered)return;

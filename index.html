@@ -33,9 +33,9 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
 #nav h1{color:var(--gold);font-size:16px;margin-right:4px;white-space:nowrap;}
 .nav-btn{background:var(--card);color:var(--text);border:1px solid #333;border-radius:20px;padding:4px 10px;font-size:11px;cursor:pointer;white-space:nowrap;}
 .nav-btn:hover,.nav-btn.active{background:var(--blue);color:#fff;border-color:var(--blue);}
-.game-section{display:none;flex-direction:column;height:calc(100vh - 52px);overflow:hidden;}
-.game-section.active{display:flex;}
-#game-home{padding:20px;overflow-y:auto;height:calc(100vh - 52px);}
+.game-section{display:none;flex-direction:column;overflow:hidden;}
+.game-section.active{display:flex;flex:1;min-height:0;}
+#game-home{padding:20px;overflow-y:auto;}
 .game-title{font-size:28px;font-weight:900;color:var(--gold);margin-bottom:6px;}
 .game-subtitle{color:var(--text2);font-size:14px;margin-bottom:16px;}
 .home-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px;}
@@ -219,7 +219,7 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
 
 
 /* WHO WANTS TO BE A MILLIONAIRE */
-.wwtbam-wrap{flex:1;display:flex;gap:12px;overflow:hidden;}
+.wwtbam-wrap{flex:1;display:flex;gap:12px;overflow:hidden;min-height:0;}
 .wwtbam-ladder{width:180px;flex-shrink:0;overflow-y:auto;display:flex;flex-direction:column;gap:3px;}
 .wwtbam-rung{padding:6px 10px;border-radius:8px;font-size:13px;font-weight:700;display:flex;justify-content:space-between;align-items:center;background:#16213e;border:1px solid #2a2a4e;transition:all 0.3s;}
 .wwtbam-rung.current{background:#4a90e222;border-color:#4a90e2;color:#4a90e2;transform:scale(1.04);}
@@ -227,7 +227,7 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
 .wwtbam-rung.won{background:#00d4aa22;border-color:#00d4aa;color:#00d4aa;}
 .wwtbam-rung.lost{background:#e9456011;border-color:#e9456033;color:#555;}
 .wwtbam-rung .rung-pts{color:inherit;font-size:12px;}
-.wwtbam-main{flex:1;display:flex;flex-direction:column;gap:10px;overflow:hidden;}
+.wwtbam-main{flex:1;display:flex;flex-direction:column;gap:10px;overflow:hidden;min-height:0;}
 .wwtbam-question{background:#16213e;border-radius:14px;padding:20px 24px;font-size:22px;font-weight:700;line-height:1.4;text-align:center;border:2px solid #2a2a4e;flex-shrink:0;}
 .wwtbam-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;flex-shrink:0;}
 .wwtbam-opt{background:#16213e;border:2px solid #4a90e2;border-radius:12px;padding:14px 18px;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all 0.2s;text-align:left;}
@@ -247,7 +247,7 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
 .lifeline-btn .ll-icon{font-size:24px;}
 .lifeline-btn.used{opacity:0.3;cursor:not-allowed;border-color:#333;color:#555;}
 .wwtbam-feedback{text-align:center;font-size:18px;font-weight:700;min-height:30px;padding:6px;flex-shrink:0;}
-.wwtbam-age-select{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:20px;}
+.wwtbam-age-select{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:20px;overflow-y:auto;min-height:0;}
 .age-btn{padding:20px 40px;border-radius:16px;border:3px solid #4a90e2;background:#16213e;color:#e0e0e0;font-size:22px;font-weight:900;cursor:pointer;transition:all 0.25s;width:320px;text-align:left;}
 .age-btn:hover{border-color:#f5a623;background:#2a2a4e;transform:translateX(6px);}
 .age-btn .age-sub{font-size:13px;color:#a0a0b0;font-weight:400;margin-top:4px;}
@@ -258,6 +258,15 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
 .friend-box{background:#1a2e1a;border:2px solid #00d4aa;border-radius:12px;padding:16px;text-align:center;flex-shrink:0;}
 .friend-name{font-size:14px;color:#00d4aa;font-weight:700;margin-bottom:4px;}
 .friend-says{font-size:18px;font-weight:700;}
+
+
+@keyframes flashRed {
+  0%,100%{background:#16213e;border-color:#2a2a4e;color:#e0e0e0;}
+  30%,70%{background:#e9456033;border-color:#e94560;color:#ff6b6b;}
+}
+.br-flash{animation:flashRed 0.6s ease 0s 6 both;}
+.br-locked .mc-opt{pointer-events:none;opacity:0.4;}
+#br-buzz-controls{display:none;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:8px;}
 
 </style>
 </head>
@@ -469,6 +478,10 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
         <div class="mc-question" id="br-q">Loading...</div>
         <div class="mc-options" id="br-opts"></div>
         <div class="mc-explain" id="br-explain" style="display:none;"></div>
+        <div id="br-buzz-controls" style="display:none;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:8px;">
+          <button class="btn btn-blue" onclick="brNextBuzz()">&#9889; Next Buzz</button>
+          <button class="btn btn-green" onclick="brCorrectNext()">&#10003; Correct &#8594; Next</button>
+        </div>
       </div>
     </div>
     <div class="game-controls">
@@ -479,7 +492,7 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
         <circle class="timer-ring" cx="35" cy="35" r="30" id="br-ring" stroke="var(--purple)"/>
         <text class="timer-num" x="35" y="35" id="br-tnum">20</text>
       </svg>
-      <button class="btn btn-red" style="font-weight:900;font-size:13px;padding:8px 14px;" onclick="startTimer('br',5)">&#9889; BUZZ IN 5s</button>
+      <button class="btn btn-red" style="font-weight:900;font-size:13px;padding:8px 14px;" onclick="brBuzzIn()">&#9889; BUZZ IN 3s</button>
       <button class="btn btn-green btn-sm" onclick="startTimer('br',20)">&#9654; 20s</button>
       <button class="btn btn-gray btn-sm" onclick="stopTimer('br')">&#9646;&#9646;</button>
     </div>
@@ -746,6 +759,74 @@ function showGame(id){
 
 const timers={};
 const timerMap={emoji:'emoji',flag:'flag',draw:'draw',br:'br',tf:'tf',lyr:'lyr',price:'price',pw:'pw'};
+
+function brBuzzIn(){
+  // Reset any previous lock state
+  const card=document.getElementById('br-card');
+  const opts=document.getElementById('br-opts');
+  const buzzCtrl=document.getElementById('br-buzz-controls');
+  card.classList.remove('br-flash','br-locked');
+  if(opts)opts.style.display='';
+  if(buzzCtrl)buzzCtrl.style.display='none';
+  // Now start 3s timer with expiry callback
+  stopTimer('br');
+  let rem=3;
+  const ring=document.getElementById('br-ring');
+  const num=document.getElementById('br-tnum');
+  if(!ring||!num)return;
+  const circ=188.4;
+  function tick(){
+    const pct=rem/3;
+    ring.style.strokeDashoffset=circ*(1-pct);
+    ring.style.stroke=pct>0.5?'var(--green)':pct>0.25?'var(--gold)':'var(--red)';
+    num.textContent=rem;
+    if(rem<=0){
+      clearInterval(timers['br']);
+      ring.style.stroke='var(--red)';
+      num.textContent='0';
+      // TIME UP — lock the round
+      brTimeUp();
+      return;
+    }
+    rem--;
+  }
+  tick();
+  timers['br']=setInterval(tick,1000);
+}
+function brTimeUp(){
+  const card=document.getElementById('br-card');
+  const opts=document.getElementById('br-opts');
+  const buzzCtrl=document.getElementById('br-buzz-controls');
+  // Flash question red & lock answers
+  card.classList.add('br-flash','br-locked');
+  if(opts)opts.style.display='none';
+  if(buzzCtrl)buzzCtrl.style.display='flex';
+}
+function brNextBuzz(){
+  // Another player wants to buzz in — reset card, show opts again
+  const card=document.getElementById('br-card');
+  const opts=document.getElementById('br-opts');
+  const buzzCtrl=document.getElementById('br-buzz-controls');
+  card.classList.remove('br-flash','br-locked');
+  if(opts)opts.style.display='';
+  if(buzzCtrl)buzzCtrl.style.display='none';
+  // Reset timer display
+  const ring=document.getElementById('br-ring');
+  const num=document.getElementById('br-tnum');
+  if(ring){ring.style.strokeDashoffset='0';ring.style.stroke='var(--purple)';}
+  if(num)num.textContent='20';
+}
+function brCorrectNext(){
+  // Host says it was correct — unlock and advance
+  const card=document.getElementById('br-card');
+  const opts=document.getElementById('br-opts');
+  const buzzCtrl=document.getElementById('br-buzz-controls');
+  card.classList.remove('br-flash','br-locked');
+  if(opts)opts.style.display='';
+  if(buzzCtrl)buzzCtrl.style.display='none';
+  brNav(1);
+}
+
 function startTimer(key,secs){
   stopTimer(key);
   let rem=secs;

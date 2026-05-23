@@ -166,6 +166,9 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
 .result-badge{padding:4px 12px;border-radius:20px;font-size:13px;font-weight:700;display:inline-block;margin:4px;}
 .badge-correct{background:var(--green);color:#000;}
 .badge-wrong{background:var(--red);color:#fff;}
+.who-btn{padding:10px 22px;border-radius:20px;border:2px solid #4a90e2;background:#16213e;color:#e0e0e0;cursor:pointer;font-size:15px;font-weight:700;transition:all 0.2s;}
+.who-btn:hover{background:#4a90e222;border-color:#f5a623;color:#f5a623;}
+.who-btn.active{background:#4a90e2;color:#fff;border-color:#4a90e2;}
 
 /* DEAL OR NO DEAL */
 .dond-cases { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin:12px 0; }
@@ -697,7 +700,7 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
 
 <script>
 const scores=[0,0,0];
-function addScore(p,v){scores[p]=Math.max(0,scores[p]+v);document.getElementById('pscore'+p).textContent=scores[p];}
+function addScore(p,v){scores[p]=scores[p]+v;document.getElementById('pscore'+p).textContent=scores[p];}
 function resetScores(){for(let i=0;i<3;i++){scores[i]=0;document.getElementById('pscore'+i).textContent='0';}}
 
 function showGame(id){
@@ -1823,7 +1826,7 @@ const WWTBAM_QUESTIONS={11:[
     {q:"Who plays Rue in Euphoria?",opts:["Millie Bobby Brown", "Sydney Sweeney", "Hunter Schafer", "Zendaya"],c:3,hint:"She is also known for playing MJ in the Spider-Man MCU films and won two Emmys for this role.",tier:1},
     {q:"What is a nepo baby?",opts:["A celebrity who acts young", "A celebrity child who benefits from parents industry connections", "A baby influencer on Instagram", "Someone who never leaves their hometown"],c:1,hint:"Nepo is short for nepotism. The term went viral in late 2022 after a New York Magazine feature.",tier:2},
     {q:"In Fortnite, what is a Victory Royale?",opts:["A special skin reward", "Being the last player or team standing", "Winning 100 matches in a season", "A limited-time game mode"],c:1,hint:"This phrase appears on screen at the end of every Fortnite match for the winner.",tier:2},
-    {q:"What year did TikTok officially launch globally?",opts:["2016", "2017", "2018", "2019"],c:2,hint:"ByteDance merged Musical.ly into TikTok this year. It exploded in the US during COVID-19 in 2020.",tier:2},
+    {q:"What is Brat Summer based on?",opts:["Being athletic and outdoorsy all summer", "Charli XCX album with carefree messy party girl energy", "Being demanding and spoiled like a celebrity", "A viral TikTok dance challenge in 2023"],c:1,hint:"Charli XCX album Brat in 2024 sparked a massive aesthetic trend. Bright green, carefree, nightlife attitude. Even Kamala Harris campaign went Brat.",tier:2},
     {q:"Which singer album SOUR featured drivers license deja vu and good 4 u?",opts:["Doja Cat", "Billie Eilish", "Olivia Rodrigo", "Gracie Abrams"],c:2,hint:"This was her debut album released in 2021. All three songs charted extremely high simultaneously.",tier:2},
     {q:"What does understood the assignment mean?",opts:["Did all their homework", "Perfectly delivered exactly what was expected or more", "Read all the rules carefully", "Agreed with what someone said"],c:1,hint:"If someone understood the assignment, they went all-in on the vibe with maximum effort.",tier:2},
     {q:"What is Kai Cenat known for?",opts:["Being a professional gamer", "Record-breaking Twitch subathons", "YouTube cooking videos", "A viral dance challenge"],c:1,hint:"He broke Twitch subscriber records multiple times and became the most subscribed streamer.",tier:2},
@@ -1848,12 +1851,12 @@ const WWTBAM_QUESTIONS={11:[
     {q:"Who hosts Love Island UK from 2023 onwards?",opts:["Laura Whitmore", "Caroline Flack", "Maya Jama", "Emma Willis"],c:2,hint:"She took over in 2023. She is a TV presenter who was previously in a relationship with Stormzy.",tier:2},
     {q:"What does the 4B movement refer to?",opts:["A fashion trend with four basic colors", "A South Korean feminist movement with no dating marriage or sex with men", "A K-pop fan club ranking system", "A TikTok challenge about four boundaries"],c:1,hint:"The 4B comes from four Korean words all starting with bi meaning no. It gained huge attention in November 2024.",tier:2},
     {q:"What Netflix show features teenagers at a prestigious school in Madrid?",opts:["Money Heist", "Cable Girls", "Elite", "Control Z"],c:2,hint:"It mixes murder mysteries with teenage drama. Known for its diverse cast and plot twists.",tier:2},
-    {q:"What Supreme Court case in 2022 overturned Roe v Wade?",opts:["Obergefell v Hodges", "Dobbs v Jackson", "Planned Parenthood v Casey", "Whole Womans Health v Jackson"],c:1,hint:"Named after Mississippi state health officer. It eliminated the federal constitutional right to abortion established in 1973.",tier:3},
+    {q:"What Beyonce album marked her official pivot to country music in 2024?",opts:["Renaissance Act II", "Cowboy Carter", "Lemonade 2", "Texas Summer"],c:1,hint:"She dropped it in March 2024. It was a statement about Black artists roots in country music history. Lead single Texas Hold Em was her first country number one.",tier:3},
     {q:"Kendrick Lamar performed at Super Bowl LIX in 2025. What city was it in?",opts:["Miami", "Los Angeles", "Las Vegas", "New Orleans"],c:3,hint:"The Superdome. He performed Not Like Us live for the first time at a major stage.",tier:3},
     {q:"What is normcore as a fashion aesthetic?",opts:["Maximalist colorful fashion", "Deliberately unremarkable average basic clothing as a fashion statement", "Nostalgia-based 90s revival looks", "Athletic wear worn casually"],c:1,hint:"A 2014 trend concept: wearing dad jeans, white sneakers, and plain t-shirts on PURPOSE.",tier:3},
     {q:"What UK Love Island concept involves the public voting in a new bombshell?",opts:["Casa Amor", "The Hideaway", "The Dumping", "Movie Night"],c:0,hint:"Arguably the most dramatic moment of every Love Island series. Islanders are split up and tempted by 6 new singles.",tier:3},
     {q:"In AI, what does LLM stand for?",opts:["Large Language Model", "Linked Learning Machine", "Linear Logic Module", "Low Latency Mechanism"],c:0,hint:"ChatGPT, Claude, and Gemini are all examples. They are trained on massive text datasets.",tier:3},
-    {q:"What year did Instagram launch?",opts:["2008", "2009", "2010", "2011"],c:2,hint:"Kevin Systrom and Mike Krieger launched it in October of this year. Facebook bought it two years later.",tier:3},
+    {q:"What does it mean when someone says you are in your flop era?",opts:["You are very clumsy and accident-prone", "You are publicly underperforming after a previous peak", "You keep canceling plans on friends", "You are dating someone friends disapprove of"],c:1,hint:"Used when a celeb or creator declines after a peak moment. The opposite is a glow up era.",tier:3},
     {q:"What song did Kendrick Lamar perform LAST at the 2025 Super Bowl halftime show?",opts:["Not Like Us", "Humble", "DNA", "Alright"],c:0,hint:"He saved the most pointed song for last, turning a pop culture event into a statement.",tier:3}
   ]};
 let wwtbamAge=11,wwtbamPlayerIdx=0,wwtbamQuestions=[],wwtbamQIdx=0,wwtbamSafeHaven=0;

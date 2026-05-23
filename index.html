@@ -1707,10 +1707,7 @@ function initDOND() {
   document.getElementById('dond-setup').style.display = 'flex';
   document.getElementById('dond-play').style.display = 'none';
   document.getElementById('dond-turn-badge').textContent = '';
-  ['dond-p0','dond-p1','dond-p2'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.classList.remove('active');
-  });
+  updateDondPlayerButtons();
   document.getElementById('dond-contestant-name').textContent = 'Pick a contestant';
   renderDondSetup();
 }
@@ -1721,12 +1718,26 @@ function resetDOND() {
   initDOND();
 }
 
-function setDondContestant(p) {
-  dondContestant = p;
+function updateDondPlayerButtons() {
   ['dond-p0','dond-p1','dond-p2'].forEach((id,i) => {
     const el = document.getElementById(id);
-    if (el) el.classList.toggle('active', i===p);
+    if (!el) return;
+    const alreadyPlayed = dondPlayedOrder.includes(i);
+    el.disabled = alreadyPlayed;
+    el.style.opacity = alreadyPlayed ? '0.35' : '1';
+    el.style.cursor = alreadyPlayed ? 'not-allowed' : 'pointer';
+    el.classList.toggle('active', i === dondContestant && !alreadyPlayed);
+    const names = ['Legend','Sumaya','Sarai'];
+    const nameEl = document.getElementById('pname' + i);
+    const name = (nameEl && nameEl.value) ? nameEl.value : names[i];
+    el.textContent = alreadyPlayed ? name + ' ✓' : name;
   });
+}
+
+function setDondContestant(p) {
+  if (dondPlayedOrder.includes(p)) return; // already played this round
+  dondContestant = p;
+  updateDondPlayerButtons();
   const nameEl = document.getElementById('pname' + p);
   const name = (nameEl && nameEl.value) ? nameEl.value : ['Legend','Sumaya','Sarai'][p];
   document.getElementById('dond-contestant-name').textContent = name;
@@ -1985,6 +1996,7 @@ function dondNextPlayer() {
   initDOND();
   dondBanked = savedBanked;
   dondPlayedOrder = savedOrder;
+  updateDondPlayerButtons();
   setDondContestant(notPlayed[0]);
 }
 

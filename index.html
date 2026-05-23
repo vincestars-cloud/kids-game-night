@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game Night Platform</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #0d0d1a; --surface: #1a1a2e; --card: #16213e;
+  --red: #e94560; --gold: #f5a623; --green: #00d4aa; --blue: #4a90e2;
+  --text: #e0e0e0; --text2: #a0a0b0;
+}
+body { background: var(--bg); color: var(--text); font-family: "Segoe UI", system-ui, sans-serif; min-height: 100vh; }
+#score-panel {
+  position: fixed; left: 0; top: 0; width: 200px; height: 100vh;
+  background: var(--surface); border-right: 2px solid var(--card);
+  padding: 12px; overflow-y: auto; z-index: 1000;
+  display: flex; flex-direction: column; gap: 10px;
+}
+#score-panel h2 { color: var(--gold); text-align: center; font-size: 16px; margin-bottom: 4px; }
+.player-block { background: var(--card); border-radius: 10px; padding: 10px; }
+.player-name-input {
+  width: 100%; background: transparent; border: none;
+  border-bottom: 1px solid var(--blue); color: var(--text);
+  font-size: 14px; font-weight: bold; text-align: center; outline: none; margin-bottom: 6px;
+}
+.player-score { font-size: 28px; font-weight: 900; text-align: center; color: var(--gold); margin-bottom: 8px; }
+.score-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+.sbtn { border: none; border-radius: 6px; padding: 4px 2px; font-size: 11px; font-weight: bold; cursor: pointer; }
+.sbtn.plus { background: var(--green); color: #000; }
+.sbtn.minus { background: var(--red); color: #fff; }
+.reset-btn { width: 100%; background: #333; color: var(--text); border: none; border-radius: 8px; padding: 8px; font-size: 12px; cursor: pointer; margin-top: 4px; }
+.reset-btn:hover { background: #444; }
+#main { margin-left: 200px; min-height: 100vh; }
+#nav {
+  background: var(--surface); padding: 10px 14px;
+  display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+  border-bottom: 2px solid var(--card); position: sticky; top: 0; z-index: 900;
+}
+#nav h1 { color: var(--gold); font-size: 17px; margin-right: 6px; white-space: nowrap; }
+.nav-btn {
+  background: var(--card); color: var(--text); border: 1px solid #333;
+  border-radius: 20px; padding: 5px 12px; font-size: 12px; cursor: pointer; white-space: nowrap;
+}
+.nav-btn:hover, .nav-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+.game-section { display: none; padding: 24px; min-height: calc(100vh - 58px); }
+.game-section.active { display: block; }
+#game-home { display: block; }
+.game-title { font-size: 32px; font-weight: 900; color: var(--gold); margin-bottom: 8px; }
+.game-subtitle { color: var(--text2); font-size: 16px; margin-bottom: 24px; }
+.home-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 16px; margin-top: 20px; }
+.home-card {
+  background: var(--card); border-radius: 16px; padding: 22px 16px;
+  text-align: center; cursor: pointer; transition: all 0.25s; border: 2px solid transparent;
+}
+.home-card:hover { border-color: var(--blue); transform: translateY(-4px); }
+.home-card .icon { font-size: 38px; margin-bottom: 10px; }
+.home-card h3 { font-size: 15px; font-weight: 700; }
+.home-card p { font-size: 12px; color: var(--text2); margin-top: 6px; }
+.timer-wrap { display: flex; justify-content: center; margin: 16px 0; }
+.timer-svg { width: 100px; height: 100px; }
+.timer-bg { fill: none; stroke: #333; stroke-width: 8; }
+.timer-ring {
+  fill: none; stroke-width: 8; stroke-linecap: round;
+  stroke-dasharray: 251.2; stroke-dashoffset: 0;
+  transform: rotate(-90deg); transform-origin: 50% 50%;
+  transition: stroke 0.5s;
+}
+.timer-num { font-size: 28px; font-weight: 900; fill: var(--text); dominant-baseline: middle; text-anchor: middle; }
+.big-card {
+  background: var(--card); border-radius: 16px; padding: 32px;
+  text-align: center; margin-bottom: 20px; min-height: 180px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+.btn {
+  border: none; border-radius: 10px; padding: 13px 26px; font-size: 15px;
+  font-weight: 700; cursor: pointer; margin: 6px; transition: all 0.2s;
+}
+.btn:hover { transform: translateY(-2px); opacity: 0.9; }
+.btn-blue { background: var(--blue); color: #fff; }
+.btn-red { background: var(--red); color: #fff; }
+.btn-green { background: var(--green); color: #000; }
+.btn-gold { background: var(--gold); color: #000; }
+.btn-gray { background: #444; color: #fff; }
+.btn-sm { padding: 8px 16px; font-size: 13px; }
+.progress-wrap { background: #222; border-radius: 8px; height: 10px; margin: 12px 0; overflow: hidden; }
+.progress-bar { height: 100%; background: var(--green); border-radius: 8px; transition: width 0.4s; }
+.reveal-cover {
+  background: var(--card); border-radius: 12px; padding: 20px;
+  text-align: center; font-size: 22px; color: var(--text2); cursor: pointer;
+  border: 2px dashed #444; min-height: 80px; display: flex;
+  align-items: center; justify-content: center; margin: 10px 0;
+}
+.reveal-cover.shown { color: var(--green); border-color: var(--green); border-style: solid; font-weight: 700; }
+.emoji-display { font-size: 68px; letter-spacing: 6px; margin: 20px 0; }
+.puzzle-label { color: var(--text2); font-size: 14px; margin-bottom: 8px; }
+.jeopardy-board { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 16px; }
+.j-header { background: var(--blue); color: #fff; font-size: 13px; font-weight: 700; padding: 12px 8px; text-align: center; border-radius: 8px; }
+.j-cell {
+  background: var(--card); color: var(--gold); font-size: 22px; font-weight: 900;
+  padding: 20px 8px; text-align: center; border-radius: 8px; cursor: pointer;
+  border: 2px solid transparent; transition: all 0.2s;
+}
+.j-cell:hover:not(.used) { border-color: var(--gold); transform: scale(1.03); }
+.j-cell.used { background: #1a1a1a; color: #333; cursor: default; }
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 2000; align-items: center; justify-content: center; }
+.modal-overlay.open { display: flex; }
+.modal-box { background: var(--surface); border-radius: 20px; padding: 40px; max-width: 600px; width: 90%; text-align: center; border: 2px solid var(--blue); }
+.modal-points { color: var(--gold); font-size: 48px; font-weight: 900; }
+.modal-category { color: var(--text2); font-size: 16px; margin-bottom: 16px; }
+.modal-question { font-size: 24px; font-weight: 700; margin-bottom: 24px; line-height: 1.4; }
+.modal-answer { background: var(--card); border-radius: 12px; padding: 16px; font-size: 20px; color: var(--green); font-weight: 700; display: none; margin-bottom: 20px; }
+.flag-img { border-radius: 12px; max-width: 420px; width: 100%; height: auto; border: 3px solid var(--card); }
+.flag-wrap { display: flex; justify-content: center; margin: 16px 0; }
+.draw-word-hidden { font-size: 44px; color: #333; cursor: pointer; user-select: none; background: var(--card); border-radius: 12px; padding: 20px 40px; }
+.draw-word-shown { font-size: 48px; font-weight: 900; color: var(--red); }
+.mc-question { font-size: 24px; font-weight: 700; margin-bottom: 20px; line-height: 1.4; }
+.mc-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; }
+.mc-opt {
+  background: var(--card); border: 2px solid #333; border-radius: 12px;
+  padding: 14px; font-size: 16px; cursor: pointer; text-align: left;
+}
+.mc-opt:hover:not(.locked) { border-color: var(--blue); }
+.mc-opt.correct { background: #00d4aa22; border-color: var(--green); color: var(--green); }
+.mc-opt.wrong { background: #e9456022; border-color: var(--red); color: var(--red); }
+.mc-opt.locked { cursor: default; }
+.tf-statement { font-size: 26px; font-weight: 700; line-height: 1.4; margin-bottom: 20px; }
+.tf-answer { font-size: 22px; font-weight: 700; }
+.tf-answer.true { color: var(--green); }
+.tf-answer.false { color: var(--red); }
+.tf-fact { color: var(--text2); font-size: 16px; margin-top: 8px; }
+.lyric-song { color: var(--text2); font-size: 14px; margin-bottom: 16px; }
+.lyric-line { font-size: 26px; font-weight: 700; margin-bottom: 16px; line-height: 1.4; }
+.lyric-blank { font-size: 24px; font-style: italic; color: var(--text2); }
+.product-emoji { font-size: 60px; margin: 10px 0; }
+.product-display { font-size: 24px; font-weight: 700; margin: 10px 0; }
+.product-desc { color: var(--text2); font-size: 16px; margin-bottom: 16px; }
+.conn-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 16px 0; }
+.conn-cell {
+  background: var(--card); border: 2px solid #333; border-radius: 10px;
+  padding: 14px 8px; text-align: center; cursor: pointer; font-size: 13px;
+  font-weight: 700; text-transform: uppercase; min-height: 58px;
+  display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+}
+.conn-cell:hover:not(.solved-0):not(.solved-1):not(.solved-2):not(.solved-3) { border-color: var(--blue); }
+.conn-cell.selected { border-color: var(--gold); background: #f5a62322; }
+.conn-cell.solved-0 { background: #ffd700; color: #000; border-color: #ffd700; cursor: default; }
+.conn-cell.solved-1 { background: #78C091; color: #000; border-color: #78C091; cursor: default; }
+.conn-cell.solved-2 { background: #4A90E2; color: #fff; border-color: #4A90E2; cursor: default; }
+.conn-cell.solved-3 { background: #9B59B6; color: #fff; border-color: #9B59B6; cursor: default; }
+.conn-msg { font-size: 18px; font-weight: 700; text-align: center; padding: 10px; min-height: 40px; }
+.conn-solved-label { font-size: 13px; font-weight: 700; margin: 4px 0; padding: 8px 16px; border-radius: 8px; display: inline-block; }
+.conn-sel-count { color: var(--text2); font-size: 14px; margin: 8px 0; }
+.conn-puzzle-select { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.password-word-hidden { font-size: 44px; color: #333; cursor: pointer; background: var(--card); border-radius: 12px; padding: 20px 40px; }
+.password-word-shown { font-size: 52px; font-weight: 900; color: var(--blue); }
+.password-rule { background: var(--card); border-radius: 10px; padding: 16px; margin-bottom: 16px; font-size: 16px; color: var(--text2); }
+.q-counter { color: var(--text2); font-size: 14px; margin-bottom: 8px; }
+.flex-center { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.mt-16 { margin-top: 16px; }
+</style>
+</head>
+<body>
+
+<!-- SCORE PANEL -->
+<div id="score-panel">
+  <h2>&#127942; Scores</h2>
+  <div class="player-block">
+    <input class="player-name-input" id="pname0" value="Player 1" />
+    <div class="player-score" id="pscore0">0</div>
+    <div class="score-btns">
+      <button class="sbtn plus" onclick="addScore(0,100)">+100</button>
+      <button class="sbtn minus" onclick="addScore(0,-100)">-100</button>
+      <button class="sbtn plus" onclick="addScore(0,200)">+200</button>
+      <button class="sbtn minus" onclick="addScore(0,-200)">-200</button>
+      <button class="sbtn plus" onclick="addScore(0,500)">+500</button>
+      <button class="sbtn minus" onclick="addScore(0,-500)">-500</button>
+    </div>
+  </div>
+  <div class="player-block">
+    <input class="player-name-input" id="pname1" value="Player 2" />
+    <div class="player-score" id="pscore1">0</div>
+    <div class="score-btns">
+      <button class="sbtn plus" onclick="addScore(1,100)">+100</button>
+      <button class="sbtn minus" onclick="addScore(1,-100)">-100</button>
+      <button class="sbtn plus" onclick="addScore(1,200)">+200</button>
+      <button class="sbtn minus" onclick="addScore(1,-200)">-200</button>
+      <button class="sbtn plus" onclick="addScore(1,500)">+500</button>
+      <button class="sbtn minus" onclick="addScore(1,-500)">-500</button>
+    </div>
+  </div>
+  <div class="player-block">
+    <input class="player-name-input" id="pname2" value="Player 3" />
+    <div class="player-score" id="pscore2">0</div>
+    <div class="score-btns">
+      <button class="sbtn plus" onclick="addScore(2,100)">+100</button>
+      <button class="sbtn minus" onclick="addScore(2,-100)">-100</button>
+      <button class="sbtn plus" onclick="addScore(2,200)">+200</button>
+      <button class="sbtn minus" onclick="addScore(2,-200)">-200</button>
+      <button class="sbtn plus" onclick="addScore(2,500)">+500</button>
+      <button class="sbtn minus" onclick="addScore(2,-500)">-500</button>
+    </div>
+  </div>
+  <button class="reset-btn" onclick="resetScores()">Reset All Scores</button>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+  <nav id="nav">
+    <h1>&#127918; Game Night</h1>
+    <button class="nav-btn active" onclick="showGame('home')">Home</button>
+    <button class="nav-btn" onclick="showGame('emoji')">Emoji Decoder</button>
+    <button class="nav-btn" onclick="showGame('jeopardy')">Jeopardy Blast</button>
+    <button class="nav-btn" onclick="showGame('flags')">Flag Flash</button>
+    <button class="nav-btn" onclick="showGame('draw')">Draw That!</button>
+    <button class="nav-btn" onclick="showGame('brainrot')">Brain Rot</button>
+    <button class="nav-btn" onclick="showGame('tf')">True/False</button>
+    <button class="nav-btn" onclick="showGame('lyrics')">Finish Lyric</button>
+    <button class="nav-btn" onclick="showGame('price')">Price Is Right</button>
+    <button class="nav-btn" onclick="showGame('connections')">Connections</button>
+    <button class="nav-btn" onclick="showGame('password')">Password</button>
+  </nav>
+
+  <!-- HOME -->
+  <div id="game-home" class="game-section active">
+    <div class="game-title">Welcome to Game Night!</div>
+    <div class="game-subtitle">10 games ready. Edit player names in the left panel. Click any game to start!</div>
+    <div class="home-grid">
+      <div class="home-card" onclick="showGame('emoji')"><div class="icon">&#127917;</div><h3>Emoji Decoder</h3><p>Guess the movie/show/phrase from emojis. 40 puzzles!</p></div>
+      <div class="home-card" onclick="showGame('jeopardy')"><div class="icon">&#128250;</div><h3>Jeopardy Blast</h3><p>5 categories, 5 point values. Click to reveal!</p></div>
+      <div class="home-card" onclick="showGame('flags')"><div class="icon">&#127988;</div><h3>Flag Flash</h3><p>Real flag photos. 25 countries. 15 second timer!</p></div>
+      <div class="home-card" onclick="showGame('draw')"><div class="icon">&#9999;&#65039;</div><h3>Draw That!</h3><p>Secret word, draw it, others guess! 50 words.</p></div>
+      <div class="home-card" onclick="showGame('brainrot')"><div class="icon">&#129504;</div><h3>Brain Rot Trivia</h3><p>Gen Z/Alpha internet culture. 20 questions!</p></div>
+      <div class="home-card" onclick="showGame('tf')"><div class="icon">&#9989;</div><h3>True or False Blitz</h3><p>25 statements. T or F on whiteboard!</p></div>
+      <div class="home-card" onclick="showGame('lyrics')"><div class="icon">&#127925;</div><h3>Finish The Lyric</h3><p>Complete the song lyric. 20 songs!</p></div>
+      <div class="home-card" onclick="showGame('price')"><div class="icon">&#128176;</div><h3>Price Is Right</h3><p>Guess the price without going over. 20 products!</p></div>
+      <div class="home-card" onclick="showGame('connections')"><div class="icon">&#128279;</div><h3>Connections</h3><p>Group 16 words into 4 categories. NYT style!</p></div>
+      <div class="home-card" onclick="showGame('password')"><div class="icon">&#128273;</div><h3>Password / Hot Seat</h3><p>One-word clues, hot seat guesses! 30 words.</p></div>
+    </div>
+  </div>
+
+  <!-- EMOJI DECODER -->
+  <div id="game-emoji" class="game-section">
+    <div class="game-title">&#127917; Emoji Decoder</div>
+    <div class="game-subtitle">Look at the emojis and guess the movie, show, song, or phrase! Write on whiteboard.</div>
+    <div class="q-counter" id="emoji-counter">Puzzle 1 of 40</div>
+    <div class="big-card">
+      <div class="emoji-display" id="emoji-display"></div>
+      <div class="puzzle-label" id="emoji-category">Category: Movie</div>
+    </div>
+    <div class="flex-center">
+      <button class="btn btn-gray btn-sm" onclick="emojiPrev()">&#9664; Prev</button>
+      <button class="btn btn-blue" onclick="emojiReveal()">Reveal Answer</button>
+      <button class="btn btn-gray btn-sm" onclick="emojiNext()">Next &#9654;</button>
+    </div>
+    <div id="emoji-answer" class="reveal-cover mt-16" onclick="emojiReveal()">Tap to reveal answer</div>
+    <div class="timer-wrap mt-16">
+      <svg class="timer-svg" viewBox="0 0 100 100">
+        <circle class="timer-bg" cx="50" cy="50" r="40"/>
+        <circle class="timer-ring" id="emoji-ring" cx="50" cy="50" r="40" stroke="#00d4aa"/>
+        <text class="timer-num" id="emoji-time" x="50" y="50">30</text>
+      </svg>
+    </div>
+    <div class="flex-center">
+      <button class="btn btn-green btn-sm" onclick="startTimer('emoji',30)">Start Timer</button>
+      <button class="btn btn-red btn-sm" onclick="stopTimer('emoji')">Stop</button>
+    </div>
+  </div>
+
+  <!-- JEOPARDY -->
+  <div id="game-jeopardy" class="game-section">
+    <div class="game-title">&#128250; Jeopardy Blast</div>
+    <div class="game-subtitle">Click a cell to reveal the question. Host reads it aloud, then clicks Reveal Answer.</div>
+    <div class="jeopardy-board" id="jeopardy-board"></div>
+    <div class="flex-center mt-16">
+      <button class="btn btn-gray btn-sm" onclick="resetJeopardy()">Reset Board</button>
+    </div>
+  </div>
+
+  <!-- FLAG FLASH -->
+  <div id="game-flags" class="game-section">
+    <div class="game-title">&#127988; Flag Flash</div>
+    <div class="game-subtitle">See the flag, write the country name on your whiteboard! 15 seconds!</div>
+    <div class="q-counter" id="flag-counter">Flag 1 of 25</div>
+    <div class="flag-wrap"><img id="flag-img" class="flag-img" src="https://flagcdn.com/w640/us.png" alt="Country Flag" /></div>
+    <div class="flex-center">
+      <button class="btn btn-gray btn-sm" onclick="flagPrev()">&#9664; Prev</button>
+      <button class="btn btn-blue" onclick="flagReveal()">Reveal Country</button>
+      <button class="btn btn-gray btn-sm" onclick="flagNext()">Next &#9654;</button>
+    </div>
+    <div id="flag-answer" class="reveal-cover mt-16" onclick="flagReveal()">Tap to reveal country</div>
+    <div class="timer-wrap mt-16">
+      <svg class="timer-svg" viewBox="0 0 100 100">
+        <circle class="timer-bg" cx="50" cy="50" r="40"/>
+        <circle class="timer-ring" id="flags-ring" cx="50" cy="50" r="40" stroke="#00d4aa"/>
+        <text class="timer-num" id="flags-time" x="50" y="50">15</text>
+      </svg>
+    </div>
+    <div class="flex-center">
+      <button class="btn btn-green btn-sm" onclick="startTimer('flags',15)">Start Timer</button>
+      <button class="btn btn-red btn-sm" onclick="stopTimer('flags')">Stop</button>
+    </div>
+  </div>
+
+  <!-- DRAW THAT -->
+  <div id="game-draw" class="game-section">
+    <div class="game-title">&#9999;&#65039; Draw That!</div>
+    <div class="game-subtitle">Host taps to reveal the secret word. One player draws, others guess! 60 seconds.</div>
+    <div class="q-counter" id="draw-counter">Word 1 of 50</div>
+    <div class="big-card">
+      <div id="draw-word" class="draw-word-hidden" onclick="drawReveal()">Tap to reveal word</div>
+    </div>
+    <div class="flex-center">
+      <button class="btn btn-gray btn-sm" onclick="drawPrev()">&#9664; Prev</button>
+      <button class="btn btn-blue" onclick="drawReveal()">Reveal Word</button>
+      <button class="btn btn-gray btn-sm" onclick="drawNext()">Next &#9654;</button>
+    </div>
+    <div class="timer-wrap mt-16">
+      <svg class="timer-svg" viewBox="0 0 100 100">
+        <circle class="timer-bg" cx="50" cy="50" r="40"/>
+        <circle class="timer-ring" id="draw-ring" cx="50" cy="50" r="40" stroke="#00d4aa"/>
+        <text class="timer-num" id="draw-time" x="50" y="50">60</text>
+      </svg>
+    </div>
+    <div class="flex-center">
+      <button class="btn btn-green btn-sm" onclick="startTimer('draw',60)">Start Timer</button>
+      <button class="btn btn-red btn-sm" onclick="stopTimer('draw')">Stop</button>
+    </div>
+  </div>
+
+  <!-- BRAIN ROT -->
+  <div id="game-brainrot" class="game-section">
+    <div class="game-title">&#129504; Brain Rot Trivia</div>
+    <div class="game-subtitle">Gen Z/Alpha internet culture quiz! Click the correct answer.</div>
+    <div class="q-counter" id="br-counter">Question 1 of 20</div>
+    <div class="progress-wrap"><div class="progress-bar" id="br-progress" style="width:5%"></div></div>
+    <div class="big-card" style="text-align:left;align-items:flex-start;">
+      <div class="mc-question" id="br-question"></div>
+      <div class="mc-options" id="br-options"></div>
+    </div>
+    <div class="flex-center mt-16">
+      <button class="btn btn-gray btn-sm" onclick="brPrev()">&#9664; Prev</button>
+      <button class="btn btn-gray btn-sm" onclick="brNext()">Next &#9654;</button>
+    </div>
+  </div>
+
+  <!-- TRUE / FALSE -->
+  <div id="game-tf" class="game-section">
+    <div class="game-title">&#9989; True or False Blitz</div>
+    <div class="game-subtitle">Kids hold up T or F on their whiteboards! Click reveal to show the answer.</div>
+    <div class="q-counter" id="tf-counter">Statement 1 of 25</div>
+    <div class="progress-wrap"><div class="progress-bar" id="tf-progress" style="width:4%"></div></div>
+    <div class="big-card">
+      <div class="tf-statement" id="tf-statement"></div>
+    </div>
+    <div class="flex-center">
+      <button class="btn btn-gray btn-sm" onclick="tfPrev()">&#9664; Prev</button>
+      <button class="btn btn-blue" onclick="tfReveal()">Reveal Answer</button>
+      <button class="btn btn-gray btn-sm" onclick="tfNext()">Next &#9654;</button>
+    </div>
+    <div id="tf-answer-box" class="big-card mt-16" style="display:none;">
+      <div class="tf-answer" id="tf-answer-text"></div>
+      <div class="tf-fact" id="tf-fact-text"></div>
+    </div>
+  </div>
+
+  <!-- LYRICS -->
+  <div id="game-lyrics" class="game-section">
+    <div class="game-title">&#127925; Finish The Lyric</div>
+    <div class="game-subtitle">Finish the song lyric on your whiteboard! Host reveals the answer.</div>
+    <div class="q-counter" id="lyr-counter">Song 1 of 20</div>
+    <div class="big-card" style="align-items:flex-start;text-align:left;">
+      <div class="lyric-song" id="lyr-song"></div>
+      <div class="lyric-line" id="lyr-line"></div>
+      <div class="lyric-blank" id="lyr-blank">____________________</div>
+    </div>
+    <div class="flex-center">
+      <button class="btn btn-gray btn-sm" onclick="lyrPrev()">&#9664; Prev</button>
+      <button class="btn btn-blue" onclick="lyrReveal()">Reveal Answer</button>
+      <button class="btn btn-gray btn-sm" onclick="lyrNext()">Next &#9654;</button>
+    </div>
+    <div id="lyr-answer" class="reveal-cover mt-16" onclick="lyrReveal()">Tap to reveal lyric</div>
+  </div>
+
+  <!-- PRICE IS RIGHT -->
+  <div id="game-price" class="game-section">
+    <div class="game-title">&#128176; Price Is Right</div>
+    <div class="game-subtitle">Write your best price guess! Closest WITHOUT going over wins the round.</div>
+    <div class="q-counter" id="price-counter">Product 1 of 20</div>
+    <div class="big-card">
+      <div class="product-emoji" id="price-emoji"></div>
+      <div class="product-display" id="price-name"></div>
+      <div class="product-desc" id="price-desc"></div>
+    </div>
+    <div class="flex-center">
+      <button class="btn btn-gray btn-sm" onclick="pricePrev()">&#9664; Prev</button>
+      <button class="btn btn-blue" onclick="priceReveal()">Reveal Price</button>
+      <button class="btn btn-gray btn-sm" onclick="priceNext()">Next &#9654;</button>
+    </div>
+    <div id="price-answer" class="reveal-cover mt-16" onclick="priceReveal()">Tap to reveal price</div>
+  </div>
+
+  <!-- CONNECTIONS -->
+  <div id="game-connections" class="game-section">
+    <div class="game-title">&#128279; Connections</div>
+    <div class="game-subtitle">Select 4 words that belong in the same group. Submit to check!</div>
+    <div class="conn-puzzle-select" id="conn-puzzle-btns"></div>
+    <div id="conn-solved-labels"></div>
+    <div class="conn-sel-count" id="conn-sel-count">Selected: 0/4</div>
+    <div class="conn-grid" id="conn-grid"></div>
+    <div class="flex-center mt-16">
+      <button class="btn btn-gold" onclick="connSubmit()">Submit</button>
+      <button class="btn btn-gray btn-sm" onclick="connDeselect()">Deselect All</button>
+      <button class="btn btn-gray btn-sm" onclick="connShuffle()">Shuffle</button>
+    </div>
+    <div class="conn-msg" id="conn-msg"></div>
+  </div>
+
+  <!-- PASSWORD -->
+  <div id="game-password" class="game-section">
+    <div class="game-title">&#128273; Password / Hot Seat</div>
+    <div class="game-subtitle">Clue-givers see the word (not the hot seat player!). Give ONE-WORD clues only. 60 seconds!</div>
+    <div class="password-rule">Rules: Hot seat player looks away while word is revealed. Clue-givers take turns giving one-word clues. Hot seat gets one guess per clue!</div>
+    <div class="q-counter" id="pass-counter">Word 1 of 30</div>
+    <div class="big-card">
+      <div id="pass-word" class="password-word-hidden" onclick="passReveal()">Tap to reveal (HOST ONLY)</div>
+    </div>
+    <div class="flex-center">
+      <button class="btn btn-gray btn-sm" onclick="passPrev()">&#9664; Prev</button>
+      <button class="btn btn-blue" onclick="passReveal()">Reveal Word</button>
+      <button class="btn btn-gray btn-sm" onclick="passNext()">Next &#9654;</button>
+    </div>
+    <div class="timer-wrap mt-16">
+      <svg class="timer-svg" viewBox="0 0 100 100">
+        <circle class="timer-bg" cx="50" cy="50" r="40"/>
+        <circle class="timer-ring" id="password-ring" cx="50" cy="50" r="40" stroke="#00d4aa"/>
+        <text class="timer-num" id="password-time" x="50" y="50">60</text>
+      </svg>
+    </div>
+    <div class="flex-center">
+      <button class="btn btn-green btn-sm" onclick="startTimer('password',60)">Start Timer</button>
+      <button class="btn btn-red btn-sm" onclick="stopTimer('password')">Stop</button>
+    </div>
+  </div>
+</div>
+
+<!-- JEOPARDY MODAL -->
+<div class="modal-overlay" id="j-modal">
+  <div class="modal-box">
+    <div class="modal-points" id="j-modal-pts">200</div>
+    <div class="modal-category" id="j-modal-cat">Category</div>
+    <div class="modal-question" id="j-modal-q">Question text</div>
+    <div class="modal-answer" id="j-modal-a">Answer</div>
+    <div class="flex-center">
+      <button class="btn btn-gold" onclick="jRevealAnswer()">Reveal Answer</button>
+      <button class="btn btn-gray" onclick="jCloseModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== SCORES =====
+var scores=[0,0,0];
+function addScore(p,amt){scores[p]+=amt;document.getElementById("pscore"+p).textContent=scores[p];}
+function resetScores(){if(!confirm("Reset all scores to 0?"))return;scores=[0,0,0];for(var i=0;i<3;i++)document.getElementById("pscore"+i).textContent="0";}
+
+// ===== NAV =====
+function showGame(id){
+  document.querySelectorAll(".game-section").forEach(function(s){s.classList.remove("active");});
+  document.querySelectorAll(".nav-btn").forEach(function(b){b.classList.remove("active");});
+  var el=document.getElementById("game-"+id);if(el)el.classList.add("active");
+  document.querySelectorAll(".nav-btn").forEach(function(b){if(b.getAttribute("onclick").indexOf("'"+id+"'")>-1)b.classList.add("active");});
+  stopAllTimers();
+  var fns={emoji:renderEmoji,jeopardy:buildJeopardy,flags:renderFlag,draw:renderDraw,brainrot:renderBR,tf:renderTF,lyrics:renderLyr,price:renderPrice,connections:renderConnections,password:renderPass};
+  if(fns[id])fns[id]();
+}
+
+// ===== TIMERS =====
+var timerIntervals={};
+var CIRC=251.2;
+function startTimer(name,total){
+  stopTimer(name);var rem=total;updateTimerDisplay(name,rem,total);
+  timerIntervals[name]=setInterval(function(){rem--;if(rem<0){rem=0;clearInterval(timerIntervals[name]);}updateTimerDisplay(name,rem,total);},1000);
+}
+function stopTimer(name){if(timerIntervals[name]){clearInterval(timerIntervals[name]);timerIntervals[name]=null;}}
+function stopAllTimers(){["emoji","flags","draw","password"].forEach(stopTimer);}
+function updateTimerDisplay(name,t,total){
+  var te=document.getElementById(name+"-time"),re=document.getElementById(name+"-ring");
+  if(!te||!re)return;
+  te.textContent=t;
+  var pct=total>0?t/total:0;
+  re.style.strokeDashoffset=CIRC*(1-pct);
+  re.style.stroke=pct>0.5?"#00d4aa":pct>0.25?"#f5a623":"#e94560";
+}
+
+// ===== EMOJI DECODER =====
+var EP=[
+  {e:"\u{1F981}\u{1F451}\u{1F305}",c:"Movie",a:"The Lion King"},
+  {e:"\u{1F577}\uFE0F\u{1F466}\u{1F3D9}\uFE0F",c:"Movie",a:"Spider-Man"},
+  {e:"\u{1F9CA}\u2744\uFE0F\u{1F478}",c:"Movie",a:"Frozen"},
+  {e:"\u{1F420}\u{1F535}\u{1F30A}",c:"Movie",a:"Finding Nemo"},
+  {e:"\u{1F9F8}\u2708\uFE0F\u{1F3E0}",c:"Movie",a:"Toy Story"},
+  {e:"\u26A1\u{1F9D9}\u200D\u2642\uFE0F\u{1F3EB}",c:"Movie",a:"Harry Potter"},
+  {e:"\u{1F988}\u{1F3C4}\u200D\u2642\uFE0F\u{1FA78}",c:"Movie",a:"Jaws"},
+  {e:"\u{1F47D}\u{1F332}\u{1F6B2}",c:"Movie",a:"E.T."},
+  {e:"\u{1F996}\u{1F33F}\u{1F3C3}\u200D\u2642\uFE0F",c:"Movie",a:"Jurassic Park"},
+  {e:"\u{1F339}\u{1F9CC}\u{1F3F0}",c:"Movie",a:"Beauty and the Beast"},
+  {e:"\u{1F916}\u2764\uFE0F\u{1F331}",c:"Movie",a:"WALL-E"},
+  {e:"\u{1F987}\u{1F0CF}\u{1F303}",c:"Movie",a:"The Dark Knight"},
+  {e:"\u{1F41D}\u{1F36F}\u{1F33B}",c:"Movie",a:"Bee Movie"},
+  {e:"\u{1F9C5}\u{1F409}\u{1F5E1}\uFE0F",c:"Movie",a:"Shrek"},
+  {e:"\u{1F30A}\u{1FA9D}\u{1F3DD}\uFE0F",c:"Movie",a:"Moana"},
+  {e:"\u{1F9EA}\u{1F7E6}\u{1F373}",c:"TV Show",a:"Breaking Bad"},
+  {e:"\u{1F409}\u{1F3F0}\u2694\uFE0F",c:"TV Show",a:"Game of Thrones"},
+  {e:"\u{1F9DF}\u200D\u2642\uFE0F\u{1F52B}\u{1F33E}",c:"TV Show",a:"The Walking Dead"},
+  {e:"\u{1F355}\u{1F6CB}\uFE0F\u{1F46B}\u{1F602}",c:"TV Show",a:"Friends"},
+  {e:"\u{1F534}\u{1F526}\u{1F47E}",c:"TV Show",a:"Stranger Things"},
+  {e:"\u{1F991}\u{1F3AE}\u{1F480}",c:"TV Show",a:"Squid Game"},
+  {e:"\u{1F4CE}\u{1F3E2}\u{1F62C}",c:"TV Show",a:"The Office"},
+  {e:"\u{1F46E}\u{1F369}\u{1F52B}",c:"TV Show",a:"Brooklyn Nine-Nine"},
+  {e:"\u{1F7E1}\u{1F354}\u{1F30A}",c:"TV Show",a:"SpongeBob SquarePants"},
+  {e:"\u{1F436}\u{1F467}\u{1F3E1}",c:"TV Show",a:"Bluey"},
+  {e:"\u{1F303}\u{1F483}\u{1F3A4}",c:"Song",a:"Shake It Off - Taylor Swift"},
+  {e:"\u2602\uFE0F\u{1F327}\uFE0F\u{1F3B9}",c:"Song",a:"Umbrella - Rihanna"},
+  {e:"\u{1F48D}\u{1F483}\u{1F41D}",c:"Song",a:"Single Ladies - Beyonce"},
+  {e:"\u{1F33B}\u{1F577}\uFE0F\u{1F3B5}",c:"Song",a:"Sunflower - Post Malone"},
+  {e:"\u{1F576}\uFE0F\u{1F48A}\u{1F303}",c:"Song",a:"Blinding Lights - The Weeknd"},
+  {e:"\u{1F426}\u{1F305}\u{1F4DA}",c:"Phrase",a:"Early bird catches the worm"},
+  {e:"\u{1F382}\u{1F374}\u2705",c:"Phrase",a:"Piece of cake"},
+  {e:"\u{1F426}\u{1F426}\u{1FAA8}",c:"Phrase",a:"Kill two birds with one stone"},
+  {e:"\u2601\uFE0F\u{1F308}\u2728",c:"Phrase",a:"Every cloud has a silver lining"},
+  {e:"\u{1F431}\u{1F480}\u2753",c:"Phrase",a:"Curiosity killed the cat"},
+  {e:"\u{1F34E}\u{1F4F1}\u{1F4BB}",c:"Brand",a:"Apple"},
+  {e:"\u{1F3CB}\uFE0F\u{1F4AA}\u{1F964}",c:"Brand",a:"Gatorade"},
+  {e:"\u{1F354}\u{1F35F}\u{1F451}",c:"Brand",a:"Burger King"},
+  {e:"\u{1F32E}\u{1F514}\u{1F6CE}\uFE0F",c:"Brand",a:"Taco Bell"},
+  {e:"\u{1F985}\u{1F3B6}\u{1F3A7}",c:"Brand",a:"Beats by Dre"}
+];
+var emojiIdx=0;
+function renderEmoji(){
+  var p=EP[emojiIdx];
+  document.getElementById("emoji-display").textContent=p.e;
+  document.getElementById("emoji-category").textContent="Category: "+p.c;
+  document.getElementById("emoji-counter").textContent="Puzzle "+(emojiIdx+1)+" of "+EP.length;
+  var a=document.getElementById("emoji-answer");a.textContent="Tap to reveal answer";a.classList.remove("shown");
+  updateTimerDisplay("emoji",30,30);
+}
+function emojiReveal(){var a=document.getElementById("emoji-answer");a.textContent=EP[emojiIdx].a;a.classList.add("shown");}
+function emojiNext(){stopTimer("emoji");emojiIdx=(emojiIdx+1)%EP.length;renderEmoji();}
+function emojiPrev(){stopTimer("emoji");emojiIdx=(emojiIdx-1+EP.length)%EP.length;renderEmoji();}
+
+// ===== JEOPARDY =====
+var JD={
+  cats:["Brain Rot","Pop Culture","Music","Random Facts","Flag Quiz"],
+  qs:[
+    [{q:"What does 'rizz' mean in Gen Z slang?",a:"Charm / natural ability to attract others romantically"},
+     {q:"What is an 'NPC moment'?",a:"Acting robotic with no personality (Non-Playable Character)"},
+     {q:"What does 'no cap' mean?",a:"No lie / I'm being serious / for real"},
+     {q:"What does 'delulu' mean?",a:"Short for delusional — used humorously about unrealistic fantasies"},
+     {q:"What does 'slay' mean as a compliment?",a:"To look amazing or do something impressively well"}],
+    [{q:"Which actor plays Iron Man in the MCU?",a:"Robert Downey Jr."},
+     {q:"What streaming platform is Stranger Things on?",a:"Netflix"},
+     {q:"Which game has players building and surviving with blocks?",a:"Minecraft"},
+     {q:"Name the Disney princess who controls ice and snow.",a:"Elsa (from Frozen)"},
+     {q:"What country hosted the 2024 Summer Olympics?",a:"France (Paris)"}],
+    [{q:"Name two Taylor Swift studio albums.",a:"Accept any two: Midnights, Folklore, Evermore, Fearless, Speak Now, Red, 1989, Reputation, Lover"},
+     {q:"Which artist sings 'bad guy'?",a:"Billie Eilish"},
+     {q:"Who sang 'Old Town Road'?",a:"Lil Nas X"},
+     {q:"Finish: \"I got my driver's license last week...\"",a:"Still don't know how to parallel park — Olivia Rodrigo"},
+     {q:"Which singer had the #1 hit 'Levitating'?",a:"Dua Lipa"}],
+    [{q:"How many sides does a hexagon have?",a:"6"},
+     {q:"What planet is called the Red Planet?",a:"Mars"},
+     {q:"How many bones in the adult human body?",a:"206"},
+     {q:"What is the closest star to Earth (besides the Sun)?",a:"Proxima Centauri"},
+     {q:"Which ocean is the largest on Earth?",a:"The Pacific Ocean"}],
+    [{q:"Which country's flag features a maple leaf?",a:"Canada"},
+     {q:"Which country's flag has a rising sun design?",a:"Japan"},
+     {q:"Which country has a flag with green, white, green stripes and an eagle?",a:"Mexico"},
+     {q:"Which African country has a green and white flag with an eagle?",a:"Nigeria"},
+     {q:"Which Scandinavian country has a blue cross on a white background?",a:"Finland"}]
+  ],
+  pts:[100,200,300,400,500]
+};
+var jUsed={};
+function buildJeopardy(){
+  var board=document.getElementById("jeopardy-board");board.innerHTML="";
+  JD.cats.forEach(function(cat){var h=document.createElement("div");h.className="j-header";h.textContent=cat;board.appendChild(h);});
+  for(var qi=0;qi<5;qi++){
+    for(var ci=0;ci<5;ci++){
+      (function(catI,qI,pts){
+        var key=catI+"-"+pts,cell=document.createElement("div");
+        cell.className="j-cell"+(jUsed[key]?" used":"");
+        cell.textContent=jUsed[key]?"":"$"+pts;
+        cell.id="jc-"+key;
+        cell.onclick=function(){if(jUsed[key])return;openJModal(catI,pts,JD.qs[catI][qI]);};
+        board.appendChild(cell);
+      })(ci,qi,JD.pts[qi]);
+    }
+  }
+}
+function resetJeopardy(){jUsed={};buildJeopardy();}
+var curJKey=null;
+function openJModal(ci,pts,qObj){
+  curJKey=ci+"-"+pts;
+  document.getElementById("j-modal-pts").textContent="$"+pts;
+  document.getElementById("j-modal-cat").textContent=JD.cats[ci];
+  document.getElementById("j-modal-q").textContent=qObj.q;
+  document.getElementById("j-modal-a").textContent=qObj.a;
+  document.getElementById("j-modal-a").style.display="none";
+  document.getElementById("j-modal").classList.add("open");
+}
+function jRevealAnswer(){document.getElementById("j-modal-a").style.display="block";}
+function jCloseModal(){
+  document.getElementById("j-modal").classList.remove("open");
+  if(curJKey){jUsed[curJKey]=true;var c=document.getElementById("jc-"+curJKey);if(c){c.classList.add("used");c.textContent="";}curJKey=null;}
+}
+
+// ===== FLAGS =====
+var FL=[
+  {c:"us",n:"United States"},{c:"gb",n:"United Kingdom"},{c:"fr",n:"France"},{c:"de",n:"Germany"},
+  {c:"jp",n:"Japan"},{c:"br",n:"Brazil"},{c:"mx",n:"Mexico"},{c:"ca",n:"Canada"},
+  {c:"au",n:"Australia"},{c:"in",n:"India"},{c:"cn",n:"China"},{c:"kr",n:"South Korea"},
+  {c:"it",n:"Italy"},{c:"es",n:"Spain"},{c:"ng",n:"Nigeria"},{c:"za",n:"South Africa"},
+  {c:"eg",n:"Egypt"},{c:"ar",n:"Argentina"},{c:"se",n:"Sweden"},{c:"no",n:"Norway"},
+  {c:"tr",n:"Turkey"},{c:"sa",n:"Saudi Arabia"},{c:"th",n:"Thailand"},{c:"ph",n:"Philippines"},
+  {c:"pk",n:"Pakistan"}
+];
+var flagIdx=0;
+function renderFlag(){
+  var f=FL[flagIdx];
+  document.getElementById("flag-img").src="https://flagcdn.com/w640/"+f.c+".png";
+  document.getElementById("flag-counter").textContent="Flag "+(flagIdx+1)+" of "+FL.length;
+  var a=document.getElementById("flag-answer");a.textContent="Tap to reveal country";a.classList.remove("shown");
+  updateTimerDisplay("flags",15,15);
+}
+function flagReveal(){var a=document.getElementById("flag-answer");a.textContent=FL[flagIdx].n;a.classList.add("shown");}
+function flagNext(){stopTimer("flags");flagIdx=(flagIdx+1)%FL.length;renderFlag();}
+function flagPrev(){stopTimer("flags");flagIdx=(flagIdx-1+FL.length)%FL.length;renderFlag();}
+
+// ===== DRAW THAT =====
+var DW=["Rollercoaster","Popcorn","Skateboard","Volcano","Rainbow","Trampoline","Spaghetti","Tornado","Escalator","Jellyfish","Saxophone","Ninja","Astronaut","Waterfall","Lego","Microphone","Flamingo","Surfboard","Cactus","Helicopter","Sunflower","Penguin","Quicksand","Lighthouse","Bulldozer","Marshmallow","Kangaroo","Starfish","Campfire","Toothbrush","Giraffe","Treasure","Hammock","Fireworks","Snowboard","Submarine","Caterpillar","Pineapple","Zombie","Robot","Sandcastle","Elevator","Basketball","Microscope","Dinosaur","Thunderstorm","Watermelon","Boomerang","Avalanche","Spaceship"];
+var drawIdx=0;
+function renderDraw(){
+  document.getElementById("draw-counter").textContent="Word "+(drawIdx+1)+" of "+DW.length;
+  var w=document.getElementById("draw-word");w.textContent="Tap to reveal word";w.className="draw-word-hidden";
+  updateTimerDisplay("draw",60,60);
+}
+function drawReveal(){var w=document.getElementById("draw-word");w.textContent=DW[drawIdx];w.className="draw-word-shown";}
+function drawNext(){stopTimer("draw");drawIdx=(drawIdx+1)%DW.length;renderDraw();}
+function drawPrev(){stopTimer("draw");drawIdx=(drawIdx-1+DW.length)%DW.length;renderDraw();}
+
+// ===== BRAIN ROT =====
+var BRQ=[
+  {q:"What does 'rizz' mean?",o:["To disrespect someone","Natural charm to attract others","A dance move","Being very hungry"],a:1},
+  {q:"What is an 'NPC moment'?",o:["Acting robotic with no personality","Winning a video game","A meme format","Getting ratio'd"],a:0},
+  {q:"'No cap' means...",o:["Without a hat","You're lying","I'm telling the truth / no lie","Stop talking"],a:2},
+  {q:"What does 'delulu' mean?",o:["Dedicated lover","Delusional — believing something unrealistic","Delete + undo","Daily luxury"],a:1},
+  {q:"'Gyatt' is used when someone...",o:["Says something funny","Has an impressive physique","Wins an argument","Posts a selfie"],a:1},
+  {q:"What does 'sigma' mean in internet slang?",o:["Just a Greek letter","A lone wolf who succeeds on their own terms","Someone who copies others","A type of meme"],a:1},
+  {q:"To be 'caught in 4K' means...",o:["Watching 4K TV","Caught red-handed with clear evidence","Having 4000 followers","Playing a game"],a:1},
+  {q:"What does 'W' mean in gaming/internet culture?",o:["Wrong answer","Win / good outcome","Weird","Waiting"],a:1},
+  {q:"'Slay' as a compliment means...",o:["To defeat someone","Look amazing or perform impressively","Delete something online","Cut hair"],a:1},
+  {q:"'Understood the assignment' means...",o:["Completed homework","Performed exactly right for the occasion","Agreed with someone","Read the instructions"],a:1},
+  {q:"'Living rent free in your head' means...",o:["Can't afford rent","Thinking about it constantly without wanting to","You own a house","You memorized it"],a:1},
+  {q:"What does 'IYKYK' stand for?",o:["I Yield Kids You're Kidding","If You Know You Know","In Your Kind Yard Know","I'm Your Kinda Knowledgeable"],a:1},
+  {q:"A 'beige flag' in dating means...",o:["A super dangerous red flag","A neutral mildly weird quirk that isn't a dealbreaker","A country's flag","Being boring in a good way"],a:1},
+  {q:"The 'Ohio' meme refers to...",o:["A US state with corn","A fictional place where weird/cursed things happen","A rapper","A dance challenge"],a:1},
+  {q:"Who is Kai Cenat?",o:["A famous chef","A record-breaking Twitch streamer known for subathons","A K-pop artist","An NBA player"],a:1},
+  {q:"'Hitting the griddy' refers to...",o:["Cooking on a grill","A viral football touchdown dance","Studying hard","Playing Minecraft"],a:1},
+  {q:"'Sussy baka' combines which game + language?",o:["Minecraft + Spanish","Among Us + Japanese (baka = fool)","Roblox + Korean","Fortnite + Italian"],a:1},
+  {q:"'Bussin' means food is...",o:["Terrible","Extremely delicious / really good","Being served on a bus","Overpriced"],a:1},
+  {q:"'It's giving...' is used to say something...",o:["Is being donated","Has a certain vibe or energy","Is being thrown away","Is expensive"],a:1},
+  {q:"'Skibidi' became famous through which YouTube format?",o:["Short cooking videos","Skibidi Toilet — toilet-headed vs camera-headed characters","Dance tutorials","Music playlists"],a:1}
+];
+var brIdx=0,brAnswered=false;
+function renderBR(){
+  var item=BRQ[brIdx];
+  document.getElementById("br-counter").textContent="Question "+(brIdx+1)+" of "+BRQ.length;
+  document.getElementById("br-progress").style.width=(((brIdx+1)/BRQ.length)*100)+"%";
+  document.getElementById("br-question").textContent=item.q;
+  var opts=document.getElementById("br-options");opts.innerHTML="";brAnswered=false;
+  item.o.forEach(function(o,i){
+    var btn=document.createElement("button");btn.className="mc-opt";
+    btn.textContent=["A","B","C","D"][i]+") "+o;
+    btn.onclick=function(){
+      if(brAnswered)return;brAnswered=true;
+      opts.querySelectorAll(".mc-opt").forEach(function(b){b.classList.add("locked");});
+      if(i===item.a)btn.classList.add("correct");
+      else{btn.classList.add("wrong");opts.querySelectorAll(".mc-opt")[item.a].classList.add("correct");}
+    };
+    opts.appendChild(btn);
+  });
+}
+function brNext(){brIdx=(brIdx+1)%BRQ.length;renderBR();}
+function brPrev(){brIdx=(brIdx-1+BRQ.length)%BRQ.length;renderBR();}
+
+// ===== TRUE / FALSE =====
+var TFD=[
+  {s:"A group of flamingos is called a flamboyance.",t:true,f:"TRUE! It can also be called a stand or colony."},
+  {s:"Honey never expires — archaeologists found 3000-year-old honey in Egyptian tombs that was still edible.",t:true,f:"TRUE! Honey has natural preservatives and very low moisture content."},
+  {s:"The Eiffel Tower gets taller in summer.",t:true,f:"TRUE! Heat causes the metal to expand — it can grow about 6 inches."},
+  {s:"A shrimp's heart is located in its head.",t:true,f:"TRUE! Technically in the thorax, which sits in the head region."},
+  {s:"Bananas are technically berries, but strawberries are not.",t:true,f:"TRUE! Botanically, bananas qualify as berries. Strawberries are accessory fruits."},
+  {s:"Sharks are older than trees.",t:true,f:"TRUE! Sharks appeared ~450M years ago, trees ~350M years ago."},
+  {s:"Cleopatra lived closer in time to the Moon landing than to the Great Pyramid's construction.",t:true,f:"TRUE! Pyramids ~2560 BC, Cleopatra ~30 BC, Moon landing 1969 AD."},
+  {s:"Cats always land on their feet.",t:false,f:"FALSE! Cats usually do, but not always — they can still get hurt from falls."},
+  {s:"The Great Wall of China is visible from space with the naked eye.",t:false,f:"FALSE! This is a common myth — it's too thin to see from space."},
+  {s:"Goldfish have a 3-second memory.",t:false,f:"FALSE! Goldfish can actually remember things for months. Total myth!"},
+  {s:"Lightning never strikes the same place twice.",t:false,f:"FALSE! The Empire State Building gets struck about 20 times per year."},
+  {s:"Humans only use 10% of their brains.",t:false,f:"FALSE! Brain scans show we use virtually all parts of the brain regularly."},
+  {s:"A day on Venus is longer than a year on Venus.",t:true,f:"TRUE! Venus rotates so slowly it takes longer to spin once than to orbit the Sun."},
+  {s:"Octopuses have three hearts.",t:true,f:"TRUE! Two pump blood to the gills, one pumps it to the rest of the body."},
+  {s:"The unicorn is the national animal of Scotland.",t:true,f:"TRUE! The unicorn has been Scotland's national animal since the 12th century."},
+  {s:"Water can boil and freeze at the same time.",t:true,f:"TRUE! Called the 'triple point' — occurs at a specific temperature and pressure."},
+  {s:"A jiffy is an actual unit of time.",t:true,f:"TRUE! In physics, a jiffy is 1/100th of a second."},
+  {s:"Wombats produce cube-shaped poop.",t:true,f:"TRUE! They are the only known animals that produce cube-shaped poop."},
+  {s:"Nintendo was founded before the Eiffel Tower was built.",t:true,f:"TRUE! Nintendo was founded in 1889 — the same year the Eiffel Tower was completed!"},
+  {s:"Roblox was released before Minecraft.",t:true,f:"TRUE! Roblox launched in 2006, Minecraft in 2009."},
+  {s:"The Amazon River flows into the Pacific Ocean.",t:false,f:"FALSE! The Amazon flows into the Atlantic Ocean."},
+  {s:"Penguins live in the Arctic.",t:false,f:"FALSE! Penguins live in Antarctica. Polar bears live in the Arctic."},
+  {s:"You can sneeze with your eyes open.",t:false,f:"FALSE (almost)! Your eyes close reflexively — very hard to keep them open when sneezing."},
+  {s:"TikTok was originally called Musical.ly.",t:true,f:"TRUE! ByteDance acquired Musical.ly in 2017 and merged it into TikTok."},
+  {s:"The word 'set' has more definitions in English than any other word.",t:true,f:"TRUE! 'Set' has 430+ definitions in the Oxford English Dictionary."}
+];
+var tfIdx=0;
+function renderTF(){
+  var item=TFD[tfIdx];
+  document.getElementById("tf-counter").textContent="Statement "+(tfIdx+1)+" of "+TFD.length;
+  document.getElementById("tf-progress").style.width=(((tfIdx+1)/TFD.length)*100)+"%";
+  document.getElementById("tf-statement").textContent=item.s;
+  document.getElementById("tf-answer-box").style.display="none";
+}
+function tfReveal(){
+  var item=TFD[tfIdx];
+  document.getElementById("tf-answer-text").textContent=item.t?"TRUE \u2705":"FALSE \u274C";
+  document.getElementById("tf-answer-text").className="tf-answer "+(item.t?"true":"false");
+  document.getElementById("tf-fact-text").textContent=item.f;
+  document.getElementById("tf-answer-box").style.display="flex";
+}
+function tfNext(){tfIdx=(tfIdx+1)%TFD.length;renderTF();}
+function tfPrev(){tfIdx=(tfIdx-1+TFD.length)%TFD.length;renderTF();}
+
+// ===== LYRICS =====
+var LYR=[
+  {song:"God's Plan - Drake",line:"She said, do you love me? I tell her only partly...",blank:"I only love my bed and my mama, I'm sorry"},
+  {song:"bad guy - Billie Eilish",line:"White shirt now red, my bloody nose...",blank:"Sleeping, you're on your tippy toes"},
+  {song:"Shake It Off - Taylor Swift",line:"I stay out too late, got nothing in my brain...",blank:"That's what people say, mm mm. That's what people say."},
+  {song:"drivers license - Olivia Rodrigo",line:"I got my driver's license last week...",blank:"Still don't know how to parallel park"},
+  {song:"As It Was - Harry Styles",line:"Holding me back, gravity's holding me back...",blank:"I want you to hold out the palm of your hand"},
+  {song:"Sunflower - Post Malone & Swae Lee",line:"Needless to say, I keep her in check...",blank:"She was all bad-bad, nevertheless"},
+  {song:"Blinding Lights - The Weeknd",line:"I said ooh, I'm blinded by the lights...",blank:"No, I can't sleep until I feel your touch"},
+  {song:"Levitating - Dua Lipa",line:"Baby, you're a shooting star...",blank:"I'd let you take me anywhere"},
+  {song:"Kill Bill - SZA",line:"I might kill my ex, not the best idea...",blank:"His new girlfriend's next, how'd I get here?"},
+  {song:"Old Town Road - Lil Nas X",line:"I'm gonna take my horse to the old town road...",blank:"I'm gonna ride 'til I can't no more"},
+  {song:"Say So - Doja Cat",line:"Day to night to morning, keep with me in the moment...",blank:"I'd let you had I known it, why don't you say so?"},
+  {song:"Heat Waves - Glass Animals",line:"Sometimes all I think about is you...",blank:"Late nights in the middle of June"},
+  {song:"7 Rings - Ariana Grande",line:"Whoever said money can't solve your problems...",blank:"Must not have had enough money to solve 'em"},
+  {song:"Peaches - Justin Bieber",line:"I got my peaches out in Georgia...",blank:"I got my weed from California"},
+  {song:"STAY - The Kid LAROI & Justin Bieber",line:"I do the same thing I told you that I never would...",blank:"I told you I changed, even when I knew I never could"},
+  {song:"Good 4 U - Olivia Rodrigo",line:"Good for you, you look happy and healthy...",blank:"Not me, not at all"},
+  {song:"Montero - Lil Nas X",line:"I caught it bad yesterday you hit my phone up...",blank:"Callin' me baby, like it's something that you own"},
+  {song:"abcdefu - GAYLE",line:"A B C D E F U...",blank:"And your mom and your sister and your job and your broken-down car"},
+  {song:"Anti-Hero - Taylor Swift",line:"It's me, hi, I'm the problem, it's me...",blank:"At tea time, everybody agrees"},
+  {song:"Flowers - Miley Cyrus",line:"We were good, we were gold...",blank:"Kind of dream that can't be sold"}
+];
+var lyrIdx=0;
+function renderLyr(){
+  var item=LYR[lyrIdx];
+  document.getElementById("lyr-counter").textContent="Song "+(lyrIdx+1)+" of "+LYR.length;
+  document.getElementById("lyr-song").textContent="\u{1F3B5} "+item.song;
+  document.getElementById("lyr-line").textContent=item.line;
+  document.getElementById("lyr-blank").textContent="____________________";
+  var a=document.getElementById("lyr-answer");a.textContent="Tap to reveal lyric";a.classList.remove("shown");
+}
+function lyrReveal(){var a=document.getElementById("lyr-answer");a.textContent=LYR[lyrIdx].blank;a.classList.add("shown");}
+function lyrNext(){lyrIdx=(lyrIdx+1)%LYR.length;renderLyr();}
+function lyrPrev(){lyrIdx=(lyrIdx-1+LYR.length)%LYR.length;renderLyr();}
+
+// ===== PRICE IS RIGHT =====
+var PR=[
+  {e:"\u{1F3A7}",n:"Apple AirPods Pro (2nd Gen)",d:"Wireless earbuds with active noise cancellation",p:"$249.00"},
+  {e:"\u{1F964}",n:"Stanley Quencher H2.0 40oz",d:"The iconic tumbler everyone has",p:"$45.00"},
+  {e:"\u{1F45F}",n:"Nike Air Force 1 '07",d:"Classic white low-top sneaker",p:"$115.00"},
+  {e:"\u{1F3AE}",n:"PS5 DualSense Wireless Controller",d:"Sony PlayStation 5 controller with haptic feedback",p:"$74.99"},
+  {e:"\u{1F9F1}",n:"LEGO Technic McLaren Formula E",d:"Large-scale LEGO race car building set",p:"$199.99"},
+  {e:"\u{1F4F1}",n:"Apple iPhone 15 (128GB)",d:"Latest base model iPhone",p:"$799.00"},
+  {e:"\u{1F58D}\uFE0F",n:"Crayola 115-Piece Art Set",d:"Pencils, markers, crayons and more in a case",p:"$29.99"},
+  {e:"\u{1F3C0}",n:"Spalding NBA Street Basketball",d:"Official size outdoor rubber basketball",p:"$169.99"},
+  {e:"\u2615",n:"Nespresso Vertuo Next Coffee Maker",d:"Pod coffee machine with milk frother",p:"$119.95"},
+  {e:"\u{1F392}",n:"JanSport SuperBreak Backpack",d:"Classic school backpack",p:"$39.99"},
+  {e:"\u{1F9E5}",n:"The North Face Nuptse 700 Jacket",d:"Iconic puffer jacket, fill power 700",p:"$299.00"},
+  {e:"\u{1F52B}",n:"Nerf Elite 2.0 Ranger Blaster",d:"20-dart rotating drum, motorized Nerf blaster",p:"$29.99"},
+  {e:"\u{1F4A7}",n:"Hydro Flask 32oz Wide Mouth",d:"Stainless steel insulated water bottle",p:"$54.95"},
+  {e:"\u{1F3B2}",n:"Codenames Board Game",d:"Team word-association party game",p:"$27.99"},
+  {e:"\u{1F372}",n:"Instant Pot Duo 6-Quart",d:"7-in-1 electric pressure cooker",p:"$99.95"},
+  {e:"\u{1F3B8}",n:"Fender Squier Affinity Strat Starter Pack",d:"Beginner electric guitar bundle",p:"$299.99"},
+  {e:"\u{1F4F7}",n:"Polaroid Now+ Instant Camera",d:"Analog instant camera with Bluetooth lens filters",p:"$89.99"},
+  {e:"\u{1F3B5}",n:"Beats Studio3 Wireless Headphones",d:"Over-ear noise cancelling Beats headphones",p:"$199.95"},
+  {e:"\u{1F3AE}",n:"Nintendo Switch Deluxe Travel Case",d:"Official Nintendo carrying case for Switch",p:"$29.99"},
+  {e:"\u{1F9CA}",n:"YETI Rambler 20oz Tumbler",d:"Stainless steel insulated tumbler with lid",p:"$35.00"}
+];
+var priceIdx=0;
+function renderPrice(){
+  var item=PR[priceIdx];
+  document.getElementById("price-counter").textContent="Product "+(priceIdx+1)+" of "+PR.length;
+  document.getElementById("price-emoji").textContent=item.e;
+  document.getElementById("price-name").textContent=item.n;
+  document.getElementById("price-desc").textContent=item.d;
+  var a=document.getElementById("price-answer");a.textContent="Tap to reveal price";a.classList.remove("shown");
+}
+function priceReveal(){var a=document.getElementById("price-answer");a.textContent=PR[priceIdx].p;a.classList.add("shown");}
+function priceNext(){priceIdx=(priceIdx+1)%PR.length;renderPrice();}
+function pricePrev(){priceIdx=(priceIdx-1+PR.length)%PR.length;renderPrice();}
+
+// ===== CONNECTIONS =====
+var CP=[
+  {groups:[
+    {l:"Taylor Swift Albums",c:0,w:["Midnights","Folklore","Evermore","Fearless"]},
+    {l:"Streaming Platforms",c:1,w:["Netflix","Hulu","Disney+","Peacock"]},
+    {l:"Minecraft Mobs",c:2,w:["Creeper","Enderman","Skeleton","Spider"]},
+    {l:"Social Media Apps",c:3,w:["TikTok","Snapchat","BeReal","Pinterest"]}
+  ]},
+  {groups:[
+    {l:"School Subjects",c:0,w:["Algebra","Biology","History","Spanish"]},
+    {l:"Triangle Types",c:1,w:["Scalene","Isosceles","Equilateral","Right"]},
+    {l:"Shakespeare Plays",c:2,w:["Hamlet","Macbeth","Othello","Romeo"]},
+    {l:"US Presidents",c:3,w:["Lincoln","Obama","Kennedy","Reagan"]}
+  ]},
+  {groups:[
+    {l:"Pasta Types",c:0,w:["Penne","Rigatoni","Fusilli","Farfalle"]},
+    {l:"Starbucks Drinks",c:1,w:["Frappuccino","Macchiato","Matcha","Refresher"]},
+    {l:"Ice Cream Brands",c:2,w:["Ben & Jerrys","Haagen-Dazs","Talenti","Breyers"]},
+    {l:"Hot Sauces",c:3,w:["Sriracha","Tabasco","Franks","Cholula"]}
+  ]},
+  {groups:[
+    {l:"NBA Teams",c:0,w:["Lakers","Celtics","Warriors","Heat"]},
+    {l:"Tennis Grand Slams",c:1,w:["Wimbledon","US Open","Roland Garros","Australian Open"]},
+    {l:"Weird Olympic Sports",c:2,w:["Skeleton","Biathlon","Curling","Luge"]},
+    {l:"Martial Arts",c:3,w:["Judo","Muay Thai","Taekwondo","Capoeira"]}
+  ]},
+  {groups:[
+    {l:"Animals That Cannot Jump",c:0,w:["Elephant","Hippo","Rhino","Sloth"]},
+    {l:"Flightless Birds",c:1,w:["Ostrich","Penguin","Emu","Kiwi"]},
+    {l:"Famous Blue Characters",c:2,w:["Smurf","Sonic","Cookie Monster","Stitch"]},
+    {l:"Types of Sharks",c:3,w:["Hammerhead","Bull","Tiger","Whale"]}
+  ]},
+  {groups:[
+    {l:"Roblox Games",c:0,w:["Adopt Me","Brookhaven","Blox Fruits","Piggy"]},
+    {l:"Famous YouTubers",c:1,w:["MrBeast","Markiplier","PewDiePie","Jacksepticeye"]},
+    {l:"Gaming Consoles",c:2,w:["Switch","PS5","Xbox","Steam Deck"]},
+    {l:"Disney Princesses",c:3,w:["Moana","Rapunzel","Tiana","Merida"]}
+  ]}
+];
+var connPIdx=0,connSel=[],connSolved=[],connWordOrder=[];
+function renderConnections(){buildConnBtns();loadConn(connPIdx);}
+function buildConnBtns(){
+  var wrap=document.getElementById("conn-puzzle-btns");wrap.innerHTML="";
+  CP.forEach(function(p,i){
+    var b=document.createElement("button");
+    b.className="btn btn-sm "+(i===connPIdx?"btn-blue":"btn-gray");
+    b.textContent="Puzzle "+(i+1);
+    b.onclick=function(){connPIdx=i;loadConn(i);buildConnBtns();};
+    wrap.appendChild(b);
+  });
+}
+function loadConn(idx){
+  connSel=[];connSolved=[];connWordOrder=[];
+  var puzzle=CP[idx];
+  puzzle.groups.forEach(function(g){g.w.forEach(function(w){connWordOrder.push({word:w,group:g.l,color:g.c});});});
+  connWordOrder=connWordOrder.slice().sort(function(){return Math.random()-0.5;});
+  document.getElementById("conn-solved-labels").innerHTML="";
+  document.getElementById("conn-msg").textContent="";
+  renderConnGrid();
+}
+function connShuffle(){connWordOrder=connWordOrder.slice().sort(function(){return Math.random()-0.5;});renderConnGrid();}
+function renderConnGrid(){
+  var grid=document.getElementById("conn-grid");grid.innerHTML="";
+  document.getElementById("conn-sel-count").textContent="Selected: "+connSel.length+"/4";
+  connWordOrder.forEach(function(item){
+    var isSolved=connSolved.indexOf(item.group)>-1;
+    var isSelected=connSel.indexOf(item.word)>-1;
+    var cell=document.createElement("div");
+    cell.className="conn-cell"+(isSolved?" solved-"+item.color:isSelected?" selected":"");
+    cell.textContent=item.word;
+    if(!isSolved){
+      cell.onclick=function(){
+        var si=connSel.indexOf(item.word);
+        if(si>-1)connSel.splice(si,1);
+        else if(connSel.length<4)connSel.push(item.word);
+        renderConnGrid();
+      };
+    }
+    grid.appendChild(cell);
+  });
+}
+function connSubmit(){
+  if(connSel.length!==4){document.getElementById("conn-msg").textContent="Select exactly 4 words!";return;}
+  var puzzle=CP[connPIdx],matched=null;
+  puzzle.groups.forEach(function(g){
+    if(connSolved.indexOf(g.l)>-1)return;
+    if(connSel.every(function(w){return g.w.indexOf(w)>-1;}))matched=g;
+  });
+  if(matched){
+    connSolved.push(matched.l);connSel=[];
+    var lbl=document.createElement("div");lbl.className="conn-solved-label";
+    var colors=["#ffd700","#78C091","#4A90E2","#9B59B6"];
+    lbl.style.background=colors[matched.c];lbl.style.color=matched.c>1?"#fff":"#000";
+    lbl.textContent=matched.l+": "+matched.w.join(", ");
+    document.getElementById("conn-solved-labels").appendChild(lbl);
+    document.getElementById("conn-msg").textContent=connSolved.length===4?"Puzzle Complete! Great job!":"Correct! Keep going!";
+  } else {
+    var oneAway=false;
+    puzzle.groups.forEach(function(g){
+      if(connSolved.indexOf(g.l)>-1)return;
+      if(connSel.filter(function(w){return g.w.indexOf(w)>-1;}).length===3)oneAway=true;
+    });
+    document.getElementById("conn-msg").textContent=oneAway?"One away! Try again!":"Not quite! Try again.";
+    connSel=[];
+  }
+  renderConnGrid();
+}
+function connDeselect(){connSel=[];renderConnGrid();}
+
+// ===== PASSWORD =====
+var PW=["Ocean","Volcano","Robot","Skateboard","Rainbow","Tornado","Castle","Dragon","Pizza","Galaxy","Laser","Treasure","Ninja","Penguin","Rocket","Thunder","Mirror","Jungle","Wizard","Fossil","Anchor","Diamond","Phantom","Circuit","Bubble","Compass","Iceberg","Carnival","Satellite","Labyrinth"];
+var passIdx=0;
+function renderPass(){
+  document.getElementById("pass-counter").textContent="Word "+(passIdx+1)+" of "+PW.length;
+  var w=document.getElementById("pass-word");w.textContent="Tap to reveal (HOST ONLY)";w.className="password-word-hidden";
+  updateTimerDisplay("password",60,60);
+}
+function passReveal(){var w=document.getElementById("pass-word");w.textContent=PW[passIdx];w.className="password-word-shown";}
+function passNext(){stopTimer("password");passIdx=(passIdx+1)%PW.length;renderPass();}
+function passPrev(){stopTimer("password");passIdx=(passIdx-1+PW.length)%PW.length;renderPass();}
+
+// ===== INIT =====
+window.onload=function(){renderEmoji();renderFlag();renderDraw();renderBR();renderTF();renderLyr();renderPrice();renderPass();};
+</script>
+</body>
+</html>

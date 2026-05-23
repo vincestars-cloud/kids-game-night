@@ -49,7 +49,7 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
 .game-header .counter{color:var(--text2);font-size:13px;white-space:nowrap;}
 .back-btn{background:var(--card);color:var(--text);border:1px solid #444;border-radius:8px;padding:5px 12px;font-size:12px;cursor:pointer;white-space:nowrap;}
 .back-btn:hover{background:var(--blue);color:#fff;}
-.game-content{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 20px;overflow:hidden;}
+.game-content{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 20px;overflow-y:auto;}
 .game-controls{display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;background:var(--surface);border-top:1px solid var(--card);flex-shrink:0;height:70px;flex-wrap:nowrap;}
 .btn{border:none;border-radius:10px;padding:10px 20px;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
 .btn:hover{transform:translateY(-2px);opacity:0.9;}
@@ -227,9 +227,9 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
 .wwtbam-rung.won{background:#00d4aa22;border-color:#00d4aa;color:#00d4aa;}
 .wwtbam-rung.lost{background:#e9456011;border-color:#e9456033;color:#555;}
 .wwtbam-rung .rung-pts{color:inherit;font-size:12px;}
-.wwtbam-main{flex:1;display:flex;flex-direction:column;gap:10px;overflow:hidden;min-height:0;}
+.wwtbam-main{flex:1;display:flex;flex-direction:column;gap:10px;overflow-y:auto;min-height:0;}
 .wwtbam-question{background:#16213e;border-radius:14px;padding:20px 24px;font-size:22px;font-weight:700;line-height:1.4;text-align:center;border:2px solid #2a2a4e;flex-shrink:0;}
-.wwtbam-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;flex-shrink:0;}
+.wwtbam-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;flex-shrink:0;}
 .wwtbam-opt{background:#16213e;border:2px solid #4a90e2;border-radius:12px;padding:14px 18px;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all 0.2s;text-align:left;}
 .wwtbam-opt:hover:not(.disabled){background:#1a2a4e;border-color:#f5a623;}
 .wwtbam-opt.selected{background:#2a3a6e;border-color:#4a90e2;}
@@ -248,7 +248,7 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
 .lifeline-btn.used{opacity:0.3;cursor:not-allowed;border-color:#333;color:#555;}
 .wwtbam-feedback{text-align:center;font-size:18px;font-weight:700;min-height:30px;padding:6px;flex-shrink:0;}
 .wwtbam-age-select{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:20px;overflow-y:auto;min-height:0;}
-.age-btn{padding:20px 40px;border-radius:16px;border:3px solid #4a90e2;background:#16213e;color:#e0e0e0;font-size:22px;font-weight:900;cursor:pointer;transition:all 0.25s;width:320px;text-align:left;}
+.age-btn{padding:16px 24px;border-radius:16px;border:3px solid #4a90e2;background:#16213e;color:#e0e0e0;font-size:20px;font-weight:900;cursor:pointer;transition:all 0.25s;width:min(320px,90%);text-align:left;}
 .age-btn:hover{border-color:#f5a623;background:#2a2a4e;transform:translateX(6px);}
 .age-btn .age-sub{font-size:13px;color:#a0a0b0;font-weight:400;margin-top:4px;}
 .wwtbam-result{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px;}
@@ -2113,7 +2113,10 @@ function useLifeline(type){
     if(wwtbamLifelinesUsed.ai)return;wwtbamLifelinesUsed.ai=true;
     document.getElementById("ll-ai").classList.add("used");
     box.style.display="block";
-    box.innerHTML='<div class="ai-hint-box"><div style="font-size:12px;color:#9b59b6;margin-bottom:6px;letter-spacing:2px;">🤖 AI HINT</div>'+q.hint+'</div>';
+    const letters=["A","B","C","D"];
+    const correct_letter=letters[q.c];
+    const correct_text=q.opts[q.c];
+    box.innerHTML='<div class="ai-hint-box"><div style="font-size:12px;color:#9b59b6;margin-bottom:6px;letter-spacing:2px;">🤖 AI SAYS</div><div style="margin-bottom:10px;font-size:15px;color:#c0c0d0;">'+q.hint+'</div><div style="background:#2a1a4e;border:2px solid #9b59b6;border-radius:10px;padding:10px 16px;font-size:18px;font-weight:900;color:#d9a8ff;">The answer is <span style="color:#f5a623;">'+correct_letter+'</span> — '+correct_text+'</div></div>';
   }else if(type==="friend"){
     if(wwtbamLifelinesUsed.friend)return;wwtbamLifelinesUsed.friend=true;
     document.getElementById("ll-friend").classList.add("used");

@@ -619,6 +619,7 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
     <div class="game-header">
       <button class="back-btn" onclick="showGame('home')">&#8592; Home</button>
       <h2>&#128279; Connections</h2>
+      <div id="conn-hint-box" style="display:none;background:#1a1a3e;border:1px solid #9b59b644;border-radius:10px;padding:10px 14px;margin:6px 0;font-size:13px;"></div>
       <span class="conn-msg" id="conn-msg"></span>
     </div>
     <div class="game-content" style="padding:8px 16px;justify-content:flex-start;overflow-y:auto;">
@@ -626,6 +627,7 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
       <div class="conn-grid" id="conn-grid"></div>
       <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;justify-content:center;">
         <button class="btn btn-blue btn-sm" onclick="connSubmit()">Submit Group</button>
+        <button class="btn btn-gray btn-sm" id="conn-hint-btn" onclick="connShowHint()">í ½í²¡ Hint</button>
         <button class="btn btn-gray btn-sm" onclick="connDeselect()">Deselect All</button>
         <button class="btn btn-red btn-sm" onclick="connReset()">Reset</button>
       </div>
@@ -1368,6 +1370,9 @@ function loadConnPuzzle(i){
   connHintsShown=0;
   var _hb=document.getElementById('conn-hint-box');if(_hb){_hb.style.display='none';_hb.innerHTML='';}
   var _hbtn=document.getElementById('conn-hint-btn');if(_hbtn)_hbtn.textContent='í ½í²¡ Hint';
+  connHintsShown=0;
+  var _hb=document.getElementById('conn-hint-box');if(_hb){_hb.style.display='none';_hb.innerHTML='';}
+  var _hbtn=document.getElementById('conn-hint-btn');if(_hbtn)_hbtn.textContent='ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Hint';
 }
 function renderConnGrid(){
   const grid=document.getElementById('conn-grid');if(!grid)return;
@@ -1406,6 +1411,28 @@ function connSubmit(){
 }
 function connDeselect(){connSelected=[];renderConnGrid();}
 function connReset(){connSelected=[];connSolved=[];loadConnPuzzle(connPuzzleIdx);}
+var connHintsShown=0;
+function connShowHint(){
+  var p=CP[connPuzzleIdx];
+  var colors=['#27AE60','#2980B9','#8E44AD','#E67E22'];
+  var colorNames=['Green','Blue','Purple','Orange'];
+  var hb=document.getElementById('conn-hint-box');
+  var hbtn=document.getElementById('conn-hint-btn');
+  if(!hb)return;
+  var allSolved=p.groups.every(function(g,i){return connSolved.includes(i);});
+  if(allSolved){hb.style.display='block';hb.innerHTML='<span style="color:#00d4aa;">\u2705 All groups solved!</span>';return;}
+  connHintsShown++;
+  var revealCount=Math.min(connHintsShown,p.groups.length);
+  hb.style.display='block';
+  hb.innerHTML='<div style="font-size:10px;color:#9b59b6;letter-spacing:2px;margin-bottom:8px;text-transform:uppercase;">Category Hints</div>'+
+    p.groups.map(function(g,i){
+      var revealed=i<revealCount||connSolved.includes(i);
+      return '<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;padding:5px 8px;background:#111;border-radius:7px;border-left:3px solid '+colors[g.color]+';"><span style="font-size:10px;color:'+colors[g.color]+';font-weight:700;min-width:46px;">'+colorNames[g.color]+'</span><span style="color:'+(revealed?'#f5a623':'#444')+';font-size:13px;">'+(revealed?g.label:'â€” hidden â€”')+'</span></div>';
+    }).join('');
+  var remaining=p.groups.length-revealCount;
+  if(remaining>0&&hbtn)hbtn.textContent='\uD83D\uDCA1 Reveal ('+remaining+' left)';
+  else if(hbtn)hbtn.textContent='\uD83D\uDCA1 All revealed';
+}
 let connHintsShown=0;
 function connShowHint(){
   var p=CP[connPuzzleIdx];

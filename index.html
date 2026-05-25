@@ -920,35 +920,39 @@ function toggleEmojiAnswer(){
 function emojiNav(d){emojiIdx=(emojiIdx+d+EP.length)%EP.length;loadEmoji(emojiIdx);}
 
 // JEOPARDY DATA
-const jCats=['Pop Culture','Sports & Athletes','Disney & Pixar','Finish The Lyric','Internet Moments'];
+const jCats=['Pop Culture','Sports & Athletes','Disney & Pixar','Finish The Lyric','School'];
 const jData=[
-  [{pts:100,q:"What character does Zendaya play in Euphoria?",a:"Rue Bennett — a teenage girl navigating addiction and high school."},
-   {pts:200,q:"Who plays Wednesday Addams in Netflix's Wednesday?",a:"Jenna Ortega — she also choreographed the viral dance scene herself."},
-   {pts:300,q:"What is Bluey's dad's name?",a:"Bandit Heeler. Mom is Chilli. They're Australian Blue Heeler dogs."},
-   {pts:400,q:"What Netflix show from South Korea features deadly children's games for cash prize?",a:"Squid Game — Season 1 dropped in 2021 and became Netflix's biggest launch ever."},
-   {pts:500,q:"Which Taylor Swift era has the snake imagery and dark moody aesthetic?",a:"Reputation (2017) — the dark era after the Kanye/Kim drama where she leaned fully into the villain narrative."}],
-  [{pts:100,q:"What sport does Simone Biles compete in?",a:"Gymnastics — she returned at Paris 2024 Olympics and won gold again after her mental health break at Tokyo 2021."},
-   {pts:200,q:"How many NBA Championship rings does LeBron James have?",a:"4 rings: Miami Heat (2012, 2013), Cleveland Cavaliers (2016), LA Lakers (2020)."},
-   {pts:300,q:"What country did Lionel Messi lead to a World Cup win in 2022?",a:"Argentina — their first World Cup since 1986. Messi won the Golden Ball award as tournament's best player."},
-   {pts:400,q:"What pop star is Travis Kelce (Kansas City Chiefs tight end) dating?",a:"Taylor Swift — started dating in 2023. She attended multiple Chiefs games and the Super Bowl."},
-   {pts:500,q:"What NFL receiver's Griddy touchdown dance was added to Fortnite?",a:"Justin Jefferson (Minnesota Vikings) — the Griddy became the most iconic TD celebration of the era."}],
-  [{pts:100,q:"Who is the villain in The Little Mermaid?",a:"Ursula the Sea Witch — she tricks Ariel into trading her voice for legs."},
-   {pts:200,q:"What is the name of Andy's cowboy toy in Toy Story?",a:"Woody — voiced by Tom Hanks. His full name is Woody Pride."},
-   {pts:300,q:"In Inside Out, what is the name of Riley's childhood imaginary friend?",a:"Bing Bong — part elephant, cat, and dolphin. He sacrifices himself so Joy can escape the memory dump."},
-   {pts:400,q:"What country is Moana set in, and what does she have a special connection with?",a:"Polynesia (island of Motunui) — she has a special connection with the ocean itself, which chooses her."},
-   {pts:500,q:"In Pixar's Up, what is Carl's late wife's name and what was their shared dream?",a:"Ellie — their dream was to move to Paradise Falls in South America. Carl fulfills it after she passes."}],
-  [{pts:100,q:"Fill in: 'You belong with me, you belong with ___'",a:"Me — Taylor Swift, 'You Belong With Me' (2008). One of her most iconic music videos."},
-   {pts:200,q:"Fill in: 'I got my driver\'s license last week... still see your face in the ___ lights'",a:"Traffic — Olivia Rodrigo, 'drivers license' (2021). First song to debut #1 on both major charts simultaneously."},
-   {pts:300,q:"Fill in: 'That is that me espresso, that is that me ___'",a:"Espresso — Sabrina Carpenter (2024). Summer 2024's inescapable song. 'I can\'t relate to desperation.'"},
-   {pts:400,q:"Fill in: 'They not like us, they not like us, they not like ___'",a:"Us — Kendrick Lamar's Drake diss 'Not Like Us' (2024). Debuted at #1. He performed it at the Super Bowl."},
-   {pts:500,q:"Fill in this legendary Rick Roll: 'Never gonna give you up, never gonna let you down, never gonna run around and ___'",a:"Desert you — Rick Astley (1987). Congratulations, you just got rickrolled. The video has over 1.5 billion views."}],
-  [{pts:100,q:"What were the two color options people saw in 'The Dress' 2015 viral debate?",a:"Blue and black OR white and gold. It was actually blue and black. Science says lighting perception varies by person."},
-   {pts:200,q:"What does it mean when a tweet gets 'ratioed'?",a:"Replies outnumber likes — meaning most people disagree with you. Getting ratioed is very embarrassing online."},
-   {pts:300,q:"What was the first YouTube video to reach 1 billion views?",a:"Gangnam Style by PSY (2012) — so popular it broke YouTube's view counter, which wasn't built for that many zeros."},
-   {pts:400,q:"What mobile game had people walking into traffic staring at their phones when it launched in 2016?",a:"Pokémon GO — the AR game sent millions outside. People trespassed at government buildings, crashed cars, and servers collapsed."},
-   {pts:500,q:"What does 'quiet quitting' mean as a 2022 workplace trend?",a:"Doing exactly your job description — no more, no less. Not actually quitting, but refusing to go above and beyond for a company that doesn't reward it."}],
+  // POP CULTURE
+  [{pts:100,q:"What color is Grimace, the big McDonald's mascot?",a:"Purple — he used to be the 'Evil Grimace' who stole milkshakes, now he's just a friendly blob. His 2023 birthday shake went viral everywhere."},
+   {pts:200,q:"What app is known for short videos, trending sounds, and duets?",a:"TikTok — launched globally in 2018. Every viral dance, trend, and sound starts here. Most downloaded app on the planet for years running."},
+   {pts:300,q:"What movie features the song 'We Don't Talk About Bruno'?",a:"Encanto (2021) — Colombian family the Madrigals. Bruno sees bad omens. The song hit #1 and broke a Disney chart record held by Let It Go for 25 years."},
+   {pts:400,q:"What singer released both 'Espresso' AND 'Please Please Please' in Summer 2024?",a:"Sabrina Carpenter — both songs were inescapable Summer 2024. She opened for Taylor Swift on the Eras Tour and became THE breakout artist of the year."},
+   {pts:500,q:"What streaming show returned for Season 2 in 2024 and is set in a deadly game competition in South Korea?",a:"Squid Game — Season 1 (2021) was Netflix's most-watched show ever. Season 2 dropped December 2024. The red light green light doll became iconic worldwide."}],
+  // SPORTS
+  [{pts:100,q:"How many players from one team are on a basketball court at the same time?",a:"5 — point guard, shooting guard, small forward, power forward, center. Both teams combined = 10 players on court at once."},
+   {pts:200,q:"What city is hosting the 2028 Summer Olympics?",a:"Los Angeles, USA — LA has hosted the Olympics twice before (1932 and 1984). The opening ceremony will be at SoFi Stadium, home of the Rams."},
+   {pts:300,q:"What sport does WNBA star Caitlin Clark play?",a:"Basketball — Indiana Fever. She broke the all-time NCAA scoring record before going pro. She made women's basketball must-watch TV in 2024 and had the most-watched WNBA season ever."},
+   {pts:400,q:"In soccer, if you accidentally kick the ball into your OWN goal, what is it called?",a:"An own goal — you accidentally give a point to the other team. One of the most painful moments in sports. It counts just like a regular goal."},
+   {pts:500,q:"What gymnast is called the GOAT and won 3 gold medals at the 2024 Paris Olympics after her mental health comeback?",a:"Simone Biles — team all-around, individual all-around, and floor exercise golds. She withdrew from Tokyo 2021 for mental health, came back even better. Greatest of all time."}],
+  // DISNEY & PIXAR
+  [{pts:100,q:"What color is Stitch from Lilo & Stitch?",a:"Blue — Experiment 626, created by Dr. Jumba as a destructive alien. Lilo adopts him and teaches him about ohana, which means family. Nobody gets left behind."},
+   {pts:200,q:"In Inside Out 2, which NEW emotion takes over Riley's headquarters when she becomes a teenager?",a:"Anxiety — voiced by Maya Hawke. She kicks Joy out and starts running on worst-case scenarios. Anxiety thinks she's protecting Riley. Very relatable for anyone who has ever been a teenager."},
+   {pts:300,q:"What is Simba's father's name in The Lion King?",a:"Mufasa — voiced by James Earl Jones in the original (1994) AND in the 2024 prequel Mufasa: The Lion King. Remember who you are. He lives in the stars."},
+   {pts:400,q:"In Turning Red, what animal does Mei transform into whenever she gets too excited or emotional?",a:"A giant red panda — it is a family curse from her ancestors. Set in Toronto in 2002. She learns to embrace it instead of suppressing her feelings."},
+   {pts:500,q:"In Pixar's Coco, what secret does Miguel discover about his great-great-grandfather?",a:"Ernesto de la Cruz is a fraud and a murderer — he stole Hector's songs AND poisoned him. The real musician in the family was Hector, Miguel's true great-great-grandfather."}],
+  // FINISH THE LYRIC
+  [{pts:100,q:"Fill in: 'Old town road, I'm gonna take my horse to the old town ___'",a:"Road — Lil Nas X ft. Billy Ray Cyrus (2019). Spent 19 consecutive weeks at #1, breaking the all-time Billboard Hot 100 record. A country-rap crossover nobody saw coming."},
+   {pts:200,q:"Fill in: 'Running up that hill... running up that ___'",a:"Hill — Kate Bush (1985), but it exploded again in 2022 when it appeared in Stranger Things Season 4. Hit #1 globally, 37 years after it was first released."},
+   {pts:300,q:"Fill in: 'I got a blank space baby, and I'll write your ___'",a:"Name — Taylor Swift, Blank Space (2014). She is playing into the crazy ex-girlfriend narrative the media invented about her. One of the most self-aware pop songs ever made."},
+   {pts:400,q:"Fill in: 'Started from the bottom, now we're ___'",a:"Here — Drake (2013). The entire song is about grinding from nothing to making it. One of Drake's most quoted lyrics ever."},
+   {pts:500,q:"Fill in: 'Somebody that I used to ___' — Australian artist, 2011, super famous two-person music video",a:"Know — Gotye ft. Kimbra. The music video has over 1.4 billion YouTube views. The distinctive bass line is one of the most recognizable sounds of the 2010s."}],
+  // SCHOOL
+  [{pts:100,q:"What is the capital city of the United States of America?",a:"Washington D.C. — the District of Columbia. Named after President George Washington. Congress meets at the Capitol building. It is NOT a state."},
+   {pts:200,q:"What is the closest planet to the Sun?",a:"Mercury — scorching hot on the sunny side (430 degrees Celsius) but freezing on the dark side. A year on Mercury is only 88 Earth days because it orbits so fast."},
+   {pts:300,q:"How many continents are on Earth?",a:"7 — Africa, Antarctica, Asia, Australia (Oceania), Europe, North America, South America. Some countries teach 6 by combining Europe and Asia into Eurasia. Either answer works."},
+   {pts:400,q:"A pizza has 8 slices. Three friends each eat 2 slices. How many slices are left?",a:"2 slices — 3 friends times 2 slices equals 6 eaten. 8 minus 6 equals 2. Someone is getting leftover pizza for breakfast."},
+   {pts:500,q:"What is the largest country in the world by total land area?",a:"Russia — covers about 17 million square kilometers. That is almost twice the size of Canada, the second largest. Russia spans 11 different time zones from east to west."}],
 ]
-
 let jUsed=Array.from({length:5},()=>Array(5).fill(false));
 function buildJBoard(){
   const b=document.getElementById('jeopardy-board');
@@ -1361,6 +1365,9 @@ function loadConnPuzzle(i){
   renderConnGrid();
   document.getElementById('conn-msg').textContent='';
   document.getElementById('conn-solved-labels').innerHTML='';
+  connHintsShown=0;
+  var _hb=document.getElementById('conn-hint-box');if(_hb){_hb.style.display='none';_hb.innerHTML='';}
+  var _hbtn=document.getElementById('conn-hint-btn');if(_hbtn)_hbtn.textContent='������ Hint';
 }
 function renderConnGrid(){
   const grid=document.getElementById('conn-grid');if(!grid)return;
@@ -1399,6 +1406,31 @@ function connSubmit(){
 }
 function connDeselect(){connSelected=[];renderConnGrid();}
 function connReset(){connSelected=[];connSolved=[];loadConnPuzzle(connPuzzleIdx);}
+let connHintsShown=0;
+function connShowHint(){
+  var p=CP[connPuzzleIdx];
+  var colors=['#4CAF50','#2196F3','#9C27B0','#FF9800'];
+  var colorNames=['Green','Blue','Purple','Orange'];
+  var hb=document.getElementById('conn-hint-box');
+  var hbtn=document.getElementById('conn-hint-btn');
+  if(!hb)return;
+  var allSolved=p.groups.every(function(_,i){return connSolved.includes(i);});
+  if(allSolved){hb.style.display='block';hb.innerHTML='<span style="color:#00d4aa;">\u2705 All groups solved!</span>';return;}
+  connHintsShown++;
+  var revealCount=Math.min(connHintsShown,p.groups.length);
+  hb.style.display='block';
+  hb.innerHTML='<div style="font-size:11px;color:#9b59b6;letter-spacing:2px;margin-bottom:8px;">CATEGORY HINTS</div>'+
+    p.groups.map(function(g,i){
+      var revealed=i<revealCount||connSolved.includes(i);
+      return '<div style="margin-bottom:6px;padding:6px 10px;background:#111;border-radius:8px;border-left:3px solid '+colors[g.color]+';display:flex;align-items:center;gap:8px;">'+
+        '<span style="font-size:10px;color:'+colors[g.color]+';letter-spacing:1px;font-weight:700;min-width:48px;">'+colorNames[g.color]+'</span>'+
+        '<span style="color:'+(revealed?'#f5a623':'#555')+';font-size:13px;">'+(revealed?g.label:'?????')+'</span>'+
+        '</div>';
+    }).join('');
+  var remaining=p.groups.length-revealCount;
+  if(remaining>0&&hbtn)hbtn.textContent='\uD83D\uDCA1 Reveal ('+remaining+' left)';
+  else if(hbtn)hbtn.textContent='\uD83D\uDCA1 Hint';
+}
 
 // PASSWORD DATA
 const PWD=[
